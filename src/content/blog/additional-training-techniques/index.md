@@ -49,4 +49,3 @@ trainer가 한번의 step당 다음의 정보들을 업데이트하도록 변경
 > acc, loss, val_acc, val_loss, f1_score, val_f1_score, learning_rate
 
 하나의 workspace가 여러 tag를 가지고 있도록 구성해서 나중에 필터링하기 편하도록 구성했다. augmentation중 핵심적인 기법들 같이 학습에 구별되서 사용된 기법들을 tag에 더 넣기로 했다.
-![](/assets/images/추가적인 학습 기법들/675f679a-b603-46cc-bd23-5aa7f0eafb36-image.png)

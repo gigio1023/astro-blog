@@ -92,11 +92,7 @@ funmamental([ref](https://byeoltong.com/737)), 기술적 지표 등 정보의 �
 # Stat Arb strategy
 Statistical Arbitragy strategy를 딥러닝으로 생각한다면 이상적으로는 아래와 같이 생각할 수 있다.
 
-![](/assets/images/Quant trading / Researcher/383cf31e-6b5b-4930-aca5-9fa40921ab09-image.png)
-
 end-to-end의 멋지고 간단한 구조다. 하지만 현실적으로는 모든 요소에 대해서 end-to-end를 적용하지 않고 아래와 같이 구성한다.
-
-![](/assets/images/Quant trading / Researcher/227d39a7-0aa2-43cb-95e6-eb5d8a9d9b14-image.png)
 
 - 대부분의 가격 예측은 선형회귀를 통해서 이루어진다. 물론 머신러닝과 딥러닝 모델을 통해서도 예측한다.
 - portfolio optimizer: 종목 간의 상관 관계성, 종목의 가격이 얼마나 움직이는지 등을 고려할 때 어떤 포지션이 가장 안정적인 수익을 창출할 수 있는지 판단하는 모델
@@ -141,8 +137,6 @@ end-to-end의 멋지고 간단한 구조다. 하지만 현실적으로는 모든
 ### 직관과 다른 성공 기준
 미래 예측의 성공을 평가하는 지수로 $r^2$([wiki](https://ko.wikipedia.org/wiki/%EA%B2%B0%EC%A0%95%EA%B3%84%EC%88%98))가 있다. 간단하게 미래 가격 예측에 대해 얼만큼 맞췄는지를 알려주는 지표라고 이해할 수 있다. 음수의 경우 예측을 안하는게 더 나은 경우고, 양수의 경우 0 ~ 100% 사이의 지표를 표현한다.
 
-
-![](/assets/images/Quant trading / Researcher/9ffa1d05-2fcc-4396-82a5-1559050b97de-image.png)
 
 6개의 forecast(예측)을 보자.
 높은 $r^2$의 forecast가 돈을 버는데 유용할 것이라고 생각할 수 있다. 하지만 $r^2$가 0.05%, 1.00%, 3.00%인 forecast가 실제로 실현 가능하고 돈을 벌 수 있는 forecast라고 한다. 

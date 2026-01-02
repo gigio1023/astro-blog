@@ -34,8 +34,6 @@ https://github.com/lvwerra/trl
   - 여러 장의 이미지에 대해 설명
 - Stories of Images in Sequence(SIS)
   - 여러 장의 이미지를 통해 스토리 생성
-  
-![](/assets/images/NLP trends/04787c83-fb7c-4f60-8cbb-4396ae35c4c7-image.png)
 
 ### Show and Tell
 https://arxiv.org/pdf/1411.4555.pdf

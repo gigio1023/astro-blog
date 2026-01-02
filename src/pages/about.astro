@@ -10,9 +10,18 @@ import { SITE } from '@/consts'
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
-  "name": SITE.title,
+  "name": "Sungho Park",
   "url": SITE.href,
-  "description": SITE.description
+  "description": "AI Engineer",
+  "jobTitle": "AI Engineer",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "NAVER"
+  },
+  "sameAs": [
+    "https://github.com/gigio1023",
+    "https://www.linkedin.com/in/gigio1023"
+  ]
 }
 ---
 <Layout class="max-w-3xl">
@@ -27,23 +36,61 @@ const personSchema = {
     <!-- Header -->
     <div class="flex flex-col gap-4">
       <div>
-        <h1 class="text-3xl md:text-4xl font-bold">About</h1>
+        <h1 class="text-3xl md:text-4xl font-bold">Sungho Park</h1>
         <p class="text-sm text-muted-foreground font-mono mt-1">
-          Learn more about this blog
+          AI Engineer
         </p>
       </div>
     </div>
 
     <!-- Main Content -->
     <div class="prose prose-sm dark:prose-invert max-w-none space-y-6">
-      <p class="text-muted-foreground leading-relaxed">
-        Welcome to <strong class="text-primary">{SITE.title}</strong>! 
-        This is a placeholder about page. Customize this content to tell your visitors about yourself, your blog, or your interests.
-      </p>
+      <h2 class="text-xl font-semibold mt-8 mb-4">What I Do</h2>
+      <ul class="space-y-2 text-muted-foreground">
+        <li>Designing and productizing Agentic AI systems</li>
+        <li>Building RAG pipelines and evaluation frameworks</li>
+        <li>Optimizing LLM inference for cost, latency, and quality</li>
+      </ul>
 
-      <p class="text-muted-foreground leading-relaxed">
-        You can edit this page by modifying <code class="text-sm bg-muted px-1.5 py-0.5 rounded">src/pages/about.astro</code>.
-      </p>
+      <h2 class="text-xl font-semibold mt-8 mb-4">Experience</h2>
+      <div class="space-y-4">
+        <div class="border-l-2 border-primary pl-4">
+          <h3 class="font-semibold">NAVER</h3>
+          <p class="text-sm text-muted-foreground">AI Engineer · 2025 - Present</p>
+        </div>
+        <div class="border-l-2 border-muted pl-4">
+          <h3 class="font-semibold">BHSN</h3>
+          <p class="text-sm text-muted-foreground">AI Engineer · 2024 - 2025</p>
+        </div>
+        <div class="border-l-2 border-muted pl-4">
+          <h3 class="font-semibold">WRTN Technologies</h3>
+          <p class="text-sm text-muted-foreground">ML Engineer · 2023 - 2024</p>
+        </div>
+      </div>
+
+      <h2 class="text-xl font-semibold mt-8 mb-4">Publications & Talks</h2>
+      <ul class="space-y-2 text-muted-foreground text-sm">
+        <li>SAFARI - NAACL 2025 Findings (Accepted, Withdrawn)</li>
+        <li>Polyglot-Ko - arXiv 2023</li>
+        <li>ML4H - NeurIPS 2022 Workshop (Accepted, Withdrawn)</li>
+        <li>Langcon 2025 - Rethinking Agents And Tools</li>
+      </ul>
+
+      <h2 class="text-xl font-semibold mt-8 mb-4">Contact</h2>
+      <div class="flex flex-wrap gap-4">
+        <Link href="https://github.com/gigio1023" external class="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+          <Icon name="lucide:github" class="size-4" />
+          GitHub
+        </Link>
+        <Link href="https://www.linkedin.com/in/gigio1023" external class="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+          <Icon name="lucide:linkedin" class="size-4" />
+          LinkedIn
+        </Link>
+        <Link href="mailto:relilau00@gmail.com" class="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+          <Icon name="lucide:mail" class="size-4" />
+          Email
+        </Link>
+      </div>
     </div>
   </section>
 </Layout>
