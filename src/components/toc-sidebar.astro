@@ -394,9 +394,5 @@ const tocGroups: TOCGroup[] = hasTranslation
   }
 
   document.addEventListener('astro:page-load', () => TOCController.init())
-  document.addEventListener('astro:after-swap', () => {
-    TOCController.cleanup()
-    TOCController.init()
-  })
   document.addEventListener('astro:before-swap', () => TOCController.cleanup())
 </script>

@@ -47,21 +47,16 @@ import { Icon } from 'astro-icon/components'
     localStorage.setItem('theme', newTheme)
   }
 
-  function initThemeToggle() {
-    document
-      .getElementById('theme-toggle')
-      ?.addEventListener('click', handleToggleClick)
-  }
-
-  initThemeToggle()
+  // Event delegation — survives DOM swaps
+  document.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('#theme-toggle')) {
+      handleToggleClick()
+    }
+  })
 
   // Apply theme to incoming document BEFORE swap to prevent flash
   document.addEventListener('astro:before-swap', (e) => {
     const storedTheme = localStorage.getItem('theme') || 'light'
-    e.newDocument.documentElement.setAttribute('data-theme', storedTheme)
-  })
-
-  document.addEventListener('astro:after-swap', () => {
-    initThemeToggle()
+    ;(e as any).newDocument.documentElement.setAttribute('data-theme', storedTheme)
   })
 </script>

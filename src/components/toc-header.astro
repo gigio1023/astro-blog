@@ -424,11 +424,5 @@ const headingGroups: HeadingGroup[] = hasTranslation
   }
 
   document.addEventListener('astro:page-load', () => MobileTOCController.init())
-  document.addEventListener('astro:after-swap', () => {
-    MobileTOCController.cleanup()
-    MobileTOCController.init()
-  })
-  document.addEventListener('astro:before-swap', () =>
-    MobileTOCController.cleanup(),
-  )
+  document.addEventListener('astro:before-swap', () => MobileTOCController.cleanup())
 </script>

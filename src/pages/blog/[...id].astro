@@ -415,26 +415,20 @@ const englishTitle = await getEnglishTitle(post)
   </Button>
 
   <script>
-    document.addEventListener('astro:page-load', () => {
-      const scrollToTopButton = document.getElementById('scroll-to-top')
-      const footer = document.querySelector('footer')
-
-      if (scrollToTopButton && footer) {
-        scrollToTopButton.addEventListener('click', () => {
-          window.scrollTo({ top: 0, behavior: 'smooth' })
-        })
-
-        window.addEventListener('scroll', () => {
-          const footerRect = footer.getBoundingClientRect()
-          const isFooterVisible = footerRect.top <= window.innerHeight
-
-          scrollToTopButton.classList.toggle(
-            'hidden',
-            window.scrollY <= 300 || isFooterVisible,
-          )
-        })
+    // Event delegation — no re-attachment needed
+    document.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('#scroll-to-top')) {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       }
     })
+
+    window.addEventListener('scroll', () => {
+      const btn = document.getElementById('scroll-to-top')
+      const footer = document.querySelector('footer')
+      if (!btn || !footer) return
+      const isFooterVisible = footer.getBoundingClientRect().top <= window.innerHeight
+      btn.classList.toggle('hidden', window.scrollY <= 300 || isFooterVisible)
+    }, { passive: true })
   </script>
 </Layout>
 
@@ -447,9 +441,7 @@ const englishTitle = await getEnglishTitle(post)
       document.head.appendChild(link)
     }
   }
-  loadKatexCss()
   document.addEventListener('astro:page-load', loadKatexCss)
-  document.addEventListener('astro:after-swap', loadKatexCss)
 </script>
 
 <script>
@@ -517,6 +509,5 @@ const englishTitle = await getEnglishTitle(post)
     }
   }
 
-  renderMermaid()
-  document.addEventListener('astro:after-swap', renderMermaid)
+  document.addEventListener('astro:page-load', renderMermaid)
 </script>
