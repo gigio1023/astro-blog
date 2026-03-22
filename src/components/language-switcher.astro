@@ -2,15 +2,15 @@
 ---
 
 <div class="lang-switcher">
-  <div class="inline-flex items-center rounded-md border border-border/50 p-0.5 text-xs">
+  <div class="inline-flex items-center rounded-full border border-border p-0.5 text-sm">
     <button
-      class="lang-btn-ko rounded px-5 py-0.5 font-medium transition-all duration-150 bg-foreground text-background shadow-sm"
+      class="lang-btn-ko rounded-full px-4 py-1 font-medium transition-all duration-150 bg-foreground text-background"
       type="button"
     >
       KO
     </button>
     <button
-      class="lang-btn-en rounded px-5 py-0.5 font-medium transition-all duration-150 text-muted-foreground hover:text-foreground/80"
+      class="lang-btn-en rounded-full px-4 py-1 font-medium transition-all duration-150 text-muted-foreground hover:text-foreground"
       type="button"
     >
       EN
@@ -19,8 +19,8 @@
 </div>
 
 <script>
-  const ACTIVE = ['bg-foreground', 'text-background', 'shadow-sm']
-  const INACTIVE = ['text-muted-foreground', 'hover:text-foreground/80']
+  const ACTIVE = ['bg-foreground', 'text-background']
+  const INACTIVE = ['text-muted-foreground', 'hover:text-foreground']
 
   function getLang(): string {
     return localStorage.getItem('preferred-lang') || 'ko'
