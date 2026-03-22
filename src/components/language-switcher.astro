@@ -19,11 +19,11 @@
 </div>
 
 <style is:global>
-  [data-lang] {
-    transition: opacity 0.2s ease;
-  }
   [data-lang].lang-hidden {
     display: none !important;
+  }
+  #main-content {
+    transition: opacity 0.12s ease;
   }
 </style>
 
@@ -33,12 +33,6 @@
 
   function getLang(): string {
     return localStorage.getItem('preferred-lang') || 'en'
-  }
-
-  function setLang(lang: string) {
-    localStorage.setItem('preferred-lang', lang)
-    applyLang(lang)
-    document.dispatchEvent(new CustomEvent('lang-switch', { detail: { lang } }))
   }
 
   function applyLang(lang: string) {
@@ -59,6 +53,23 @@
       if (lang === 'en') { btn.classList.add(...ACTIVE); btn.classList.remove(...INACTIVE) }
       else { btn.classList.add(...INACTIVE); btn.classList.remove(...ACTIVE) }
     })
+  }
+
+  function setLang(lang: string) {
+    const main = document.getElementById('main-content')
+    if (main) {
+      main.style.opacity = '0'
+      setTimeout(() => {
+        localStorage.setItem('preferred-lang', lang)
+        applyLang(lang)
+        document.dispatchEvent(new CustomEvent('lang-switch', { detail: { lang } }))
+        main.style.opacity = '1'
+      }, 120)
+    } else {
+      localStorage.setItem('preferred-lang', lang)
+      applyLang(lang)
+      document.dispatchEvent(new CustomEvent('lang-switch', { detail: { lang } }))
+    }
   }
 
   function initLangSwitcher() {
