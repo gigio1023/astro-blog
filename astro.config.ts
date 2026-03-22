@@ -16,12 +16,14 @@ import remarkMath from 'remark-math'
 import { pluginCollapsibleSections } from '@expressive-code/plugin-collapsible-sections'
 import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 
+import { mermaidIntegration } from './src/plugins/remark-mermaid'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   site: 'https://sunghogigio.com',
   // Static output - API routes are handled by Cloudflare Pages Functions in /functions folder
   integrations: [
+    mermaidIntegration(),
     expressiveCode({
       themes: ['github-light', 'github-dark'],
       plugins: [pluginCollapsibleSections(), pluginLineNumbers()],

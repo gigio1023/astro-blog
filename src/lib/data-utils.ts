@@ -5,10 +5,33 @@ export async function getAllAuthors(): Promise<CollectionEntry<'authors'>[]> {
   return await getCollection('authors')
 }
 
+export function isTranslation(post: CollectionEntry<'blog'>): boolean {
+  return !!post.data.translationOf
+}
+
+export async function getTranslation(
+  postId: string,
+): Promise<CollectionEntry<'blog'> | null> {
+  const posts = await getCollection('blog')
+  return (
+    posts.find(
+      (p) => p.data.translationOf === postId && !p.data.draft,
+    ) || null
+  )
+}
+
+export async function getEnglishTitle(
+  post: CollectionEntry<'blog'>,
+): Promise<string> {
+  if (post.data.lang === 'en') return post.data.title
+  const translation = await getTranslation(post.id)
+  return translation?.data.title ?? post.data.title
+}
+
 export async function getAllPosts(): Promise<CollectionEntry<'blog'>[]> {
   const posts = await getCollection('blog')
   return posts
-    .filter((post) => !post.data.draft && !isSubpost(post.id))
+    .filter((post) => !post.data.draft && !isSubpost(post.id) && !isTranslation(post))
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 }
 
@@ -17,7 +40,7 @@ export async function getAllPostsAndSubposts(): Promise<
 > {
   const posts = await getCollection('blog')
   return posts
-    .filter((post) => !post.data.draft)
+    .filter((post) => !post.data.draft && !isTranslation(post))
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 }
 
@@ -144,6 +167,7 @@ export async function getSubpostsForParent(
     .filter(
       (post) =>
         !post.data.draft &&
+        !isTranslation(post) &&
         isSubpost(post.id) &&
         getParentId(post.id) === parentId,
     )
@@ -176,7 +200,11 @@ export async function hasSubposts(postId: string): Promise<boolean> {
 }
 
 export function isSubpost(postId: string): boolean {
-  return postId.includes('/')
+  if (!postId.includes('/')) return false
+  // Translation files (e.g., folder/index.en) are not subposts
+  const lastSegment = postId.split('/').pop() || ''
+  if (/^index\.[a-z]{2}$/.test(lastSegment)) return false
+  return true
 }
 
 export async function getParentPost(
