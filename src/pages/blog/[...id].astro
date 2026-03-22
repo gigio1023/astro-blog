@@ -136,7 +136,8 @@ try {
 
 const originalLang = post.data.lang || 'ko'
 const translationLang = translationPost?.data.lang || 'en'
-const defaultLang = 'ko'
+const defaultLang = 'en'
+const englishTitle = await getEnglishTitle(post)
 ---
 
 <Layout hideFloatingSidebar={hasChildPosts || isCurrentSubpost}>
@@ -182,14 +183,14 @@ const defaultLang = 'ko'
                 },
                 {
                   href: `/blog/${currentPostId}`,
-                  label: post.data.title,
+                  label: englishTitle,
                   icon: 'lucide:file-text',
                 },
               ]
             : [
                 {
                   href: `/blog/${currentPostId}`,
-                  label: post.data.title,
+                  label: englishTitle,
                   icon: 'lucide:book-open-text',
                 },
               ]),

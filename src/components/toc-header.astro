@@ -14,7 +14,7 @@ type Props = {
 const { headings, translationHeadings, originalLang, translationLang } = Astro.props
 
 const hasTranslation = translationHeadings && translationHeadings.length > 0 && originalLang && translationLang
-const defaultLang = 'ko'
+const defaultLang = 'en'
 
 type HeadingGroup = {
   items: MarkdownHeading[]
