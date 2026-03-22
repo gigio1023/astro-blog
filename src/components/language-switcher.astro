@@ -32,10 +32,25 @@
     document.dispatchEvent(new CustomEvent('lang-switch', { detail: { lang } }))
   }
 
-  function applyLang(lang: string) {
+  function applyLang(lang: string, animate = true) {
     document.querySelectorAll('[data-lang]').forEach((el) => {
       const htmlEl = el as HTMLElement
-      htmlEl.style.display = htmlEl.dataset.lang === lang ? '' : 'none'
+      if (!animate) {
+        htmlEl.style.display = htmlEl.dataset.lang === lang ? '' : 'none'
+        return
+      }
+      if (htmlEl.dataset.lang === lang) {
+        htmlEl.style.display = ''
+        htmlEl.style.opacity = '0'
+        requestAnimationFrame(() => {
+          htmlEl.style.transition = 'opacity 0.2s ease'
+          htmlEl.style.opacity = '1'
+        })
+      } else {
+        htmlEl.style.transition = 'opacity 0.15s ease'
+        htmlEl.style.opacity = '0'
+        setTimeout(() => { htmlEl.style.display = 'none' }, 150)
+      }
     })
 
     document.querySelectorAll<HTMLElement>('.lang-btn-ko').forEach((btn) => {
@@ -58,7 +73,7 @@
 
     if (!hasEn || !hasKo) return
 
-    applyLang(getLang())
+    applyLang(getLang(), false)
 
     document.querySelectorAll('.lang-btn-en').forEach((btn) =>
       btn.addEventListener('click', () => setLang('en'))
