@@ -18,6 +18,28 @@
   </div>
 </div>
 
+<!-- Runs synchronously before paint — prevents EN→KO flash -->
+<script is:inline data-astro-rerun>
+  (() => {
+    const lang = localStorage.getItem('preferred-lang') || 'en'
+    document.querySelectorAll('[data-lang]').forEach(el => {
+      el.classList.toggle('lang-hidden', el.getAttribute('data-lang') !== lang)
+    })
+    document.querySelectorAll('.lang-btn-ko').forEach(btn => {
+      btn.classList.toggle('bg-foreground', lang === 'ko')
+      btn.classList.toggle('text-background', lang === 'ko')
+      btn.classList.toggle('text-muted-foreground', lang !== 'ko')
+      btn.classList.toggle('hover:text-foreground', lang !== 'ko')
+    })
+    document.querySelectorAll('.lang-btn-en').forEach(btn => {
+      btn.classList.toggle('bg-foreground', lang === 'en')
+      btn.classList.toggle('text-background', lang === 'en')
+      btn.classList.toggle('text-muted-foreground', lang !== 'en')
+      btn.classList.toggle('hover:text-foreground', lang !== 'en')
+    })
+  })()
+</script>
+
 <script>
   const ACTIVE = ['bg-foreground', 'text-background']
   const INACTIVE = ['text-muted-foreground', 'hover:text-foreground']
@@ -60,7 +82,7 @@
     }
   }
 
-  // Event delegation — always works, no re-attachment needed
+  // Event delegation — survives DOM swaps
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement
     const btn = target.closest('.lang-btn-en, .lang-btn-ko')
@@ -68,7 +90,28 @@
     setLang(btn.classList.contains('lang-btn-en') ? 'en' : 'ko')
   })
 
-  // astro:page-load fires on BOTH initial load AND every navigation
+  // Apply language to incoming document BEFORE swap (guardrail #19 pattern)
+  document.addEventListener('astro:before-swap', (e) => {
+    const lang = getLang()
+    const newDoc = (e as any).newDocument as Document
+    newDoc.querySelectorAll('[data-lang]').forEach((el) => {
+      el.classList.toggle('lang-hidden', el.getAttribute('data-lang') !== lang)
+    })
+    newDoc.querySelectorAll('.lang-btn-ko').forEach((btn) => {
+      btn.classList.toggle('bg-foreground', lang === 'ko')
+      btn.classList.toggle('text-background', lang === 'ko')
+      btn.classList.toggle('text-muted-foreground', lang !== 'ko')
+      btn.classList.toggle('hover:text-foreground', lang !== 'ko')
+    })
+    newDoc.querySelectorAll('.lang-btn-en').forEach((btn) => {
+      btn.classList.toggle('bg-foreground', lang === 'en')
+      btn.classList.toggle('text-background', lang === 'en')
+      btn.classList.toggle('text-muted-foreground', lang !== 'en')
+      btn.classList.toggle('hover:text-foreground', lang !== 'en')
+    })
+  })
+
+  // Show/hide switcher based on bilingual content
   document.addEventListener('astro:page-load', () => {
     const hasEn = document.querySelector('[data-lang="en"]')
     const hasKo = document.querySelector('[data-lang="ko"]')
@@ -76,9 +119,5 @@
     document.querySelectorAll<HTMLElement>('.lang-switcher').forEach((sw) => {
       sw.style.display = (hasEn && hasKo) ? '' : 'none'
     })
-
-    if (hasEn && hasKo) {
-      applyLang(getLang())
-    }
   })
 </script>
