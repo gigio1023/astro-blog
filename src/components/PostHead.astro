@@ -1,6 +1,6 @@
 ---
 import { SITE } from '@/consts'
-import { isSubpost } from '@/lib/data-utils'
+import { getEnglishTitle, isSubpost } from '@/lib/data-utils'
 import type { CollectionEntry } from 'astro:content'
 
 interface Props {
@@ -10,6 +10,7 @@ interface Props {
 const { post } = Astro.props
 
 const title = post.data.title || SITE.title
+const ogTitle = await getEnglishTitle(post)
 const description = post.data.description || SITE.description
 const image = new URL('/static/1200x630.png', Astro.site)
 const author =
@@ -67,7 +68,7 @@ const articleSchema = {
 {isSubpost(post.id) && <meta name="robots" content="noindex" />}
 
 <!-- Enhanced Open Graph tags for AI/GEO optimization -->
-<meta property="og:title" content={title} />
+<meta property="og:title" content={ogTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={postImage} />
 <meta property="og:image:alt" content={title} />
@@ -86,7 +87,7 @@ const articleSchema = {
 }
 
 <!-- Enhanced Twitter Card tags -->
-<meta name="twitter:title" content={title} />
+<meta name="twitter:title" content={ogTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={postImage} />
 <meta name="twitter:image:alt" content={title} />

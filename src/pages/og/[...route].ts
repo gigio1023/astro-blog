@@ -19,19 +19,22 @@ export const { getStaticPaths, GET } = OGImageRoute({
     },
     font: {
       title: {
-        families: ['Geist Mono'],
+        families: ['Geist Mono', 'Noto Sans KR'],
         weight: 'Bold',
         size: 48,
         color: [255, 255, 255],
       },
       description: {
-        families: ['Geist Mono'],
+        families: ['Geist Mono', 'Noto Sans KR'],
         weight: 'Normal',
         size: 28,
         color: [156, 163, 175],
       },
     },
-    fonts: ['./public/fonts/GeistMonoVF.woff2'],
+    fonts: [
+      './public/fonts/GeistMonoVF.woff2',
+      './public/fonts/NotoSansKR-Regular.ttf',
+    ],
     bgGradient: [[24, 24, 27]],
     padding: 80,
   }),

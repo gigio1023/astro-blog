@@ -5,14 +5,14 @@
   <div class="inline-flex items-center rounded-full border border-border p-0.5 text-sm">
     <button
       id="lang-btn-en"
-      class="rounded-full px-3 py-1 font-medium transition-colors bg-foreground text-background"
+      class="rounded-full px-3 py-1 font-medium transition-colors text-muted-foreground"
       type="button"
     >
       EN
     </button>
     <button
       id="lang-btn-ko"
-      class="rounded-full px-3 py-1 font-medium transition-colors text-muted-foreground"
+      class="rounded-full px-3 py-1 font-medium transition-colors bg-foreground text-background"
       type="button"
     >
       KO
@@ -22,7 +22,7 @@
 
 <script>
   function getLang(): string {
-    return localStorage.getItem('preferred-lang') || 'en'
+    return localStorage.getItem('preferred-lang') || 'ko'
   }
 
   function setLang(lang: string) {
