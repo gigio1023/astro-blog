@@ -37,16 +37,21 @@
       const htmlEl = el as HTMLElement
       if (!animate) {
         htmlEl.style.display = htmlEl.dataset.lang === lang ? '' : 'none'
+        htmlEl.style.opacity = ''
+        htmlEl.style.pointerEvents = ''
+        htmlEl.style.transition = ''
         return
       }
       if (htmlEl.dataset.lang === lang) {
         htmlEl.style.display = ''
+        htmlEl.style.pointerEvents = ''
         htmlEl.style.opacity = '0'
         requestAnimationFrame(() => {
           htmlEl.style.transition = 'opacity 0.2s ease'
           htmlEl.style.opacity = '1'
         })
       } else {
+        htmlEl.style.pointerEvents = 'none'
         htmlEl.style.transition = 'opacity 0.15s ease'
         htmlEl.style.opacity = '0'
         setTimeout(() => { htmlEl.style.display = 'none' }, 150)
