@@ -457,25 +457,57 @@ const defaultLang = 'en'
     const cdn = 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'
     const { default: mermaid } = await import(/* @vite-ignore */ cdn)
 
-    const isDark =
-      document.documentElement.dataset.theme === 'dark' ||
-      window.matchMedia('(prefers-color-scheme: dark)').matches
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark'
     mermaid.initialize({
       startOnLoad: false,
-      theme: isDark ? 'dark' : 'default',
+      theme: dark ? 'dark' : 'neutral',
     })
 
     for (const pre of blocks) {
       const source = pre.textContent?.trim()
       if (!source) continue
-
-      const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`
       try {
+        const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`
         const { svg } = await mermaid.render(id, source)
-        const wrapper = document.createElement('div')
-        wrapper.className = 'mermaid-diagram flex justify-center my-4'
-        wrapper.innerHTML = svg
-        pre.replaceWith(wrapper)
+        const div = document.createElement('div')
+        div.className = 'mermaid-diagram flex justify-center my-4'
+        div.innerHTML = svg
+
+        // Override ALL mermaid colors universally
+        const svgEl = div.querySelector('svg')
+        if (svgEl) {
+          const p = `#${svgEl.id}`
+          const s = svgEl.querySelector('style')
+          if (s && svgEl.id) {
+            s.textContent += dark ? `
+              ${p} { background-color: transparent !important; }
+              ${p} .node rect, ${p} .node circle, ${p} .node ellipse, ${p} .node polygon, ${p} .node path { fill: #2d333b !important; stroke: #555 !important; }
+              ${p} .label, ${p} .label text, ${p} span, ${p} p { fill: #e0e0e0 !important; color: #e0e0e0 !important; }
+              ${p} .edgeLabel, ${p} .edgeLabel p, ${p} .labelBkg, ${p} span.edgeLabel { background-color: #2d333b !important; color: #e0e0e0 !important; }
+              ${p} .edgeLabel rect { opacity: 1 !important; fill: #2d333b !important; }
+              ${p} .cluster rect { fill: #22272e !important; stroke: #555 !important; }
+              ${p} .cluster text, ${p} .cluster span { fill: #e0e0e0 !important; color: #e0e0e0 !important; }
+              ${p} .flowchart-link { stroke: #888 !important; }
+              ${p} .edgePath .path { stroke: #888 !important; }
+              ${p} .marker, ${p} .arrowheadPath { fill: #888 !important; stroke: #888 !important; }
+              ${p} .flowchartTitleText { fill: #e0e0e0 !important; }
+            ` : `
+              ${p} { background-color: transparent !important; }
+              ${p} .node rect, ${p} .node circle, ${p} .node ellipse, ${p} .node polygon, ${p} .node path { fill: #e8eaed !important; stroke: #aaa !important; }
+              ${p} .label, ${p} .label text, ${p} span, ${p} p { fill: #1e293b !important; color: #1e293b !important; }
+              ${p} .edgeLabel, ${p} .edgeLabel p, ${p} .labelBkg, ${p} span.edgeLabel { background-color: #e8eaed !important; color: #1e293b !important; }
+              ${p} .edgeLabel rect { opacity: 1 !important; fill: #e8eaed !important; }
+              ${p} .cluster rect { fill: #f1f3f5 !important; stroke: #aaa !important; }
+              ${p} .cluster text, ${p} .cluster span { fill: #1e293b !important; color: #1e293b !important; }
+              ${p} .flowchart-link { stroke: #666 !important; }
+              ${p} .edgePath .path { stroke: #666 !important; }
+              ${p} .marker, ${p} .arrowheadPath { fill: #666 !important; stroke: #666 !important; }
+              ${p} .flowchartTitleText { fill: #1e293b !important; }
+            `
+          }
+        }
+
+        pre.replaceWith(div)
       } catch (e) {
         console.error('Mermaid render error:', e)
       }

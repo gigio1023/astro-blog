@@ -251,20 +251,21 @@ Unity MCP만의 문제는 아니다.
 
 ## 비교: CoplayDev/unity-mcp vs 공식 MCP
 
+**공식 MCP (작동 안 함)**
 ```mermaid
-flowchart TB
-    subgraph "공식 MCP (작동 안 함)"
-        O1["Claude Code"] -->|stdio| O2["relay<br/>(폐쇄 소스 75MB)"]
-        O2 -->|"IPC Socket"| O3["Unity Bridge"]
-        O3 --> O4["47개 도구"]
-        style O2 fill:#f66,color:#fff
-    end
+flowchart LR
+    O1["Claude Code"] -->|stdio| O2["relay<br/>(폐쇄 소스 75MB)"]
+    O2 -->|"IPC Socket"| O3["Unity Bridge"]
+    O3 --> O4["47개 도구"]
+    style O2 fill:#f66,color:#fff
+```
 
-    subgraph "CoplayDev/unity-mcp (작동함)"
-        C1["Claude Code"] -->|HTTP| C2["Unity Editor<br/>내장 HTTP 서버"]
-        C2 --> C3["도구"]
-        style C2 fill:#6b6,color:#fff
-    end
+**CoplayDev/unity-mcp (작동함)**
+```mermaid
+flowchart LR
+    C1["Claude Code"] -->|HTTP| C2["Unity Editor<br/>내장 HTTP 서버"]
+    C2 --> C3["도구"]
+    style C2 fill:#6b6,color:#fff
 ```
 
 CoplayDev/unity-mcp는 HTTP 하나로 끝나는 단순한 구조다. 공식은 relay라는 중간 프로세스가 끼어있어서 장애점이 늘어난다. CoplayDev 쪽이 연결 끊김 문제가 있긴 하지만, 최소한 도구는 동작한다. 공식은 도구 자체가 안 잡힌다.

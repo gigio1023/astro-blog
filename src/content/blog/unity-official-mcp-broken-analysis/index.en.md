@@ -253,20 +253,21 @@ This isn't just a Unity problem.
 
 ## Comparison: CoplayDev/unity-mcp vs Official MCP
 
+**Official MCP (broken)**
 ```mermaid
-flowchart TB
-    subgraph "Official MCP (broken)"
-        O1["Claude Code"] -->|stdio| O2["relay<br/>(closed-source 75MB)"]
-        O2 -->|"IPC Socket"| O3["Unity Bridge"]
-        O3 --> O4["47 tools"]
-        style O2 fill:#f66,color:#fff
-    end
+flowchart LR
+    O1["Claude Code"] -->|stdio| O2["relay<br/>(closed-source 75MB)"]
+    O2 -->|"IPC Socket"| O3["Unity Bridge"]
+    O3 --> O4["47 tools"]
+    style O2 fill:#f66,color:#fff
+```
 
-    subgraph "CoplayDev/unity-mcp (works)"
-        C1["Claude Code"] -->|HTTP| C2["Unity Editor<br/>built-in HTTP server"]
-        C2 --> C3["tools"]
-        style C2 fill:#6b6,color:#fff
-    end
+**CoplayDev/unity-mcp (works)**
+```mermaid
+flowchart LR
+    C1["Claude Code"] -->|HTTP| C2["Unity Editor<br/>built-in HTTP server"]
+    C2 --> C3["tools"]
+    style C2 fill:#6b6,color:#fff
 ```
 
 CoplayDev/unity-mcp is a simple single-hop HTTP architecture. The official package introduces a relay middleman that adds failure points. CoplayDev has connection drop issues, but at least the tools work. The official package can't even discover tools.
