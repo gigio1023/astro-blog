@@ -209,14 +209,6 @@ const defaultLang = 'ko'
       )
     }
 
-    {
-      translationPost && (
-        <div class="col-start-2 flex justify-center xl:hidden">
-          <LanguageSwitcher />
-        </div>
-      )
-    }
-
     <section class="col-start-2 flex flex-col gap-y-6 text-center">
       <div class="flex flex-col">
         {translationPost ? (
@@ -334,6 +326,12 @@ const defaultLang = 'ko'
               </div>
             )
           }
+
+          {translationPost && (
+            <div class="sm:ml-3">
+              <LanguageSwitcher />
+            </div>
+          )}
         </div>
       </div>
 

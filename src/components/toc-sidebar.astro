@@ -1,5 +1,4 @@
 ---
-import LanguageSwitcher from '@/components/language-switcher.astro'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import type { TOCSection } from '@/lib/data-utils'
 import { getParentId, isSubpost } from '@/lib/data-utils'
@@ -40,14 +39,9 @@ const tocGroups: TOCGroup[] = hasTranslation
       id="toc-sidebar-container"
       class="sticky top-20 col-start-1 row-span-1 mr-8 ml-auto hidden h-[calc(100vh-5rem)] max-w-md xl:block"
     >
-      {hasTranslation && (
-        <div class="mb-4 px-4">
-          <LanguageSwitcher />
-        </div>
-      )}
       <ScrollArea
         client:visible
-        className={`flex flex-col overflow-y-auto ${hasTranslation ? 'max-h-[calc(100vh-11rem)]' : 'max-h-[calc(100vh-8rem)]'}`}
+        className="flex max-h-[calc(100vh-8rem)] flex-col overflow-y-auto"
         type="hover"
         data-toc-scroll-area
       >
