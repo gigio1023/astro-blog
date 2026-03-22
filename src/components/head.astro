@@ -124,13 +124,23 @@ const ogImage = image || (cleanPathname ? new URL(`/og${cleanPathname}.png`, Ast
   <!-- Google Analytics -->
   {ANALYTICS.google && (
     <>
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS.google}`}></script>
       <script is:inline define:vars={{ gaId: ANALYTICS.google }}>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', gaId);
+        gtag('config', gaId, { send_page_view: false });
+
+        // Track pageviews on initial load and SPA navigations
+        function trackPageView() {
+          gtag('event', 'page_view', {
+            page_path: window.location.pathname,
+            page_title: document.title,
+          });
+        }
+        trackPageView();
+        document.addEventListener('astro:page-load', trackPageView);
       </script>
-      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS.google}`}></script>
     </>
   )}
   
