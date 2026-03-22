@@ -8,6 +8,8 @@ lang: en
 translationOf: unity-official-mcp-broken-analysis
 ---
 
+> **TL;DR** — CoplayDev/unity-mcp kept dropping connections, so I tried the official Unity MCP. The relay returns an empty `tools/list` — zero tools. Went back to CoplayDev.
+
 I'd been using [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp) to integrate Claude Code with Unity via MCP. It works well enough, but the **server connection drops frequently**. When Unity does a domain reload or script compilation, the HTTP server seems to die. Having to reconnect MCP mid-session gets old fast.
 
 So I went looking for alternatives and found Unity's official MCP package (`com.unity.ai.assistant`). It's pre-release, but official — I figured it might be more stable. Long story short, it wasn't. It didn't work at all. Unity's infrastructure was perfectly fine. I connected to the IPC socket directly with Python and confirmed a successful handshake. But the **relay binary returned an empty array for `tools/list`**, making every tool unavailable. The relay is a 75MB closed-source Bun bundle, so there was no way to look inside.
@@ -41,7 +43,7 @@ flowchart LR
     C --> D["McpToolRegistry<br/>47 tools"]
 ```
 
-The reasoning makes sense — you need a middleman to attach to a running process. But this chain has 3 failure points, and if any single one breaks, the whole thing hangs. CoplayDev/unity-mcp does it with just HTTP.
+Makes sense — you need a middleman to attach to a running process. But the chain has 3 failure points now. One breaks, everything hangs. CoplayDev/unity-mcp does it with just HTTP.
 
 ## Setup
 
@@ -150,9 +152,9 @@ But inside Unity Editor, the tools are registered and ready:
 
 The tools exist inside Unity. The relay just can't fetch them.
 
-## Infrastructure verification — Unity side is fine
+## Checking if Unity is the problem
 
-To narrow down the problem, I verified each Unity-side component individually.
+Went through each Unity-side component one by one.
 
 **Editor & Bridge** — Confirmed PID with `ps aux`, Bridge Running in Project Settings. Editor.log:
 
@@ -179,11 +181,11 @@ Saved connection info to ~/.unity/mcp/connections/bridge-aa22b6cd-56655.json
 
 **Tool Registration** — 47 tools confirmed in Editor.log. **Relay Binary** — SHA matched between Package Cache and `~/.unity/relay/` (`eefc39db5ea7`). Latest v1.0.11.
 
-Nothing left to check on the Unity side.
+Unity side was fine.
 
 ## Digging into the relay process
 
-Traced the relay process network connections with `lsof`. This is where I found the smoking gun.
+Traced the relay's network connections with `lsof`.
 
 Editor-spawned relay (`--relay` mode):
 ```
@@ -218,7 +220,7 @@ The MCP Server process inside the relay was never running.
 
 ## Root cause hypothesis
 
-The relay binary is closed-source (75MB Bun bundle), so I can't look inside. Based on the evidence:
+The relay is closed-source (75MB Bun bundle), so I can't look inside. From the logs:
 
 **Protocol version mismatch seems most likely.** The relay metadata says `protocolVersion: "1.0"` (unity-ai-relay v1.0.11), while the Bridge responds with `protocol: "2.0"`. The handshake passes, but the tool listing protocol might differ, causing the Claude-side relay to fail silently when trying to connect to Unity.
 
@@ -274,11 +276,11 @@ CoplayDev/unity-mcp is a simple single-hop HTTP architecture. The official packa
 
 ## Conclusion
 
-The official MCP's relay architecture was the problem. In the stdio → relay → IPC → Bridge chain, the relay couldn't establish a connection to Unity, and since the relay is closed-source, the investigation hit a wall.
+The relay can't connect to Unity. Closed source, so I stopped here.
 
-I went back to CoplayDev/unity-mcp. The connection drop issue is still there, but it's better than tools not being discovered at all. I'll try the official package again when it stabilizes. Pre-release is pre-release.
+Went back to CoplayDev/unity-mcp. Connection drops are still annoying, but at least the tools work. I'll revisit the official package when it stabilizes.
 
-Claude Code's MCP implementation made things worse with no timeout and misleading "Connected" status. When one MCP server hangs, the entire session dies.
+Claude Code's MCP side didn't help either — no timeout, and "Connected" status is misleading. One hung MCP server takes down the whole session.
 
 ## Environment
 
@@ -291,4 +293,4 @@ Claude Code's MCP implementation made things worse with no timeout and misleadin
 
 ---
 
-*This analysis was performed with Claude Code (Opus 4.6), including direct IPC socket testing with Python, relay process tracing via `lsof`, Editor.log analysis, and Unity Issue Tracker research. This may be specific to my environment — if you've tried the same setup, I'd appreciate hearing about your experience.*
+*Debugging done with Claude Code (Opus 4.6). This might be specific to my environment — if you've tried the same setup, let me know how it went.*

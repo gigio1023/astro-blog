@@ -6,6 +6,8 @@ tags: ["unity", "mcp", "rabbit-hole"]
 draft: false
 ---
 
+> **TL;DR** — CoplayDev/unity-mcp가 연결이 자주 끊겨서 Unity 공식 MCP를 시도했다. relay가 `tools/list`에서 빈 배열을 반환해서 도구를 하나도 못 쓴다. 결국 CoplayDev로 돌아왔다.
+
 Unity 프로젝트에서 Claude Code를 MCP로 연동해서 쓰고 있었다. [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)를 사용했는데, 기능 자체는 잘 되지만 **서버 연결이 자주 끊기는 문제**가 있었다. 작업 중에 갑자기 연결이 끊기면 MCP 서버를 다시 시작해야 하는데, 이게 반복되면 꽤 짜증난다.
 
 그래서 대안을 찾다가 Unity 공식 MCP 패키지(`com.unity.ai.assistant`)를 발견했다. pre-release이긴 한데, 공식이면 좀 더 안정적이지 않을까 싶어서 시도해봤다. 결론부터 말하면 실패했다. Unity 쪽 인프라는 전부 정상이었고 IPC 소켓에 Python으로 직접 붙어서 handshake까지 확인했는데, 정작 **relay binary가 `tools/list`에서 빈 배열을 반환**해서 도구를 하나도 쓸 수 없었다. relay는 75MB짜리 Bun 번들 폐쇄 소스라 내부를 볼 수도 없었다.
@@ -39,7 +41,7 @@ flowchart LR
     C --> D["McpToolRegistry<br/>47개 도구"]
 ```
 
-이미 떠있는 프로세스에 붙어야 하니 중간자가 필요하다는 판단은 이해가 간다. 하지만 이 체인에는 장애점이 3개나 있고, 하나만 고장나도 전체가 멈춘다. CoplayDev/unity-mcp 같은 커뮤니티 솔루션은 HTTP 하나로 끝나는데.
+이미 떠있는 프로세스에 붙어야 하니 중간자를 둔 건 이해가 간다. 다만 장애점이 3개라서, 하나만 고장나도 전체가 멈춘다. CoplayDev/unity-mcp는 HTTP 하나로 끝나는데.
 
 ## 셋업
 
@@ -148,9 +150,9 @@ relay에 직접 MCP 메시지를 보내서 확인했다:
 
 도구가 Unity 안에는 있는데, relay가 가져오지 못하는 상황이다.
 
-## 인프라 검증 — Unity 쪽은 정상
+## Unity 쪽은 정상인지 확인
 
-문제 범위를 좁히기 위해 Unity 쪽 컴포넌트를 하나씩 검증했다.
+Unity 쪽이 문제인지 하나씩 확인해봤다.
 
 **Editor & Bridge** — `ps aux`로 PID 확인, Project Settings에서 Bridge Running 확인. Editor.log에서도 정상:
 
@@ -177,11 +179,11 @@ Saved connection info to ~/.unity/mcp/connections/bridge-aa22b6cd-56655.json
 
 **Tool Registration** — Editor.log에서 47개 도구 등록 확인. **Relay Binary 버전** — Package Cache와 `~/.unity/relay/`의 SHA가 동일(`eefc39db5ea7`). 최신 v1.0.11.
 
-Unity 쪽에서 더 볼 게 없었다.
+Unity 쪽은 문제가 없었다.
 
 ## relay 프로세스를 뜯어봤다
 
-`lsof`로 relay 프로세스의 네트워크 연결을 추적했더니, 여기서 결정적 차이를 발견했다.
+`lsof`로 relay 프로세스의 네트워크 연결을 추적했다.
 
 Editor가 자체적으로 띄운 relay(`--relay` 모드):
 ```
@@ -216,7 +218,7 @@ relay 안에서 MCP Server 프로세스 자체가 실행되지 않고 있었다.
 
 ## 원인 추정
 
-relay binary가 폐쇄 소스(75MB Bun 번들)라 내부를 직접 볼 수는 없다. 증거를 종합해보면:
+relay binary가 폐쇄 소스(75MB Bun 번들)라 내부를 직접 볼 수는 없다. 로그를 보면:
 
 **프로토콜 버전 불일치가 가장 유력한 것 같다.** relay metadata에는 `protocolVersion: "1.0"`(unity-ai-relay v1.0.11)이라고 적혀 있고, Bridge는 `protocol: "2.0"`으로 응답한다. handshake 자체는 통과하지만, 도구 목록을 주고받는 프로토콜이 달라서 Claude 측 relay가 Unity에 연결 자체를 못 맺는 것일 수 있다.
 
@@ -272,11 +274,11 @@ CoplayDev/unity-mcp는 HTTP 하나로 끝나는 단순한 구조다. 공식은 r
 
 ## 결론
 
-공식 MCP의 relay 아키텍처가 문제였다. stdio → relay → IPC → Bridge, 이 4단계 체인에서 relay가 Unity에 연결 자체를 못 맺고 있었고, relay가 폐쇄 소스라 원인을 더 이상 추적할 수 없었다.
+relay가 Unity에 연결을 못 맺고 있었다. 폐쇄 소스라 더 파볼 수가 없어서 여기서 멈췄다.
 
-결국 CoplayDev/unity-mcp로 돌아왔다. 연결 끊김 이슈는 여전히 있지만, 도구가 아예 안 잡히는 것보다는 낫다. 공식 패키지가 안정화되면 다시 시도해볼 생각이다. pre-release는 pre-release니까.
+CoplayDev/unity-mcp로 돌아왔다. 연결 끊김은 여전하지만, 도구가 아예 안 잡히는 것보다는 낫다. 공식이 안정화되면 다시 시도해볼 생각이다.
 
-Claude Code MCP 쪽도 timeout 부재와 "Connected" 상태 보고의 문제가 있었다. MCP 서버 하나가 응답을 안 하면 세션 전체가 죽는 건 좀 위험하다.
+Claude Code MCP 쪽도 timeout이 없고 "Connected" 상태 표시가 오해를 불러일으킨다. MCP 서버 하나가 먹통이면 세션 전체가 죽는 건 좀 위험하다.
 
 ## 재현 환경
 
@@ -289,4 +291,4 @@ Claude Code MCP 쪽도 timeout 부재와 "Connected" 상태 보고의 문제가 
 
 ---
 
-*이 분석은 Claude Code(Opus 4.6)와 함께 수행했다. IPC 소켓 직접 연결 테스트, `lsof`로 relay 프로세스 추적, Editor.log 분석, Unity Issue Tracker 조사를 포함한다. 내 환경에서만 재현되는 문제일 수 있으니, 같은 환경에서 시도해본 분은 경험을 공유해주시면 좋겠다.*
+*디버깅은 Claude Code(Opus 4.6)와 같이 했다. 내 환경에서만 재현되는 문제일 수 있으니, 같은 환경에서 시도해본 분은 경험을 공유해주시면 좋겠다.*
