@@ -22,9 +22,6 @@
   [data-lang].lang-hidden {
     display: none !important;
   }
-  #main-content {
-    transition: opacity 0.12s ease;
-  }
 </style>
 
 <script>
@@ -56,19 +53,16 @@
   }
 
   function setLang(lang: string) {
-    const main = document.getElementById('main-content')
-    if (main) {
-      main.style.opacity = '0'
-      setTimeout(() => {
-        localStorage.setItem('preferred-lang', lang)
-        applyLang(lang)
-        document.dispatchEvent(new CustomEvent('lang-switch', { detail: { lang } }))
-        main.style.opacity = '1'
-      }, 120)
-    } else {
+    const swap = () => {
       localStorage.setItem('preferred-lang', lang)
       applyLang(lang)
       document.dispatchEvent(new CustomEvent('lang-switch', { detail: { lang } }))
+    }
+
+    if (document.startViewTransition) {
+      document.startViewTransition(swap)
+    } else {
+      swap()
     }
   }
 
