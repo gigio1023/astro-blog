@@ -55,18 +55,13 @@ import { Icon } from 'astro-icon/components'
 
   initThemeToggle()
 
-  document.addEventListener('astro:after-swap', () => {
+  // Apply theme to incoming document BEFORE swap to prevent flash
+  document.addEventListener('astro:before-swap', (e) => {
     const storedTheme = localStorage.getItem('theme') || 'light'
-    const element = document.documentElement
+    e.newDocument.documentElement.setAttribute('data-theme', storedTheme)
+  })
 
-    element.classList.add('[&_*]:transition-none')
-    window.getComputedStyle(element).getPropertyValue('opacity')
-    element.setAttribute('data-theme', storedTheme)
-
-    requestAnimationFrame(() => {
-      element.classList.remove('[&_*]:transition-none')
-    })
-
+  document.addEventListener('astro:after-swap', () => {
     initThemeToggle()
   })
 </script>
