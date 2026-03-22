@@ -1,0 +1,123 @@
+---
+---
+
+<div class="lang-switcher">
+  <div class="inline-flex items-center rounded-full border border-border p-0.5 text-sm">
+    <button
+      class="lang-btn-ko rounded-full px-4 py-1 font-medium transition-all duration-150 text-muted-foreground hover:text-foreground"
+      type="button"
+    >
+      KO
+    </button>
+    <button
+      class="lang-btn-en rounded-full px-4 py-1 font-medium transition-all duration-150 bg-foreground text-background"
+      type="button"
+    >
+      EN
+    </button>
+  </div>
+</div>
+
+<!-- Runs synchronously before paint — prevents EN→KO flash -->
+<script is:inline data-astro-rerun>
+  (() => {
+    const lang = localStorage.getItem('preferred-lang') || 'en'
+    document.querySelectorAll('[data-lang]').forEach(el => {
+      el.classList.toggle('lang-hidden', el.getAttribute('data-lang') !== lang)
+    })
+    document.querySelectorAll('.lang-btn-ko').forEach(btn => {
+      btn.classList.toggle('bg-foreground', lang === 'ko')
+      btn.classList.toggle('text-background', lang === 'ko')
+      btn.classList.toggle('text-muted-foreground', lang !== 'ko')
+      btn.classList.toggle('hover:text-foreground', lang !== 'ko')
+    })
+    document.querySelectorAll('.lang-btn-en').forEach(btn => {
+      btn.classList.toggle('bg-foreground', lang === 'en')
+      btn.classList.toggle('text-background', lang === 'en')
+      btn.classList.toggle('text-muted-foreground', lang !== 'en')
+      btn.classList.toggle('hover:text-foreground', lang !== 'en')
+    })
+  })()
+</script>
+
+<script>
+  const ACTIVE = ['bg-foreground', 'text-background']
+  const INACTIVE = ['text-muted-foreground', 'hover:text-foreground']
+
+  function getLang(): string {
+    return localStorage.getItem('preferred-lang') || 'en'
+  }
+
+  function applyLang(lang: string) {
+    document.querySelectorAll('[data-lang]').forEach((el) => {
+      const htmlEl = el as HTMLElement
+      if (htmlEl.dataset.lang === lang) {
+        htmlEl.classList.remove('lang-hidden')
+      } else {
+        htmlEl.classList.add('lang-hidden')
+      }
+    })
+
+    document.querySelectorAll<HTMLElement>('.lang-btn-ko').forEach((btn) => {
+      if (lang === 'ko') { btn.classList.add(...ACTIVE); btn.classList.remove(...INACTIVE) }
+      else { btn.classList.add(...INACTIVE); btn.classList.remove(...ACTIVE) }
+    })
+    document.querySelectorAll<HTMLElement>('.lang-btn-en').forEach((btn) => {
+      if (lang === 'en') { btn.classList.add(...ACTIVE); btn.classList.remove(...INACTIVE) }
+      else { btn.classList.add(...INACTIVE); btn.classList.remove(...ACTIVE) }
+    })
+  }
+
+  function setLang(lang: string) {
+    const swap = () => {
+      localStorage.setItem('preferred-lang', lang)
+      applyLang(lang)
+      document.dispatchEvent(new CustomEvent('lang-switch', { detail: { lang } }))
+    }
+
+    if (document.startViewTransition) {
+      document.startViewTransition(swap)
+    } else {
+      swap()
+    }
+  }
+
+  // Event delegation — survives DOM swaps
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement
+    const btn = target.closest('.lang-btn-en, .lang-btn-ko')
+    if (!btn) return
+    setLang(btn.classList.contains('lang-btn-en') ? 'en' : 'ko')
+  })
+
+  // Apply language to incoming document BEFORE swap (guardrail #19 pattern)
+  document.addEventListener('astro:before-swap', (e) => {
+    const lang = getLang()
+    const newDoc = (e as any).newDocument as Document
+    newDoc.querySelectorAll('[data-lang]').forEach((el) => {
+      el.classList.toggle('lang-hidden', el.getAttribute('data-lang') !== lang)
+    })
+    newDoc.querySelectorAll('.lang-btn-ko').forEach((btn) => {
+      btn.classList.toggle('bg-foreground', lang === 'ko')
+      btn.classList.toggle('text-background', lang === 'ko')
+      btn.classList.toggle('text-muted-foreground', lang !== 'ko')
+      btn.classList.toggle('hover:text-foreground', lang !== 'ko')
+    })
+    newDoc.querySelectorAll('.lang-btn-en').forEach((btn) => {
+      btn.classList.toggle('bg-foreground', lang === 'en')
+      btn.classList.toggle('text-background', lang === 'en')
+      btn.classList.toggle('text-muted-foreground', lang !== 'en')
+      btn.classList.toggle('hover:text-foreground', lang !== 'en')
+    })
+  })
+
+  // Show/hide switcher based on bilingual content
+  document.addEventListener('astro:page-load', () => {
+    const hasEn = document.querySelector('[data-lang="en"]')
+    const hasKo = document.querySelector('[data-lang="ko"]')
+
+    document.querySelectorAll<HTMLElement>('.lang-switcher').forEach((sw) => {
+      sw.style.display = (hasEn && hasKo) ? '' : 'none'
+    })
+  })
+</script>

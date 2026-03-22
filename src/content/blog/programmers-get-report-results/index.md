@@ -38,7 +38,7 @@ ref: https://wadekang.tistory.com/6
 3. 2번의 정보를 활용해 k명 이상이 신고했다면, 1번의 인덱스를 기준으로 정지당한 이용자의 정보를 업데이트
 
 # 코드
-```C++
+```cpp
 #include <string>
 #include <vector>
 #include <unordered_map>

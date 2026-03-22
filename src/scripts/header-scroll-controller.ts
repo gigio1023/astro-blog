@@ -149,13 +149,6 @@ export function initHeaderScrollController(config: HeaderControllerConfig): void
 
   // Astro navigation event handlers
   document.addEventListener('astro:page-load', init)
-  document.addEventListener('astro:after-swap', () => {
-    cleanup()
-    // Use requestAnimationFrame instead of setTimeout for better performance
-    requestAnimationFrame(() => {
-      requestAnimationFrame(init)
-    })
-  })
   document.addEventListener('astro:before-swap', cleanup)
 
   // Initial load

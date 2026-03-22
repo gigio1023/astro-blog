@@ -1,18 +1,17 @@
 ---
-import Breadcrumbs from '@/components/Breadcrumbs.astro'
-import PageHead from '@/components/PageHead.astro'
-import Link from '@/components/Link.astro'
-import Layout from '@/layouts/Layout.astro'
+import Breadcrumbs from '@/components/breadcrumbs.astro'
+import PageHead from '@/components/page-head.astro'
+import Link from '@/components/link.astro'
+import Layout from '@/layouts/layout.astro'
 import { Icon } from 'astro-icon/components'
 import { SITE } from '@/consts'
 
-// Person Schema for About page
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Sungho Park",
   "url": SITE.href,
-  "description": "AI Engineer",
+  "description": "Applied ML Engineer",
   "jobTitle": "AI Engineer",
   "worksFor": {
     "@type": "Organization",
@@ -26,70 +25,128 @@ const personSchema = {
 ---
 <Layout class="max-w-3xl">
   <PageHead slot="head" title="About" />
-  
-  <!-- Person Schema for About page SEO -->
   <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
-  
   <Breadcrumbs items={[{ label: 'About', icon: 'lucide:user' }]} />
 
-  <section class="flex flex-col gap-8">
+  <section class="flex flex-col gap-10">
     <!-- Header -->
-    <div class="flex flex-col gap-4">
-      <div>
-        <h1 class="text-3xl md:text-4xl font-bold">Sungho Park</h1>
-        <p class="text-sm text-muted-foreground font-mono mt-1">
-          AI Engineer
-        </p>
-      </div>
+    <div>
+      <h1 class="text-3xl md:text-4xl font-bold">Sungho Park</h1>
+      <p class="text-muted-foreground mt-1">
+        Applied ML Engineer — evaluation, reliability, and backend systems for LLM/agent products.
+      </p>
     </div>
 
-    <!-- Main Content -->
-    <div class="prose prose-sm dark:prose-invert max-w-none space-y-6">
-      <h2 class="text-xl font-semibold mt-8 mb-4">What I Do</h2>
-      <ul class="space-y-2 text-muted-foreground">
-        <li>Designing and productizing Agentic AI systems</li>
-        <li>Building RAG pipelines and evaluation frameworks</li>
-        <li>Optimizing LLM inference for cost, latency, and quality</li>
-      </ul>
+    <!-- About -->
+    <div class="prose prose-sm dark:prose-invert max-w-none space-y-8">
+      <div>
+        <p class="text-muted-foreground leading-relaxed">
+          3+ years in applied ML and product engineering. 2+ years shipping LLM/agent workflows across Wrtn, BHSN, and NAVER.
+          Strongest in Python/FastAPI, RAG and tool-using agents, evaluation/data pipelines, and observability for multi-step agent systems.
+        </p>
+      </div>
 
-      <h2 class="text-xl font-semibold mt-8 mb-4">Experience</h2>
-      <div class="space-y-4">
-        <div class="border-l-2 border-primary pl-4">
-          <h3 class="font-semibold">NAVER</h3>
-          <p class="text-sm text-muted-foreground">AI Engineer · 2025 - Present</p>
-        </div>
-        <div class="border-l-2 border-muted pl-4">
-          <h3 class="font-semibold">BHSN</h3>
-          <p class="text-sm text-muted-foreground">AI Engineer · 2024 - 2025</p>
-        </div>
-        <div class="border-l-2 border-muted pl-4">
-          <h3 class="font-semibold">WRTN Technologies</h3>
-          <p class="text-sm text-muted-foreground">ML Engineer · 2023 - 2024</p>
+      <!-- Experience -->
+      <div>
+        <h2 class="text-lg font-semibold mb-4">Experience</h2>
+        <div class="space-y-4">
+          <div class="border-l-2 border-primary pl-4">
+            <div class="flex items-baseline justify-between">
+              <h3 class="font-semibold">NAVER</h3>
+              <span class="text-xs text-muted-foreground">2025.09 –</span>
+            </div>
+            <p class="text-sm text-muted-foreground">AI Engineer · Agent Orchestration</p>
+          </div>
+          <div class="border-l-2 border-muted pl-4">
+            <div class="flex items-baseline justify-between">
+              <h3 class="font-semibold">BHSN</h3>
+              <span class="text-xs text-muted-foreground">2024.07 – 2025.08</span>
+            </div>
+            <p class="text-sm text-muted-foreground">AI Engineer · LLM agent systems, RAG pipelines, evaluation frameworks</p>
+          </div>
+          <div class="border-l-2 border-muted pl-4">
+            <div class="flex items-baseline justify-between">
+              <h3 class="font-semibold">Wrtn Technologies</h3>
+              <span class="text-xs text-muted-foreground">2023.05 – 2024.07</span>
+            </div>
+            <p class="text-sm text-muted-foreground">ML Engineer · LLM inference optimization, streaming UX</p>
+          </div>
+          <div class="border-l-2 border-muted pl-4">
+            <div class="flex items-baseline justify-between">
+              <h3 class="font-semibold">NAVER Webtoon</h3>
+              <span class="text-xs text-muted-foreground">2022.12 – 2023.04</span>
+            </div>
+            <p class="text-sm text-muted-foreground">Applied Researcher Intern · Generative Research</p>
+          </div>
+          <div class="border-l-2 border-muted pl-4">
+            <div class="flex items-baseline justify-between">
+              <h3 class="font-semibold">Cipherome Korea</h3>
+              <span class="text-xs text-muted-foreground">2022.05 – 2022.12</span>
+            </div>
+            <p class="text-sm text-muted-foreground">ML Engineer · Advanced Research</p>
+          </div>
         </div>
       </div>
 
-      <h2 class="text-xl font-semibold mt-8 mb-4">Publications & Talks</h2>
-      <ul class="space-y-2 text-muted-foreground text-sm">
-        <li>SAFARI - NAACL 2025 Findings (Accepted, Withdrawn)</li>
-        <li>Polyglot-Ko - arXiv 2023</li>
-        <li>ML4H - NeurIPS 2022 Workshop (Accepted, Withdrawn)</li>
-        <li>Langcon 2025 - Rethinking Agents And Tools</li>
-      </ul>
+      <!-- What I Work With -->
+      <div>
+        <h2 class="text-lg font-semibold mb-4">What I Work With</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-muted-foreground">
+          <div>
+            <span class="font-medium text-foreground">Languages & Frameworks</span>
+            <p>Python, FastAPI, PyTorch</p>
+          </div>
+          <div>
+            <span class="font-medium text-foreground">LLM/Agent</span>
+            <p>RAG, function calling, LangChain, vLLM/SGLang</p>
+          </div>
+          <div>
+            <span class="font-medium text-foreground">Data & Evaluation</span>
+            <p>Airflow, Elasticsearch, HF Transformers</p>
+          </div>
+          <div>
+            <span class="font-medium text-foreground">Infra & Observability</span>
+            <p>Kubernetes, Prometheus, Grafana, VictoriaMetrics</p>
+          </div>
+        </div>
+      </div>
 
-      <h2 class="text-xl font-semibold mt-8 mb-4">Contact</h2>
-      <div class="flex flex-wrap gap-4">
-        <Link href="https://github.com/gigio1023" external class="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-          <Icon name="lucide:github" class="size-4" />
-          GitHub
-        </Link>
-        <Link href="https://www.linkedin.com/in/gigio1023" external class="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-          <Icon name="lucide:linkedin" class="size-4" />
-          LinkedIn
-        </Link>
-        <Link href="mailto:relilau00@gmail.com" class="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-          <Icon name="lucide:mail" class="size-4" />
-          Email
-        </Link>
+      <!-- Publications & Talks -->
+      <div>
+        <h2 class="text-lg font-semibold mb-4">Publications & Talks</h2>
+        <ul class="space-y-2 text-sm text-muted-foreground">
+          <li>
+            <span class="text-foreground font-medium">SAFARI</span> — NAACL 2025 Findings (co-first author). LLM-as-Judge evaluation framework.
+          </li>
+          <li>
+            <span class="text-foreground font-medium">Polyglot-Ko</span> — arXiv 2023. Large-scale Korean language model.
+          </li>
+          <li>
+            <span class="text-foreground font-medium">Langcon 2025</span> — Rethinking Agents And Tools.
+          </li>
+          <li>
+            <span class="text-foreground font-medium">Clova AI Rush 2022</span> — 1st & 3rd place.
+          </li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h2 class="text-lg font-semibold mb-4">Contact</h2>
+        <div class="flex flex-wrap gap-4">
+          <Link href="https://github.com/gigio1023" external class="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+            <Icon name="lucide:github" class="size-4" />
+            GitHub
+          </Link>
+          <Link href="https://www.linkedin.com/in/gigio1023" external class="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+            <Icon name="lucide:linkedin" class="size-4" />
+            LinkedIn
+          </Link>
+          <Link href="mailto:relilau00@gmail.com" class="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+            <Icon name="lucide:mail" class="size-4" />
+            Email
+          </Link>
+        </div>
       </div>
     </div>
   </section>

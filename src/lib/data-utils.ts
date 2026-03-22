@@ -28,6 +28,14 @@ export async function getEnglishTitle(
   return translation?.data.title ?? post.data.title
 }
 
+export async function getEnglishDescription(
+  post: CollectionEntry<'blog'>,
+): Promise<string> {
+  if (post.data.lang === 'en') return post.data.description
+  const translation = await getTranslation(post.id)
+  return translation?.data.description ?? post.data.description
+}
+
 export async function getAllPosts(): Promise<CollectionEntry<'blog'>[]> {
   const posts = await getCollection('blog')
   return posts

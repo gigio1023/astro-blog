@@ -1,17 +1,17 @@
 ---
-import Breadcrumbs from '@/components/Breadcrumbs.astro'
-import Disqus from '@/components/Disqus.astro'
-import LanguageSwitcher from '@/components/LanguageSwitcher.astro'
-import Link from '@/components/Link.astro'
-import PostHead from '@/components/PostHead.astro'
-import PostNavigation from '@/components/PostNavigation.astro'
-import SubpostsHeader from '@/components/SubpostsHeader.astro'
-import SubpostsSidebar from '@/components/SubpostsSidebar.astro'
-import TOCHeader from '@/components/TOCHeader.astro'
-import TOCSidebar from '@/components/TOCSidebar.astro'
+import Breadcrumbs from '@/components/breadcrumbs.astro'
+import Disqus from '@/components/disqus.astro'
+import LanguageSwitcher from '@/components/language-switcher.astro'
+import Link from '@/components/link.astro'
+import PostHead from '@/components/post-head.astro'
+import PostNavigation from '@/components/post-navigation.astro'
+import SubpostsHeader from '@/components/subposts-header.astro'
+import SubpostsSidebar from '@/components/subposts-sidebar.astro'
+import TOCHeader from '@/components/toc-header.astro'
+import TOCSidebar from '@/components/toc-sidebar.astro'
 import { badgeVariants } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import Layout from '@/layouts/Layout.astro'
+import Layout from '@/layouts/layout.astro'
 import { SITE } from '@/consts'
 import {
   getAdjacentPosts,
@@ -136,7 +136,8 @@ try {
 
 const originalLang = post.data.lang || 'ko'
 const translationLang = translationPost?.data.lang || 'en'
-const defaultLang = 'ko'
+const defaultLang = 'en'
+const englishTitle = await getEnglishTitle(post)
 ---
 
 <Layout hideFloatingSidebar={hasChildPosts || isCurrentSubpost}>
@@ -182,14 +183,14 @@ const defaultLang = 'ko'
                 },
                 {
                   href: `/blog/${currentPostId}`,
-                  label: post.data.title,
+                  label: englishTitle,
                   icon: 'lucide:file-text',
                 },
               ]
             : [
                 {
                   href: `/blog/${currentPostId}`,
-                  label: post.data.title,
+                  label: englishTitle,
                   icon: 'lucide:book-open-text',
                 },
               ]),
@@ -209,30 +210,20 @@ const defaultLang = 'ko'
       )
     }
 
-    {
-      translationPost && (
-        <div class="col-start-2 flex justify-center xl:hidden">
-          <LanguageSwitcher />
-        </div>
-      )
-    }
-
     <section class="col-start-2 flex flex-col gap-y-6 text-center">
       <div class="flex flex-col">
         {translationPost ? (
           <div>
             <h1
               data-lang={originalLang}
-              class="mb-2 scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl"
+              class:list={["mb-2 scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl", originalLang !== defaultLang && 'lang-hidden']}
               id="post-title"
-              style={originalLang !== defaultLang ? 'display:none' : undefined}
             >
               {post.data.title}
             </h1>
             <h1
               data-lang={translationLang}
-              class="mb-2 scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl"
-              style={translationLang !== defaultLang ? 'display:none' : undefined}
+              class:list={["mb-2 scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl", translationLang !== defaultLang && 'lang-hidden']}
             >
               {translationPost.data.title}
             </h1>
@@ -334,6 +325,12 @@ const defaultLang = 'ko'
               </div>
             )
           }
+
+          {translationPost && (
+            <div class="sm:ml-4 sm:border-l sm:border-border sm:pl-4">
+              <LanguageSwitcher />
+            </div>
+          )}
         </div>
       </div>
 
@@ -358,10 +355,10 @@ const defaultLang = 'ko'
 
     {translationPost && TranslationContent ? (
       <div class="col-start-2">
-        <article data-lang={originalLang} class="prose max-w-none" style={originalLang !== defaultLang ? 'display:none' : undefined}>
+        <article data-lang={originalLang} class:list={["prose max-w-none", originalLang !== defaultLang && 'lang-hidden']}>
           <Content />
         </article>
-        <article data-lang={translationLang} class="prose max-w-none" style={translationLang !== defaultLang ? 'display:none' : undefined}>
+        <article data-lang={translationLang} class:list={["prose max-w-none", translationLang !== defaultLang && 'lang-hidden']}>
           <TranslationContent />
         </article>
       </div>
@@ -418,39 +415,33 @@ const defaultLang = 'ko'
   </Button>
 
   <script>
-    document.addEventListener('astro:page-load', () => {
-      const scrollToTopButton = document.getElementById('scroll-to-top')
-      const footer = document.querySelector('footer')
-
-      if (scrollToTopButton && footer) {
-        scrollToTopButton.addEventListener('click', () => {
-          window.scrollTo({ top: 0, behavior: 'smooth' })
-        })
-
-        window.addEventListener('scroll', () => {
-          const footerRect = footer.getBoundingClientRect()
-          const isFooterVisible = footerRect.top <= window.innerHeight
-
-          scrollToTopButton.classList.toggle(
-            'hidden',
-            window.scrollY <= 300 || isFooterVisible,
-          )
-        })
+    // Event delegation — no re-attachment needed
+    document.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('#scroll-to-top')) {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       }
     })
+
+    window.addEventListener('scroll', () => {
+      const btn = document.getElementById('scroll-to-top')
+      const footer = document.querySelector('footer')
+      if (!btn || !footer) return
+      const isFooterVisible = footer.getBoundingClientRect().top <= window.innerHeight
+      btn.classList.toggle('hidden', window.scrollY <= 300 || isFooterVisible)
+    }, { passive: true })
   </script>
 </Layout>
 
 <script>
-  if (document.querySelector('.katex')) {
-    if (!document.querySelector('link[href*="katex.min.css"]')) {
+  function loadKatexCss() {
+    if (document.querySelector('.katex') && !document.querySelector('link[href*="katex.min.css"]')) {
       const link = document.createElement('link')
       link.rel = 'stylesheet'
-      link.href =
-        'https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css'
+      link.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css'
       document.head.appendChild(link)
     }
   }
+  document.addEventListener('astro:page-load', loadKatexCss)
 </script>
 
 <script>
@@ -518,6 +509,5 @@ const defaultLang = 'ko'
     }
   }
 
-  renderMermaid()
-  document.addEventListener('astro:after-swap', renderMermaid)
+  document.addEventListener('astro:page-load', renderMermaid)
 </script>

@@ -1,5 +1,3 @@
-import type { AstroIntegration } from 'astro'
-
 function escapeHtml(text: string): string {
   return text
     .replace(/&/g, '&amp;')
@@ -7,7 +5,7 @@ function escapeHtml(text: string): string {
     .replace(/>/g, '&gt;')
 }
 
-function remarkMermaidPlugin() {
+export function remarkMermaid() {
   return (tree: any) => {
     const toReplace: { parent: any; index: number; value: string }[] = []
 
@@ -33,21 +31,5 @@ function remarkMermaidPlugin() {
         value: `<pre class="mermaid">${escapeHtml(value)}</pre>`,
       }
     }
-  }
-}
-
-export function mermaidIntegration(): AstroIntegration {
-  return {
-    name: 'mermaid',
-    hooks: {
-      'astro:config:setup': ({ config, updateConfig }) => {
-        const existing = [...(config.markdown?.remarkPlugins || [])]
-        updateConfig({
-          markdown: {
-            remarkPlugins: [remarkMermaidPlugin, ...existing],
-          },
-        })
-      },
-    },
   }
 }

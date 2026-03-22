@@ -210,16 +210,6 @@ const pageUrl = url || Astro.url.href
         setTimeout(initObserver, 100)
       })
 
-      // Also handle after-swap for compatibility
-      document.addEventListener('astro:after-swap', () => {
-        isLoaded = false
-        isLoading = false
-        if (loadingIndicator) {
-          loadingIndicator.style.display = 'flex'
-          loadingIndicator.innerHTML = '<span>Loading comments...</span>'
-        }
-        setTimeout(initObserver, 100)
-      })
     }
   })()
 </script>
