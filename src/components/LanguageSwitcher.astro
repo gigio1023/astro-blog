@@ -1,21 +1,21 @@
 ---
 ---
 
-<div id="lang-switcher" style="display:none" class="flex justify-center">
-  <div class="inline-flex items-center rounded-full border border-border p-0.5 text-sm">
-    <button
-      id="lang-btn-en"
-      class="rounded-full px-3 py-1 font-medium transition-colors text-muted-foreground"
-      type="button"
-    >
-      EN
-    </button>
+<div id="lang-switcher">
+  <div class="inline-flex items-center rounded-lg border border-border/50 p-1 text-sm">
     <button
       id="lang-btn-ko"
-      class="rounded-full px-3 py-1 font-medium transition-colors bg-foreground text-background"
+      class="rounded-md px-4 py-1.5 font-medium transition-all duration-150 bg-foreground text-background shadow-sm"
       type="button"
     >
       KO
+    </button>
+    <button
+      id="lang-btn-en"
+      class="rounded-md px-4 py-1.5 font-medium transition-all duration-150 text-muted-foreground hover:text-foreground/80"
+      type="button"
+    >
+      EN
     </button>
   </div>
 </div>
@@ -40,15 +40,28 @@
 
     const btnEn = document.getElementById('lang-btn-en')
     const btnKo = document.getElementById('lang-btn-ko')
+    const activeAdd = ['bg-foreground', 'text-background', 'shadow-sm']
+    const activeRemove = ['text-muted-foreground', 'hover:text-foreground/80']
+    const inactiveAdd = ['text-muted-foreground', 'hover:text-foreground/80']
+    const inactiveRemove = ['bg-foreground', 'text-background', 'shadow-sm']
+
     if (btnEn) {
-      btnEn.classList.toggle('bg-foreground', lang === 'en')
-      btnEn.classList.toggle('text-background', lang === 'en')
-      btnEn.classList.toggle('text-muted-foreground', lang !== 'en')
+      if (lang === 'en') {
+        btnEn.classList.add(...activeAdd)
+        btnEn.classList.remove(...activeRemove)
+      } else {
+        btnEn.classList.add(...inactiveAdd)
+        btnEn.classList.remove(...inactiveRemove)
+      }
     }
     if (btnKo) {
-      btnKo.classList.toggle('bg-foreground', lang === 'ko')
-      btnKo.classList.toggle('text-background', lang === 'ko')
-      btnKo.classList.toggle('text-muted-foreground', lang !== 'ko')
+      if (lang === 'ko') {
+        btnKo.classList.add(...activeAdd)
+        btnKo.classList.remove(...activeRemove)
+      } else {
+        btnKo.classList.add(...inactiveAdd)
+        btnKo.classList.remove(...inactiveRemove)
+      }
     }
   }
 
