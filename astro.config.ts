@@ -76,6 +76,9 @@ export default defineConfig({
     // Type assertion needed due to Vite plugin type incompatibility between Astro and @tailwindcss/vite
     // This is the recommended approach per Astro documentation for Vite plugins
     plugins: [tailwindcss() as any],
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'radix-ui', 'lucide-react'],
+    },
   },
   server: {
     port: 1234,
