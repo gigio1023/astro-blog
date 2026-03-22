@@ -18,6 +18,15 @@
   </div>
 </div>
 
+<style is:global>
+  [data-lang] {
+    transition: opacity 0.2s ease;
+  }
+  [data-lang].lang-hidden {
+    display: none !important;
+  }
+</style>
+
 <script>
   const ACTIVE = ['bg-foreground', 'text-background']
   const INACTIVE = ['text-muted-foreground', 'hover:text-foreground']
@@ -32,29 +41,13 @@
     document.dispatchEvent(new CustomEvent('lang-switch', { detail: { lang } }))
   }
 
-  function applyLang(lang: string, animate = true) {
+  function applyLang(lang: string) {
     document.querySelectorAll('[data-lang]').forEach((el) => {
       const htmlEl = el as HTMLElement
-      if (!animate) {
-        htmlEl.style.display = htmlEl.dataset.lang === lang ? '' : 'none'
-        htmlEl.style.opacity = ''
-        htmlEl.style.pointerEvents = ''
-        htmlEl.style.transition = ''
-        return
-      }
       if (htmlEl.dataset.lang === lang) {
-        htmlEl.style.display = ''
-        htmlEl.style.pointerEvents = ''
-        htmlEl.style.opacity = '0'
-        requestAnimationFrame(() => {
-          htmlEl.style.transition = 'opacity 0.2s ease'
-          htmlEl.style.opacity = '1'
-        })
+        htmlEl.classList.remove('lang-hidden')
       } else {
-        htmlEl.style.pointerEvents = 'none'
-        htmlEl.style.transition = 'opacity 0.15s ease'
-        htmlEl.style.opacity = '0'
-        setTimeout(() => { htmlEl.style.display = 'none' }, 150)
+        htmlEl.classList.add('lang-hidden')
       }
     })
 
@@ -78,7 +71,7 @@
 
     if (!hasEn || !hasKo) return
 
-    applyLang(getLang(), false)
+    applyLang(getLang())
 
     document.querySelectorAll('.lang-btn-en').forEach((btn) =>
       btn.addEventListener('click', () => setLang('en'))

@@ -50,8 +50,7 @@ const tocGroups: TOCGroup[] = hasTranslation
           {tocGroups.map((group) => (
             <div
               data-lang={group.lang ?? undefined}
-              style={group.hidden ? 'display:none' : undefined}
-              class={group.lang ? '' : 'contents'}
+              class:list={[group.lang ? '' : 'contents', group.hidden && 'lang-hidden']}
             >
               {group.secs.map((section, index) => {
                 const isFirstSubpost =

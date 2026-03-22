@@ -86,8 +86,7 @@ const headingGroups: HeadingGroup[] = hasTranslation
             {headingGroups.map((group) => (
               <ul
                 data-lang={group.lang ?? undefined}
-                style={group.hidden ? 'display:none' : undefined}
-                class="flex list-none flex-col gap-y-2 px-4 pb-4"
+                class:list={["flex list-none flex-col gap-y-2 px-4 pb-4", group.hidden && 'lang-hidden']}
               >
                 {group.items.map((heading) => (
                   <li

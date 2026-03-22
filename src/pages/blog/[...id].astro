@@ -216,16 +216,14 @@ const englishTitle = await getEnglishTitle(post)
           <div>
             <h1
               data-lang={originalLang}
-              class="mb-2 scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl"
+              class:list={["mb-2 scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl", originalLang !== defaultLang && 'lang-hidden']}
               id="post-title"
-              style={originalLang !== defaultLang ? 'display:none' : undefined}
             >
               {post.data.title}
             </h1>
             <h1
               data-lang={translationLang}
-              class="mb-2 scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl"
-              style={translationLang !== defaultLang ? 'display:none' : undefined}
+              class:list={["mb-2 scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl", translationLang !== defaultLang && 'lang-hidden']}
             >
               {translationPost.data.title}
             </h1>
@@ -357,10 +355,10 @@ const englishTitle = await getEnglishTitle(post)
 
     {translationPost && TranslationContent ? (
       <div class="col-start-2">
-        <article data-lang={originalLang} class="prose max-w-none" style={originalLang !== defaultLang ? 'display:none' : undefined}>
+        <article data-lang={originalLang} class:list={["prose max-w-none", originalLang !== defaultLang && 'lang-hidden']}>
           <Content />
         </article>
-        <article data-lang={translationLang} class="prose max-w-none" style={translationLang !== defaultLang ? 'display:none' : undefined}>
+        <article data-lang={translationLang} class:list={["prose max-w-none", translationLang !== defaultLang && 'lang-hidden']}>
           <TranslationContent />
         </article>
       </div>
