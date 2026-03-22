@@ -1,26 +1,27 @@
 ---
 ---
 
-<div id="lang-switcher" style="display:none" class="flex justify-center">
-  <div class="inline-flex items-center rounded-full border border-border p-0.5 text-sm">
+<div class="lang-switcher">
+  <div class="inline-flex items-center rounded-md border border-border/50 p-0.5 text-xs">
     <button
-      id="lang-btn-en"
-      class="rounded-full px-3 py-1 font-medium transition-colors text-muted-foreground"
-      type="button"
-    >
-      EN
-    </button>
-    <button
-      id="lang-btn-ko"
-      class="rounded-full px-3 py-1 font-medium transition-colors bg-foreground text-background"
+      class="lang-btn-ko rounded px-5 py-0.5 font-medium transition-all duration-150 bg-foreground text-background shadow-sm"
       type="button"
     >
       KO
+    </button>
+    <button
+      class="lang-btn-en rounded px-5 py-0.5 font-medium transition-all duration-150 text-muted-foreground hover:text-foreground/80"
+      type="button"
+    >
+      EN
     </button>
   </div>
 </div>
 
 <script>
+  const ACTIVE = ['bg-foreground', 'text-background', 'shadow-sm']
+  const INACTIVE = ['text-muted-foreground', 'hover:text-foreground/80']
+
   function getLang(): string {
     return localStorage.getItem('preferred-lang') || 'ko'
   }
@@ -34,44 +35,39 @@
   function applyLang(lang: string) {
     document.querySelectorAll('[data-lang]').forEach((el) => {
       const htmlEl = el as HTMLElement
-      if (htmlEl.dataset.langBtn) return
       htmlEl.style.display = htmlEl.dataset.lang === lang ? '' : 'none'
     })
 
-    const btnEn = document.getElementById('lang-btn-en')
-    const btnKo = document.getElementById('lang-btn-ko')
-    if (btnEn) {
-      btnEn.classList.toggle('bg-foreground', lang === 'en')
-      btnEn.classList.toggle('text-background', lang === 'en')
-      btnEn.classList.toggle('text-muted-foreground', lang !== 'en')
-    }
-    if (btnKo) {
-      btnKo.classList.toggle('bg-foreground', lang === 'ko')
-      btnKo.classList.toggle('text-background', lang === 'ko')
-      btnKo.classList.toggle('text-muted-foreground', lang !== 'ko')
-    }
+    document.querySelectorAll<HTMLElement>('.lang-btn-ko').forEach((btn) => {
+      if (lang === 'ko') { btn.classList.add(...ACTIVE); btn.classList.remove(...INACTIVE) }
+      else { btn.classList.add(...INACTIVE); btn.classList.remove(...ACTIVE) }
+    })
+    document.querySelectorAll<HTMLElement>('.lang-btn-en').forEach((btn) => {
+      if (lang === 'en') { btn.classList.add(...ACTIVE); btn.classList.remove(...INACTIVE) }
+      else { btn.classList.add(...INACTIVE); btn.classList.remove(...ACTIVE) }
+    })
   }
 
   function initLangSwitcher() {
-    const switcher = document.getElementById('lang-switcher')
     const hasEn = document.querySelector('[data-lang="en"]')
     const hasKo = document.querySelector('[data-lang="ko"]')
 
-    if (!hasEn || !hasKo) {
-      if (switcher) switcher.style.display = 'none'
-      return
-    }
+    document.querySelectorAll<HTMLElement>('.lang-switcher').forEach((sw) => {
+      sw.style.display = (hasEn && hasKo) ? '' : 'none'
+    })
 
-    if (switcher) switcher.style.display = ''
+    if (!hasEn || !hasKo) return
 
-    const preferred = getLang()
-    applyLang(preferred)
+    applyLang(getLang())
 
-    document.getElementById('lang-btn-en')?.addEventListener('click', () => setLang('en'))
-    document.getElementById('lang-btn-ko')?.addEventListener('click', () => setLang('ko'))
+    document.querySelectorAll('.lang-btn-en').forEach((btn) =>
+      btn.addEventListener('click', () => setLang('en'))
+    )
+    document.querySelectorAll('.lang-btn-ko').forEach((btn) =>
+      btn.addEventListener('click', () => setLang('ko'))
+    )
   }
 
   initLangSwitcher()
-
   document.addEventListener('astro:after-swap', initLangSwitcher)
 </script>
