@@ -1,6 +1,7 @@
 ---
 import {
   getCombinedReadingTime,
+  getEnglishDescription,
   getEnglishTitle,
   getSubpostCount,
   isSubpost,
@@ -22,6 +23,7 @@ const readTime = await getCombinedReadingTime(entry.id)
 const authors = await parseAuthors(entry.data.authors ?? [])
 const subpostCount = !isSubpost(entry.id) ? await getSubpostCount(entry.id) : 0
 const title = await getEnglishTitle(entry)
+const description = await getEnglishDescription(entry)
 ---
 
 <Link
@@ -39,7 +41,7 @@ const title = await getEnglishTitle(entry)
         </span>
       </div>
       <p class="text-muted-foreground text-sm leading-snug line-clamp-1">
-        {entry.data.description}
+        {description}
       </p>
       <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-muted-foreground/80">
         {
