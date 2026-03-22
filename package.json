@@ -28,12 +28,12 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.5",
-    "@astrojs/markdown-remark": "^6.3.8",
-    "@astrojs/mdx": "^4.3.10",
-    "@astrojs/react": "^4.4.2",
-    "@astrojs/rss": "^4.0.13",
-    "@astrojs/sitemap": "^3.6.0",
+    "@astrojs/check": "^0.9.8",
+    "@astrojs/markdown-remark": "^7.0.1",
+    "@astrojs/mdx": "^5.0.2",
+    "@astrojs/react": "^5.0.1",
+    "@astrojs/rss": "^4.0.17",
+    "@astrojs/sitemap": "^3.7.1",
     "@expressive-code/plugin-collapsible-sections": "^0.41.3",
     "@expressive-code/plugin-line-numbers": "^0.41.3",
     "@iconify-json/lucide": "^1.2.73",
@@ -43,7 +43,7 @@
     "@tailwindcss/vite": "^4.1.17",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
-    "astro": "^5.7.13",
+    "astro": "^6.0.8",
     "astro-expressive-code": "^0.41.3",
     "astro-icon": "^1.1.5",
     "astro-og-canvas": "^0.7.2",
@@ -90,4 +90,3 @@
     ]
   }
 }
-
