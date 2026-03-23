@@ -11,9 +11,11 @@ lang: ko
 - Astro Docs MCP는 에이전트가 질문할 때만 동작하는데, 에이전트는 자기가 틀린 줄 모르니까 질문을 안 한다.
 - 그래서 에이전트가 코드를 생성하기 전에 참조하는 Agent Skill을 만들었다.
 
+> GitHub: [gigio1023/astro-dev-skill](https://github.com/gigio1023/astro-dev-skill)
+
 ---
 
-이 블로그는 Astro로 만들어져 있다. Claude Code나 Cursor로 블로그를 작업할 때, 에이전트가 생성하는 Astro 코드가 반복적으로 틀리는 걸 발견했다. Astro 6에서 꽤 큰 breaking change가 있었는데 에이전트의 학습 데이터에는 Astro 3/4/5 시절 코드가 많다 보니, 에이전트 입장에서는 자기가 아는 패턴이 맞다고 생각하고 그대로 생성하는 거다.
+이 블로그는 Astro로 만들어져 있다. Claude Code나 Codex를 사용하면서 블로그를 작업하는 중인데, 에이전트가 생성하는 Astro 코드가 반복적으로 틀리는 걸 발견했다. Astro 6에서 꽤 큰 breaking change가 있었는데 에이전트의 학습 데이터에는 Astro 3/4/5 시절 코드가 많다 보니, 에이전트 입장에서는 자기가 아는 패턴이 맞다고 생각하고 그대로 생성하는 거다.
 
 Astro Docs MCP도 쓰고 있는데, MCP는 에이전트가 질문할 때만 동작한다. 에이전트가 `entry.render()`를 쓸 때 "이 API 바뀌었나?"라고 MCP에 물어보지 않는다. 자기가 아는 게 맞다고 확신하니까 그냥 코드를 생성한다. MCP가 "이거 어떻게 쓰나요?"에 답해주는 거라면, 필요했던 건 "그렇게 쓰면 안 돼"를 말해주는 쪽이었다.
 
