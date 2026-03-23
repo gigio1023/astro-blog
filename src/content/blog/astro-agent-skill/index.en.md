@@ -84,7 +84,6 @@ I referenced Thariq's [Lessons from Building Claude Code: How We Use Skills](htt
 The skill covers `.astro`/`.mdx` files, Content Collections, Tailwind v4, `client:` directives, Actions/Zod 4, server features (sessions, i18n, env vars, CSP), View Transitions, and adapter setup. I tend to invoke `/astro-dev` explicitly out of habit, but since the description is written as a trigger condition, it also fires automatically when the agent touches Astro code.
 
 **Give the agent code so it spends turns on composition.** Including scripts or templates in a skill means the agent assembles from known-good pieces instead of reconstructing boilerplate from scratch. In this skill, the `templates/` directory has drop-in config files for Astro 6 + Tailwind v4.
-
 ```
 templates/
 ├── astro.config.ts    # Astro 6 + Tailwind v4 + MDX + Fonts API
