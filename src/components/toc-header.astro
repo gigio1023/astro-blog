@@ -6,32 +6,13 @@ import { Icon } from 'astro-icon/components'
 
 type Props = {
   headings: MarkdownHeading[]
-  translationHeadings?: MarkdownHeading[]
-  originalLang?: string
-  translationLang?: string
 }
 
-const { headings, translationHeadings, originalLang, translationLang } = Astro.props
-
-const hasTranslation = translationHeadings && translationHeadings.length > 0 && originalLang && translationLang
-const defaultLang = 'en'
-
-type HeadingGroup = {
-  items: MarkdownHeading[]
-  lang: string | null
-  hidden: boolean
-}
-
-const headingGroups: HeadingGroup[] = hasTranslation
-  ? [
-      { items: headings, lang: originalLang, hidden: originalLang !== defaultLang },
-      { items: translationHeadings, lang: translationLang, hidden: translationLang !== defaultLang },
-    ]
-  : [{ items: headings, lang: null, hidden: false }]
+const { headings } = Astro.props
 ---
 
 {
-  (headings?.length > 0 || (translationHeadings && translationHeadings.length > 0)) && (
+  headings?.length > 0 && (
     <div id="mobile-toc-container" class="w-full xl:hidden">
       <details class="group">
         <summary class="flex w-full cursor-pointer items-center justify-between">
@@ -83,30 +64,25 @@ const headingGroups: HeadingGroup[] = hasTranslation
           data-toc-header-scroll
         >
           <div class="max-h-[30vh]" id="mobile-table-of-contents">
-            {headingGroups.map((group) => (
-              <ul
-                data-lang={group.lang ?? undefined}
-                class:list={["flex list-none flex-col gap-y-2 px-4 pb-4", group.hidden && 'lang-hidden']}
-              >
-                {group.items.map((heading) => (
-                  <li
-                    class={cn(
-                      'px-4 text-sm',
-                      getHeadingMargin(heading.depth),
-                      'text-foreground/60',
-                    )}
+            <ul class="flex list-none flex-col gap-y-2 px-4 pb-4">
+              {headings.map((heading) => (
+                <li
+                  class={cn(
+                    'px-4 text-sm',
+                    getHeadingMargin(heading.depth),
+                    'text-foreground/60',
+                  )}
+                >
+                  <a
+                    href={`#${heading.slug}`}
+                    class="mobile-toc-item underline decoration-transparent underline-offset-[3px] transition-colors duration-200 hover:decoration-inherit"
+                    data-heading-id={heading.slug}
                   >
-                    <a
-                      href={`#${heading.slug}`}
-                      class="mobile-toc-item underline decoration-transparent underline-offset-[3px] transition-colors duration-200 hover:decoration-inherit"
-                      data-heading-id={heading.slug}
-                    >
-                      {heading.text}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            ))}
+                    {heading.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         </ScrollArea>
       </details>
@@ -382,11 +358,6 @@ const headingGroups: HeadingGroup[] = hasTranslation
       ProgressCircle.update()
     }
 
-    static handleLangSwitch = () => {
-      MobileTOCController.cleanup()
-      MobileTOCController.init()
-    }
-
     static init() {
       state.reset()
       HeadingRegions.build()
@@ -409,14 +380,12 @@ const headingGroups: HeadingGroup[] = hasTranslation
       MobileTOCLinks.setupInteraction()
       window.addEventListener('scroll', this.handleScroll, { passive: true })
       window.addEventListener('resize', this.handleResize, { passive: true })
-      document.addEventListener('lang-switch', this.handleLangSwitch)
     }
 
     static cleanup() {
       window.removeEventListener('scroll', this.handleScroll)
       window.removeEventListener('scroll', ProgressCircle.update)
       window.removeEventListener('resize', this.handleResize)
-      document.removeEventListener('lang-switch', this.handleLangSwitch)
       state.activeIds = []
       state.headings = []
       state.regions = []

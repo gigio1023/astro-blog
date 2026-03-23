@@ -7,34 +7,15 @@ import { cn, getHeadingMargin } from '@/lib/utils'
 type Props = {
   sections: TOCSection[]
   currentPostId: string
-  translationSections?: TOCSection[]
-  originalLang?: string
-  translationLang?: string
 }
 
-const { sections, currentPostId, translationSections, originalLang, translationLang } = Astro.props
+const { sections, currentPostId } = Astro.props
 const isCurrentSubpost = isSubpost(currentPostId)
 const parentId = isCurrentSubpost ? getParentId(currentPostId) : currentPostId
-
-const hasTranslation = translationSections && translationSections.length > 0 && originalLang && translationLang
-const defaultLang = 'en'
-
-type TOCGroup = {
-  secs: TOCSection[]
-  lang: string | null
-  hidden: boolean
-}
-
-const tocGroups: TOCGroup[] = hasTranslation
-  ? [
-      { secs: sections, lang: originalLang, hidden: originalLang !== defaultLang },
-      { secs: translationSections, lang: translationLang, hidden: translationLang !== defaultLang },
-    ]
-  : [{ secs: sections, lang: null, hidden: false }]
 ---
 
 {
-  (sections.length > 0 || (translationSections && translationSections.length > 0)) && (
+  sections.length > 0 && (
     <div
       id="toc-sidebar-container"
       class="sticky top-20 col-start-1 row-span-1 mr-8 ml-auto hidden h-[calc(100vh-5rem)] max-w-md xl:block"
@@ -47,15 +28,10 @@ const tocGroups: TOCGroup[] = hasTranslation
       >
         <div class="flex flex-col gap-2 px-4">
           <span class="text-lg font-medium">Table of Contents</span>
-          {tocGroups.map((group) => (
-            <div
-              data-lang={group.lang ?? undefined}
-              class:list={[group.lang ? '' : 'contents', group.hidden && 'lang-hidden']}
-            >
-              {group.secs.map((section, index) => {
-                const isFirstSubpost =
-                  section.type === 'subpost' &&
-                  (index === 0 || group.secs[index - 1].type === 'parent')
+          {sections.map((section, index) => {
+            const isFirstSubpost =
+              section.type === 'subpost' &&
+              (index === 0 || sections[index - 1].type === 'parent')
 
                 return (
                   <>
@@ -160,8 +136,6 @@ const tocGroups: TOCGroup[] = hasTranslation
                   </>
                 )
               })}
-            </div>
-          ))}
         </div>
       </ScrollArea>
     </div>
@@ -337,11 +311,6 @@ const tocGroups: TOCGroup[] = hasTranslation
 
     static handleTOCScroll = () => TOCScrollMask.update()
 
-    static handleLangSwitch = () => {
-      TOCController.cleanup()
-      TOCController.init()
-    }
-
     static handleResize() {
       HeadingRegions.build()
       const newActiveIds = HeadingRegions.getVisibleIds()
@@ -374,15 +343,12 @@ const tocGroups: TOCGroup[] = hasTranslation
         this.handleTOCScroll,
         options,
       )
-      document.addEventListener('lang-switch', this.handleLangSwitch)
     }
 
     static cleanup() {
       window.removeEventListener('scroll', this.handleScroll)
       window.removeEventListener('resize', this.handleResize)
       state.scrollArea?.removeEventListener('scroll', this.handleTOCScroll)
-      document.removeEventListener('lang-switch', this.handleLangSwitch)
-
       Object.assign(state, {
         activeIds: [],
         headings: [],

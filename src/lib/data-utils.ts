@@ -11,13 +11,45 @@ export function isTranslation(post: CollectionEntry<'blog'>): boolean {
 
 export async function getTranslation(
   postId: string,
+  lang?: string,
 ): Promise<CollectionEntry<'blog'> | null> {
   const posts = await getCollection('blog')
   return (
     posts.find(
-      (p) => p.data.translationOf === postId && !p.data.draft,
+      (p) => p.data.translationOf === postId && !p.data.draft && (lang ? p.data.lang === lang : true),
     ) || null
   )
+}
+
+/** Returns available language URLs for a post slug */
+export async function getAvailableTranslations(
+  slug: string,
+): Promise<{ lang: string; url: string }[]> {
+  const posts = await getCollection('blog')
+  const result: { lang: string; url: string }[] = []
+
+  // Check if KO version exists (base post)
+  const koPost = posts.find(
+    (p) => p.id === slug && !p.data.draft && (p.data.lang === 'ko' || !p.data.lang),
+  )
+  if (koPost) {
+    result.push({ lang: 'ko', url: `/ko/blog/${slug}` })
+  }
+
+  // Check translations
+  const translations = posts.filter(
+    (p) => p.data.translationOf === slug && !p.data.draft,
+  )
+  for (const t of translations) {
+    result.push({ lang: t.data.lang || 'en', url: `/${t.data.lang}/blog/${slug}` })
+  }
+
+  return result
+}
+
+/** Get the base slug for any post (handles translations) */
+export function getBaseSlug(post: CollectionEntry<'blog'>): string {
+  return post.data.translationOf || post.id
 }
 
 export async function getEnglishTitle(

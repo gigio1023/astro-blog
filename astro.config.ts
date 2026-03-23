@@ -22,6 +22,19 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   site: 'https://sunghogigio.com',
+  i18n: {
+    defaultLocale: 'ko',
+    locales: ['ko', 'en', 'it'],
+    routing: {
+      prefixDefaultLocale: true,
+      redirectToDefaultLocale: true,
+    },
+  },
+  redirects: {
+    '/blog': { status: 301, destination: '/ko/blog' },
+    '/about': { status: 301, destination: '/ko/about' },
+    '/tags': { status: 301, destination: '/ko/tags' },
+  },
   integrations: [mdx(), react(), sitemap(), icon()],
   vite: {
     plugins: [tailwindcss() as any],
