@@ -12,9 +12,11 @@ translationOf: "astro-agent-skill"
 - The Astro Docs MCP only works when the agent asks, and agents don't ask when they think they're right.
 - So I made an Agent Skill that the agent references before generating code.
 
+> GitHub: [gigio1023/astro-dev-skill](https://github.com/gigio1023/astro-dev-skill)
+
 ---
 
-This blog is built with Astro. When working on it with Claude Code or Cursor, I noticed agents repeatedly generate incorrect Astro code. Astro 6 introduced significant breaking changes, but agents have mostly been trained on Astro 3/4/5 era code, so they generate old patterns without realizing they're wrong.
+This blog is built with Astro. I've been working on it with Claude Code and Codex, and I noticed agents repeatedly generate incorrect Astro code. Astro 6 introduced significant breaking changes, but agents have mostly been trained on Astro 3/4/5 era code, so they generate old patterns without realizing they're wrong.
 
 I also use the Astro Docs MCP, but MCP only activates when the agent asks a question. When an agent writes `entry.render()`, it doesn't ask MCP "has this API changed?" It's confident the pattern is correct and just generates the code. If MCP answers "how do I use this?", what I needed was something that says "not like that."
 
