@@ -2,7 +2,7 @@
 title: "Retrieval-Augmented Diffusion model"
 description: "."
 date: "2022-05-18T00:00:00.000Z"
-tags: ["generative-model", "nlp"]
+tags: ["generative-model", "nlp", "paper-review"]
 draft: false
 ---
 
