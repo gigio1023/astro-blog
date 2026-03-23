@@ -101,25 +101,25 @@ const websiteSchema = {
 
   <!-- Latest Post (Hero) -->
   {latestPost && (
-    <section class="mt-8">
+    <section class="mt-5">
       <Link
         href={`/blog/${latestPost.id}`}
-        class="group block rounded-lg border border-border/60 p-6 hover:border-primary/40 hover:bg-muted/20 transition-all duration-200"
+        class="group block rounded-lg border border-border/60 px-5 py-4 hover:border-primary/40 hover:bg-muted/20 transition-all duration-200"
       >
-        <span class="text-xs font-medium text-primary uppercase tracking-wider">Latest</span>
-        <h2 class="mt-2 text-xl sm:text-2xl font-semibold leading-tight group-hover:text-primary transition-colors">
+        <span class="text-[10px] font-semibold text-primary uppercase tracking-widest">Latest</span>
+        <h2 class="mt-1 text-lg sm:text-xl font-semibold leading-snug group-hover:text-primary transition-colors">
           {latestTitle}
         </h2>
-        <p class="mt-2 text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+        <p class="mt-1 text-sm text-muted-foreground line-clamp-1">
           {latestDesc}
         </p>
-        <div class="mt-3 flex items-center gap-2 text-xs text-muted-foreground/70">
+        <div class="mt-2 flex items-center gap-2 text-xs text-muted-foreground/60">
           <span>{formatDate(latestPost.data.date)}</span>
           {latestPost.data.tags && latestPost.data.tags.length > 0 && (
             <>
-              <span class="text-border">·</span>
+              <span>·</span>
               {latestPost.data.tags.slice(0, 3).map(tag => (
-                <span class="text-muted-foreground/60">#{tag}</span>
+                <span>#{tag}</span>
               ))}
             </>
           )}
@@ -130,19 +130,19 @@ const websiteSchema = {
 
   <!-- Categories -->
   {categoryData.some(c => c.posts.length > 0) && (
-    <section class="mt-10">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+    <section class="mt-6">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {categoryData.map((cat) => cat.posts.length > 0 && (
           <div>
-            <div class="flex items-center gap-2 mb-3">
-              <Icon name={cat.icon} class="size-4 text-muted-foreground" />
-              <h3 class="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{cat.label}</h3>
+            <div class="flex items-center gap-1.5 mb-2">
+              <Icon name={cat.icon} class="size-3.5 text-muted-foreground/70" />
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{cat.label}</h3>
             </div>
-            <div class="space-y-2">
+            <div class="space-y-0.5">
               {cat.posts.map(({ post, title }) => (
                 <Link
                   href={`/blog/${post.id}`}
-                  class="block text-sm hover:text-primary transition-colors leading-snug py-1"
+                  class="block text-sm hover:text-primary transition-colors leading-snug py-0.5"
                 >
                   {title}
                 </Link>
@@ -156,18 +156,18 @@ const websiteSchema = {
 
   <!-- Recent Posts -->
   {recentPosts.length > 0 && (
-    <section class="mt-10">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-semibold">Recent</h2>
+    <section class="mt-6">
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Recent</h2>
         <Link
           href="/blog"
-          class="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
+          class="text-xs text-muted-foreground/60 hover:text-primary transition-colors flex items-center gap-1"
         >
           All posts
-          <Icon name="lucide:arrow-right" class="size-3.5" />
+          <Icon name="lucide:arrow-right" class="size-3" />
         </Link>
       </div>
-      <div class="divide-y divide-border/50">
+      <div class="divide-y divide-border/40">
         {recentPosts.map((post) => (
           <BlogCard entry={post} />
         ))}
