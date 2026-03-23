@@ -78,42 +78,34 @@ const blog = defineCollection({
 
 ## 어떤 기준으로 만들었나
 
-스킬을 만들 때 나름대로 기준을 두고 있었는데, Thariq의 [Lessons from Building Claude Code: How We Use Skills](https://x.com/trq212/status/2033949937936085378)를 읽고 나서 좀 더 명료해진 부분이 있었다. Anthropic 내부에서 수백 개의 스킬을 운영하면서 정리한 노하우인데, 이걸 참고해서 기존에 만들던 것을 다듬었다.
+스킬을 만들면서 Thariq의 [Lessons from Building Claude Code: How We Use Skills](https://x.com/trq212/status/2033949937936085378)를 참고했다. Anthropic 내부에서 수백 개의 스킬을 운영하면서 나온 이야기인데, gotchas 중심으로 만들라거나 progressive disclosure를 하라는 것 같은 기본적인 내용 외에 몇 가지 참고할 만한 포인트가 있었다.
 
-**Don't State the Obvious.** Claude는 이미 코딩에 대해 많이 알고 있으니까 스킬에는 에이전트가 평소에 하지 않는 방향으로 생각하게 만드는 정보를 넣으라는 이야기다. 처음에는 "Content Collections는 이렇게 쓰는 거다" 같은 일반적인 설명도 넣고 있었는데, 이걸 읽고 가드레일 형태로 정리하는 쪽으로 바꿨다. 에이전트가 틀리는 지점만 짚는 거다.
+**description 필드는 모델을 위한 것이다.** Claude Code는 세션이 시작될 때 설치된 모든 스킬의 description을 스캔해서 "이 요청에 맞는 스킬이 있나?"를 판단한다. 즉 description은 사람이 읽는 요약이 아니라 모델이 트리거 여부를 결정하는 조건이다. 이걸 읽고 description을 꽤 길게 다시 썼다.
 
-```markdown
-# 이런 식으로 가드레일을 작성했다
-
-**3. `Astro.glob()` does not exist:**
-// agents generate this (removed API)
-const posts = await Astro.glob('./posts/*.md')
-
-// correct pattern
-import { getCollection } from 'astro:content'
-const posts = await getCollection('blog')
+```yaml
+description: "Use when editing .astro/.mdx files, modifying astro.config.*,
+  working with content collections (build-time or live),
+  adding Tailwind CSS v4, using client directives (client:load/idle/visible),
+  handling forms/actions with Zod 4, configuring server features
+  (sessions, i18n, env vars, CSP, Cloudflare Workers),
+  using view transitions or ClientRouter (<ClientRouter />),
+  or setting up adapters (Node/Vercel/Netlify/Cloudflare) in an Astro project."
 ```
 
-"이 API는 이렇게 쓰는 거다"가 아니라 "에이전트가 이걸 쓰려고 하면 그건 삭제된 API다"라는 방향이다. 에이전트가 이미 아는 것을 반복하면 컨텍스트만 낭비된다.
+에이전트가 `.astro` 파일을 수정하거나 `astro.config`를 건드릴 때 이 스킬이 자동으로 트리거되도록 조건을 구체적으로 나열한 것이다. "Astro 개발 도우미"같은 요약으로 쓰면 트리거 타이밍이 모호해진다.
 
-**Build a Gotchas Section.** 스킬에서 가장 가치가 높은 콘텐츠는 gotchas 섹션이고, 에이전트가 실패하는 지점을 모아서 계속 업데이트하라는 이야기다. 이 스킬의 가드레일 20개가 전부 이 방식으로 만들어졌다. 처음부터 20개를 설계한 게 아니라 에이전트가 틀리는 걸 볼 때마다 하나씩 추가한 것이다.
+**에이전트에게 코드를 줘서 composition에 턴을 쓰게 하라.** 스킬에 스크립트나 템플릿을 포함하면 에이전트가 보일러플레이트를 처음부터 만드는 대신 조합하는 데 시간을 쓴다는 이야기다. 이 스킬에서는 `templates/` 디렉토리에 Astro 6 + Tailwind v4 기준 설정 파일을 넣어뒀다.
 
-**Use the File System & Progressive Disclosure.** 스킬을 폴더 구조로 나눠서 progressive disclosure를 하라는 건 스킬을 만드는 사람이라면 대부분 알고 있는 내용이고, 이 스킬도 처음부터 `references/` 폴더로 분리해서 만들고 있었다. 다만 글을 읽고 나서 라우터를 좀 더 명시적으로 만들었다. SKILL.md에 작업별로 어떤 파일을 읽어야 하는지 테이블로 안내하는 부분이다.
-
-```markdown
-# SKILL.md의 라우터 부분
-
-| What you're doing | Read this file |
-|---|---|
-| Content collections (schema, loader, querying, Zod 4) | references/content-collections.md |
-| Blog features (RSS, pagination, tags, SEO, TOC) | references/blog-recipes.md |
-| Tailwind CSS (config, theming, classes, fonts) | references/tailwind.md |
-| Client directives / islands / hydration | references/islands-and-hydration.md |
+```
+templates/
+├── astro.config.ts    # Astro 6 + Tailwind v4 + MDX + Fonts API
+├── content.config.ts  # Content Collections with glob loader
+└── global.css         # Tailwind v4 CSS entry point
 ```
 
-에이전트가 "지금 뭘 하고 있으니까 이 파일을 읽어라"를 명시적으로 알려주는 구조다. 모든 걸 한꺼번에 로드하면 컨텍스트만 커지니까 필요한 모듈만 읽도록 한 것이다.
+에이전트가 프로젝트를 셋업할 때 이 파일들을 복사해서 시작하면 설정에서 틀릴 여지가 줄어든다. 가드레일이 "이렇게 쓰면 안 돼"를 말해주는 거라면, 템플릿은 "이걸 복사해서 시작해"를 말해주는 쪽이다.
 
-**Avoid Railroading Claude.** 지나치게 구체적으로 지시하면 에이전트가 상황에 맞게 판단할 여지가 없어진다. 이 스킬에서는 "이건 틀린 패턴이고, 올바른 패턴은 이거다"까지만 알려주고 실제 적용은 에이전트에게 맡기는 방식으로 작성했다. 예를 들어 `client:` 디렉티브 선택 가이드에서는 결정 트리를 제공하되 최종 판단은 에이전트가 컴포넌트의 맥락을 보고 하도록 했다.
+가드레일 자체는 에이전트가 틀리는 걸 볼 때마다 하나씩 추가하는 방식으로 만들었다. 처음부터 20개를 설계한 게 아니다. 글에서도 "Most of ours began as a few lines and a single gotcha, and got better because people kept adding to them"이라고 하는데 실제로 그렇게 된다.
 
 ---
 

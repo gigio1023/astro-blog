@@ -79,42 +79,34 @@ I've cataloged about 20 patterns like these, including Tailwind v4's CSS-native 
 
 ## Design Principles
 
-I had my own criteria when putting this together, but reading Thariq's [Lessons from Building Claude Code: How We Use Skills](https://x.com/trq212/status/2033949937936085378) helped clarify a few things. It summarizes how Anthropic uses hundreds of skills internally. I refined what I was already doing based on the article.
+I referenced Thariq's [Lessons from Building Claude Code: How We Use Skills](https://x.com/trq212/status/2033949937936085378) while putting this together. It covers how Anthropic runs hundreds of skills internally. Beyond the basics like gotchas-first structure and progressive disclosure, a few points were worth noting.
 
-**Don't State the Obvious.** Claude already knows a lot about coding, so skills should focus on information that pushes it out of its default thinking. I had initially included general explanations like "this is how Content Collections work," but after reading this I restructured toward guardrails that only target points where agents actually fail.
+**The description field is for the model.** When a Claude Code session starts, it scans every installed skill's description to decide "is there a skill for this request?" The description isn't a human-readable summary — it's the trigger condition for the model. After reading this, I rewrote the description to be quite long and specific.
 
-```markdown
-# How a guardrail is written in the skill
-
-**3. `Astro.glob()` does not exist:**
-// agents generate this (removed API)
-const posts = await Astro.glob('./posts/*.md')
-
-// correct pattern
-import { getCollection } from 'astro:content'
-const posts = await getCollection('blog')
+```yaml
+description: "Use when editing .astro/.mdx files, modifying astro.config.*,
+  working with content collections (build-time or live),
+  adding Tailwind CSS v4, using client directives (client:load/idle/visible),
+  handling forms/actions with Zod 4, configuring server features
+  (sessions, i18n, env vars, CSP, Cloudflare Workers),
+  using view transitions or ClientRouter (<ClientRouter />),
+  or setting up adapters (Node/Vercel/Netlify/Cloudflare) in an Astro project."
 ```
 
-The direction is "if the agent tries to use this, it's a removed API" rather than "here's how to use this API." Repeating what the agent already knows just wastes context.
+Each condition is spelled out so the skill triggers automatically when the agent touches `.astro` files or modifies `astro.config`. A vague description like "Astro development helper" makes the trigger timing ambiguous.
 
-**Build a Gotchas Section.** The highest-value content in any skill is the gotchas section, built from actual failure points and updated over time. The 20 guardrails in this skill were all created this way. I didn't design 20 upfront. Each one was added after watching an agent get something wrong.
+**Give the agent code so it spends turns on composition.** Including scripts or templates in a skill means the agent assembles from known-good pieces instead of reconstructing boilerplate from scratch. In this skill, the `templates/` directory has drop-in config files for Astro 6 + Tailwind v4.
 
-**Use the File System & Progressive Disclosure.** Splitting a skill into a folder structure with progressive disclosure is something most skill authors already know, and I was already doing it with the `references/` directory. But reading the article made me add a more explicit router. The SKILL.md now has a table that directs agents to the right file based on what they're working on.
-
-```markdown
-# The router in SKILL.md
-
-| What you're doing | Read this file |
-|---|---|
-| Content collections (schema, loader, querying, Zod 4) | references/content-collections.md |
-| Blog features (RSS, pagination, tags, SEO, TOC) | references/blog-recipes.md |
-| Tailwind CSS (config, theming, classes, fonts) | references/tailwind.md |
-| Client directives / islands / hydration | references/islands-and-hydration.md |
+```
+templates/
+├── astro.config.ts    # Astro 6 + Tailwind v4 + MDX + Fonts API
+├── content.config.ts  # Content Collections with glob loader
+└── global.css         # Tailwind v4 CSS entry point
 ```
 
-It explicitly tells the agent "you're doing X, so read this file." Loading everything at once just inflates context, so only the relevant module gets read.
+When the agent sets up a project, it copies these and starts from a correct baseline. If guardrails say "don't do it like that," templates say "start from this."
 
-**Avoid Railroading Claude.** Being too specific removes the agent's ability to adapt. This skill tells the agent "this is the wrong pattern, here's the correct one" and leaves actual application to the agent's judgment. For example, the `client:` directive guide provides a decision tree but lets the agent make the final call based on component context.
+The guardrails themselves were added one at a time as I watched agents fail. I didn't design 20 upfront. The article puts it well: "Most of ours began as a few lines and a single gotcha, and got better because people kept adding to them." That's exactly how it went.
 
 ---
 
