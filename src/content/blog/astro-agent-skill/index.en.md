@@ -1,6 +1,6 @@
 ---
-title: "AI Agents Break Astro Code — How I Fixed It with an Agent Skill"
-description: "Why AI agents confidently generate broken Astro 6 code, why MCP alone isn't enough, and how I built an Agent Skill to solve it."
+title: "Why AI Agents Break Astro Blogs, and What I Did About It"
+description: "Agents kept confidently generating broken Astro 6 code, so I built an Agent Skill."
 date: "2026-03-23T14:00:00+09:00"
 tags: ["agent", "astro", "mcp", "claude-code", "agent-skill"]
 draft: false
@@ -8,73 +8,76 @@ lang: en
 translationOf: "astro-agent-skill"
 ---
 
-- AI agents confidently generate broken Astro code. They don't know about Astro 6's breaking changes.
-- The Astro Docs MCP answers questions, but it can't intercept wrong code the agent never questioned.
-- An Agent Skill complements MCP — it provides guardrails, multi-concept recipes, and decision frameworks.
-- Here's why I built this skill and how it's structured.
+- Agents confidently generate broken Astro code. They don't know about Astro 6 breaking changes.
+- Astro Docs MCP is good, but useless when the agent doesn't bother asking.
+- So I built an Agent Skill. It complements MCP, doesn't replace it.
+- Here's what kept breaking and how the skill is structured.
 
 ---
 
-## The Problem: AI Agents + Astro = Guaranteed Disaster
+This blog runs on Astro. Whenever I use Claude Code or Cursor to work on it, the generated Astro code is almost always wrong. At first I thought I was prompting badly, but after seeing the same failures over and over, it was clearly an agent-side problem.
 
-This blog is built with Astro. When I work on it using Claude Code, Cursor, or similar tools, the code agents generate is almost always broken. Unless you're deeply familiar with Astro, you can't even tell why the generated code doesn't work.
+Astro 6 shipped with significant breaking changes, but agents have been trained on overwhelmingly Astro 3/4/5 era code. From the agent's perspective, it knows these patterns and they're correct. It doesn't know what it doesn't know.
 
-The core issue is that agents **don't know what they don't know**. Astro 6 introduced massive breaking changes, but agents' training data is overwhelmingly Astro 3/4/5 patterns. They confidently generate outdated code without realizing it's wrong.
+After spending way too much time debugging agent-generated code, I managed to catalog the recurring failures.
 
-Here are real examples I've encountered.
+## What Agents Get Wrong, Repeatedly
 
-### `entry.render()` → `render(entry)`
+### `entry.render()` doesn't work anymore
 
-In Astro 6, `render()` became a standalone function, not an entry method.
+In Astro 6, `render()` changed from an entry method to a standalone function. Ask an agent to render a blog post and nine times out of ten you get this:
 
 ```ts
-// what agents generate (Astro 5 and earlier)
+// what the agent generates
 const { Content } = await post.render()
+```
 
-// correct Astro 6 pattern
+This throws something like `post.render is not a function` at runtime. If you don't know Astro well, good luck figuring out why. The correct pattern:
+
+```ts
 import { render } from 'astro:content'
 const { Content } = await render(post)
 ```
 
-The error message isn't intuitive either, making root cause analysis difficult if you don't know Astro well.
+### `Astro.glob()` was removed
 
-### `Astro.glob()` Removed
-
-When agents use `Astro.glob()`, they're calling an API that simply doesn't exist in Astro 6.
+Agents love using `Astro.glob()` to fetch post lists. It's been removed entirely in Astro 6.
 
 ```ts
-// what agents generate (removed API)
+// removed API
 const posts = await Astro.glob('./posts/*.md')
 
-// correct Astro 6 pattern
+// what you actually need
 import { getCollection } from 'astro:content'
 const posts = await getCollection('blog')
 ```
 
-### Zod 4 Syntax Changes
+### Zod 4 syntax is different
 
-Astro 6 ships Zod 4. Agents generate Zod 3 syntax.
+This one's annoying. Astro 6 ships Zod 4. The import path changed and the validator chaining is different.
 
 ```ts
 // what agents generate (Zod 3)
 import { defineCollection, z } from 'astro:content'
 z.string().email()
 
-// correct Astro 6 + Zod 4 pattern
+// Astro 6 + Zod 4
 import { defineCollection } from 'astro:content'
 import { z } from 'astro/zod'
 z.email()
 ```
 
-The import path is different, and the validator method chaining has changed. The chance of an agent getting this right is near zero.
+The odds of an agent getting this right on its own are near zero.
 
-### Mandatory `loader` for Content Collections
+### Content Collections require a `loader` now
+
+Another major change agents don't know about:
 
 ```ts
-// what agents generate (Astro 5 and earlier)
+// what agents generate
 const blog = defineCollection({ schema: z.object({...}) })
 
-// correct Astro 6 pattern
+// loader is now required, schema is a function
 import { glob } from 'astro/loaders'
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
@@ -82,156 +85,81 @@ const blog = defineCollection({
 })
 ```
 
-The `loader` is now required, schema takes a function form receiving helpers like `image()`, and the config file location changed from `src/content/config.ts` to `src/content.config.ts`. Agents know none of this.
+The config file location also moved from `src/content/config.ts` to `src/content.config.ts`. Agents know none of this.
 
-I've identified about 20 such patterns.
-
----
-
-## Why MCP Alone Isn't Enough
-
-The Astro Docs MCP exists. You can search official documentation with `search_astro_docs()`, and it's well-documented. I use it with this blog too.
-
-But MCP **only works when the agent asks**. The problem is that when an agent writes `entry.render()`, it doesn't ask MCP "how has the render function changed?" The agent is confident its pattern is correct and just generates the code.
-
-To summarize:
-
-| Situation | MCP | Agent Skill |
-|-----------|-----|-------------|
-| "How do I use paginate()?" | Searches and answers | References recipe file |
-| Agent generates `entry.render()` | Agent never asks → can't intervene | Guardrail catches it proactively |
-| Build tag pages with pagination | Single search returns incomplete info | Multi-concept recipe provided |
-| Choose between Actions vs API routes | Explains both | Provides decision framework |
-
-MCP answers **"how?"** while the Agent Skill says **"not like that."** They're complementary, not competing.
+I cataloged about 20 patterns like these. Tailwind v4 switching to CSS-native config, agents slapping `client:load` on every component, event listeners breaking under `<ClientRouter />`, and so on.
 
 ---
 
-## What Is an Agent Skill?
+## Why MCP Isn't Enough
 
-An Agent Skill injects domain knowledge into AI agents. It works with 40+ coding agents including Claude Code, Codex CLI, and Cursor. Think of it as a set of guidelines the agent references before generating code.
+I wrote about MCP in a [previous post](../agent-library-review-with-mcp). The Astro Docs MCP exists and works well enough. You can search official docs with `search_astro_docs()`, and I use it with this blog.
 
-If MCP is a "standard for external tool calls," an Agent Skill is "extending the agent's internal knowledge."
+But MCP only works when the agent asks. When an agent writes `entry.render()`, it doesn't ask MCP "hey, has the render function changed?" It's confident the pattern is correct, so it just generates the code. That's the fundamental problem.
 
-### Relationship with MCP
+MCP answers "how do I use this?" What I needed was something that says "don't do it like that."
 
-```
-┌──────────────┐     ┌──────────────────┐
-│  Agent Skill  │     │  Astro Docs MCP  │
-│               │     │                  │
-│  Guardrails   │     │  Doc search      │
-│  Recipes      │     │  API reference   │
-│  Frameworks   │     │  Config options   │
-└──────┬────────┘     └────────┬─────────┘
-       │                       │
-       └───────────┬───────────┘
-                   │
-           ┌───────▼───────┐
-           │   AI Agent    │
-           │ (code gen)    │
-           └───────────────┘
-```
-
-The Agent Skill improves code generation quality; MCP provides access to up-to-date documentation.
+So I built an Agent Skill.
 
 ---
 
-## Structure of astro-dev Skill
+## What an Agent Skill Is
 
-Here's the skill structure:
+In short, it's a way to inject domain knowledge into an agent. Works with coding agents like Claude Code, Codex CLI, and Cursor. Think of it as guidelines the agent checks before generating code.
+
+If MCP is the standard for external tool calls, an Agent Skill extends the agent's internal knowledge. It doesn't replace MCP. It fills the gaps MCP can't cover.
+
+- MCP: agent asks "how do I use X?" → searches docs, returns answer
+- Agent Skill: agent is about to write wrong code without asking → proactively says "that pattern is wrong"
+- MCP: explains one concept per search
+- Agent Skill: provides multi-concept patterns like tag pages + pagination in one shot
+
+The conclusion was that you need both for things to actually work.
+
+---
+
+## How the Skill Is Structured
 
 ```
 skills/astro-dev/
-├── SKILL.md                    # Entry point: 20 guardrails + router
+├── SKILL.md                    # Entry point. 20 guardrails + router
 ├── references/
 │   ├── astro-core-patterns.md  # Core APIs, styles, scripts, middleware
 │   ├── content-collections.md  # Build/live collections, loaders, Zod 4
 │   ├── blog-recipes.md         # RSS, pagination, tags, SEO, TOC
 │   ├── tailwind.md             # Vite plugin, CSS theming, Fonts API
-│   ├── islands-and-hydration.md # Client directives, state sharing, server islands
-│   ├── actions-and-forms.md    # Actions API, validation
-│   ├── view-transitions.md     # ClientRouter lifecycle, FOUC prevention
-│   ├── server-features.md      # Prerender/on-demand, sessions, env vars, i18n
+│   ├── islands-and-hydration.md
+│   ├── actions-and-forms.md
+│   ├── view-transitions.md
+│   ├── server-features.md
 │   └── doc-endpoints.md        # MCP setup, LLM-optimized doc URLs
 └── templates/
-    ├── astro.config.ts         # Astro 6 + Tailwind v4 drop-in config
-    ├── content.config.ts       # Content Collections config
-    └── global.css              # Tailwind v4 CSS entry point
+    ├── astro.config.ts
+    ├── content.config.ts
+    └── global.css
 ```
 
-### Key Components
+It breaks down into three parts.
 
-**1. 20 Guardrails**
+**Guardrails** are the core. Beyond the 4 examples above, there are 20 total covering Tailwind v4 config, `client:` directive selection, Actions API, on-demand rendering, environment variables, ClientRouter events, and more. Every single one was added after I watched an agent get it wrong.
 
-Patterns that agents repeatedly get wrong. Beyond the 4 shown above:
+**Blog recipes** came from building this blog. RSS, pagination, tag pages with nested pagination, Shiki dark mode, MDX component overrides, reading time, table of contents, prev/next navigation. Nine patterns total. These involve multiple concepts interacting, so a single MCP search doesn't produce working code.
 
-- Tailwind v4 uses CSS-native config (not JS)
-- Don't slap `client:load` on every component (choose by urgency)
-- Use Actions API for forms (not manual API routes)
-- Cookies/sessions require on-demand rendering
-- Use `astro:env` for environment variables (not `process.env`)
-- With `<ClientRouter />`, use `astro:page-load` event
-- And more
+**Decision frameworks** help the agent pick the right option. When to use `client:load` vs `client:idle` vs `client:visible`, Actions vs API routes, prerender vs on-demand.
 
-Each guardrail was identified from actual agent failure cases.
-
-**2. 9 Blog Recipes**
-
-Multi-concept patterns commonly needed in blog development. These are things agents can't properly implement from a single MCP search.
-
-- RSS + Content Collections
-- Pagination (`paginate()` + `getStaticPaths`)
-- Tag pages with nested pagination (`flatMap` + `paginate()`)
-- Shiki dark mode (`.astro-code` class, not `--shiki-*`)
-- MDX component overrides
-- SEO meta layout
-- Reading time (remark plugin)
-- Table of contents (headings array)
-- Previous/next post navigation
-
-**3. 4 Decision Frameworks**
-
-Guides for choices agents tend to get wrong:
-
-- `client:load` vs `client:idle` vs `client:visible` — decision tree based on urgency and position
-- Actions vs API routes — forms/mutations use Actions, webhooks/streaming use API routes
-- Prerender vs on-demand — cookies, sessions, forms, live collections require on-demand
-- Adapter selection — Node/Vercel/Netlify/Cloudflare, only needed for on-demand features
+The SKILL.md also has a router that tells the agent which reference file to load based on what it's working on. Loading everything at once just wastes context, so it only reads the relevant module.
 
 ---
 
-## Quick Router
+## How to Use It
 
-The SKILL.md includes a router that directs agents to the right reference file for their task. It's designed to load only what's needed, not everything at once.
-
-| Task | File to read |
-|------|-------------|
-| Project setup / Core APIs | `astro-core-patterns.md` |
-| Content Collections | `content-collections.md` |
-| Blog features (RSS, pagination, etc.) | `blog-recipes.md` |
-| Tailwind CSS | `tailwind.md` |
-| Client directives / hydration | `islands-and-hydration.md` |
-| Forms, Actions | `actions-and-forms.md` |
-| View Transitions | `view-transitions.md` |
-| Sessions, env vars, i18n | `server-features.md` |
-| MCP setup, doc URLs | `doc-endpoints.md` |
-
----
-
-## Usage
-
-### Claude Code
+For Claude Code, clone to your skills directory and add the path to your project's CLAUDE.md:
 
 ```bash
-# 1. Clone to skills directory
 git clone https://github.com/gigio1023/astro-dev-skill.git ~/.claude/skills/astro-dev-skill
-
-# 2. Add skill path to your project's CLAUDE.md
 ```
 
-### Using with Astro Docs MCP
-
-This skill works best alongside the Astro Docs MCP. MCP handles up-to-date doc searches; the skill handles guardrails and recipes.
+I recommend using it alongside the Astro Docs MCP. MCP handles doc searches, the skill handles guardrails and recipes:
 
 ```json
 {
@@ -246,10 +174,6 @@ This skill works best alongside the Astro Docs MCP. MCP handles up-to-date doc s
 
 ---
 
-## Closing Thoughts
-
-In a [previous post](../agent-library-review-with-mcp), I discussed the immaturity of agent libraries. An Agent Skill addresses part of that problem. It doesn't change the agent's fundamental capabilities, but by injecting domain knowledge, it significantly reduces the "confidently wrong" scenarios.
-
-If skills like this existed for every framework, the experience of developing with AI agents would improve dramatically. I've open-sourced the project — contributions and feedback are welcome.
+I wrote in a [previous post](../agent-library-review-with-mcp) about how agent libraries still feel half-baked. Changing what agents fundamentally can do is hard, but injecting domain knowledge to reduce the "confidently wrong" problem seemed worth trying. It'd be nice if something like this existed for every framework.
 
 GitHub: [gigio1023/astro-dev-skill](https://github.com/gigio1023/astro-dev-skill)
