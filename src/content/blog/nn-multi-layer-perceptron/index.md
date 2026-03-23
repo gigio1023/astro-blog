@@ -1,8 +1,8 @@
 ---
 title: "NN & Multi layer perceptron"
-description: "."
+description: "Neural networks as function approximators: linear models, activation functions, multi-layer perceptrons, universal approximation theorem, and loss functions."
 date: "2021-01-01"
-tags: ["DL"]
+tags: ["dl"]
 draft: false
 ---
 

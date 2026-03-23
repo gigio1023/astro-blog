@@ -1,8 +1,8 @@
 ---
 title: "BERT 두 문장 관계 분류 task"
-description: "."
+description: "BERT-based sentence pair classification covering NLI, semantic text pair similarity, and information retrieval QA."
 date: "2021-09-28T08:35:45.631Z"
-tags: ["BERT", "NLP"]
+tags: ["nlp"]
 draft: false
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "Python nested function"
-description: "."
+description: "Using Python decorators to compose nested functions for cleaner code structure."
 date: "2021-08-03T16:47:56.382Z"
 tags: ["python"]
 draft: false

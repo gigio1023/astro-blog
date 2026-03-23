@@ -1,8 +1,8 @@
 ---
 title: "강화학습 공부 자료"
-description: "."
+description: "Curated list of reinforcement learning study resources including lectures, books, and blog posts."
 date: "2021-09-03T14:10:16.534Z"
-tags: ["RL"]
+tags: ["ml"]
 draft: false
 ---
 

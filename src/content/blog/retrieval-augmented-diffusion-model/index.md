@@ -1,8 +1,8 @@
 ---
 title: "Retrieval-Augmented Diffusion model"
-description: "."
+description: "Paper review of retrieval-augmented diffusion models that leverage CLIP-based nearest neighbor retrieval for high-fidelity image synthesis with fewer parameters."
 date: "2022-05-18T00:00:00.000Z"
-tags: ["generative-model", "nlp", "paper-review"]
+tags: ["computer-vision", "nlp", "paper-review"]
 draft: false
 ---
 

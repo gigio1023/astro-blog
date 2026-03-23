@@ -1,6 +1,6 @@
 ---
 title: "[프로그래머스] 단어 변환"
-description: "."
+description: "Solution for the Programmers word conversion problem using BFS with single-character diff detection."
 date: "2021-09-02T20:28:41.333Z"
 tags: ["algorithm", "python"]
 draft: false

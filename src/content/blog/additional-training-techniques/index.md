@@ -1,8 +1,8 @@
 ---
 title: "추가적인 학습 기법들"
-description: "."
+description: "Practical training techniques including AMP, label smoothing, ArcFace loss, class pivot adjustment, and Wandb logging for image classification."
 date: "2021-08-30T15:13:38.273Z"
-tags: ["CNN", "PyTorch"]
+tags: ["computer-vision", "pytorch"]
 draft: false
 ---
 

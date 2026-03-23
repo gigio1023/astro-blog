@@ -2,7 +2,7 @@
 title: "Retrieval-Augmented Diffusion Model"
 description: "A review of the paper that enhances diffusion models using retrieval-based approaches from NLP, achieving high-fidelity image generation with fewer parameters."
 date: "2022-05-18T00:00:00.000Z"
-tags: ["generative-model", "nlp", "paper-review"]
+tags: ["computer-vision", "nlp", "paper-review"]
 draft: false
 lang: en
 translationOf: "retrieval-augmented-diffusion-model"

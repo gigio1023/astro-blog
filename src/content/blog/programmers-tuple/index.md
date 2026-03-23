@@ -1,6 +1,6 @@
 ---
 title: "[프로그래머스] 튜플"
-description: "."
+description: "Solution for the Programmers tuple problem using string parsing, regex, and length-based sorting."
 date: "2022-02-24T10:54:54.817Z"
 tags: ["algorithm"]
 draft: false

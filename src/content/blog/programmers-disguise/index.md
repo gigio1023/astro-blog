@@ -1,6 +1,6 @@
 ---
 title: "[프로그래머스] 위장"
-description: "."
+description: "Solution to the Programmers 'Disguise' hash problem using combinatorics to count clothing outfit combinations."
 date: "2021-10-21T17:35:00.076Z"
 tags: ["algorithm"]
 draft: false

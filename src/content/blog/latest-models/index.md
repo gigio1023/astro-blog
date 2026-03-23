@@ -1,8 +1,8 @@
 ---
 title: "최신 모델"
-description: "."
+description: "Survey of post-BERT NLP models including XLNet, RoBERTa, BART, T5, Meena, and controllable language models like PPLM."
 date: "2021-10-13T01:49:14.563Z"
-tags: ["NLP"]
+tags: ["nlp"]
 draft: false
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "[백준] 소풍"
-description: "."
+description: "Solution for Baekjoon 2026 (Picnic) using DFS on a friendship graph with adjacency matrix and adjacency list."
 date: "2021-11-10T11:35:47.937Z"
 tags: ["algorithm"]
 draft: false

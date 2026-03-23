@@ -1,8 +1,8 @@
 ---
 title: "AI & Ethics"
-description: "."
+description: "Discussion of AI bias, fairness, and privacy issues, including the COMPAS case study and COVID contact tracing privacy analysis."
 date: "2021-09-26T10:10:36.459Z"
-tags: ["Ethics", "boostcamp"]
+tags: ["ethics", "naver-boostcamp"]
 draft: false
 ---
 

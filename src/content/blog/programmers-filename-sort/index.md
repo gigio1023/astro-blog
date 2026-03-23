@@ -1,6 +1,6 @@
 ---
 title: "[프로그래머스] 파일명 정렬"
-description: "."
+description: "Solution for the Programmers filename sort problem using regex-based splitting and custom sort keys."
 date: "2021-11-02T02:51:54.726Z"
 tags: ["algorithm"]
 draft: false

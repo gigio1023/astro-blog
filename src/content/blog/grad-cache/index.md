@@ -1,8 +1,8 @@
 ---
 title: "Grad Cache"
-description: "."
+description: "An approach that enables large-batch contrastive learning under memory constraints by caching gradients."
 date: "2022-04-12T00:00:00.000Z"
-tags: ["ml", "ml-engineering", "multi-gpu", "paper-review"]
+tags: ["ml", "ml-engineering", "dl", "paper-review"]
 draft: false
 ---
 

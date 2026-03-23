@@ -1,8 +1,8 @@
 ---
 title: "Some tips"
-description: "."
+description: "Tips on efficient data feeding, transform ordering for performance, and using Albumentations for image augmentation."
 date: "2021-08-24T02:35:24.900Z"
-tags: ["PyTorch", "ai competition"]
+tags: ["pytorch", "ai-competition"]
 draft: false
 ---
 

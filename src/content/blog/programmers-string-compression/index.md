@@ -1,6 +1,6 @@
 ---
 title: "[프로그래머스] 문자열 압축"
-description: "."
+description: "Solution for the Programmers string compression problem using n-gram style chunking."
 date: "2021-11-17T17:09:49.169Z"
 tags: ["algorithm"]
 draft: false

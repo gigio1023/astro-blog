@@ -1,8 +1,8 @@
 ---
 title: "부스트캠프 AI Tech 2기 1주차 학습정리"
-description: "."
+description: "Week 1 retrospective of Naver Boostcamp AI Tech covering AI math fundamentals, Python basics, and gradient descent implementation."
 date: "2021-08-06T05:37:46.336Z"
-tags: ["Naver-Boostcamp"]
+tags: ["naver-boostcamp"]
 draft: false
 ---
 

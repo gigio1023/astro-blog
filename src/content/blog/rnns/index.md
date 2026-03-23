@@ -1,8 +1,8 @@
 ---
 title: "RNNs"
-description: "."
+description: "Deep dive into RNN types (one-to-one, one-to-many, many-to-many), character-level language models, and LSTM/GRU architectures."
 date: "2021-09-07T04:06:29.529Z"
-tags: ["NLP", "RNN"]
+tags: ["nlp"]
 draft: false
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "[프로그래머스] H-index"
-description: "."
+description: "Solution for the Programmers H-Index problem using sorting and linear scan."
 date: "2021-10-22T02:44:44.279Z"
 tags: ["algorithm"]
 draft: false

@@ -1,8 +1,8 @@
 ---
 title: "부스트캠프 AI Tech 2기 3주차 학습정리"
-description: "."
+description: "Week 3 of Naver Boostcamp AI Tech covering PyTorch custom models, datasets, dataloaders, and data visualization."
 date: "2021-08-20T08:16:21.329Z"
-tags: ["boostcamp"]
+tags: ["naver-boostcamp"]
 draft: false
 ---
 

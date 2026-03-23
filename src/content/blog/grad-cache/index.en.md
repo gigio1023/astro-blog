@@ -2,7 +2,7 @@
 title: "Grad Cache"
 description: "An approach that enables large-batch contrastive learning under memory constraints, similar to gradient accumulation."
 date: "2022-04-12T00:00:00.000Z"
-tags: ["ml", "ml-engineering", "multi-gpu", "paper-review"]
+tags: ["ml", "ml-engineering", "dl", "paper-review"]
 draft: false
 lang: en
 translationOf: "grad-cache"

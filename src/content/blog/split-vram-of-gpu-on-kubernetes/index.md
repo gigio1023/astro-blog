@@ -1,6 +1,6 @@
 ---
 title: "Split VRAM of GPU on Kubernetes"
-description: "."
+description: "Exploring options for splitting GPU VRAM across pods in Kubernetes, including replicas, extended resources, and GPU virtualization."
 date: "2022-04-08T00:00:00.000Z"
 tags: ["mlops"]
 draft: false

@@ -1,8 +1,8 @@
 ---
 title: "pytorch"
-description: "."
+description: "Practical PyTorch tips covering parameter initialization, model.eval(), tensor views, and the training loop."
 date: "2021-01-01"
-tags: ["DL", "PyTorch"]
+tags: ["dl", "pytorch"]
 draft: false
 ---
 

@@ -1,8 +1,8 @@
 ---
 title: "NLP 개요"
-description: "."
+description: "Overview of NLP fundamentals including tokenization, NER, sentiment analysis, machine translation, and the impact of Transformer on the field."
 date: "2021-09-06T04:45:14.931Z"
-tags: ["NLP"]
+tags: ["nlp"]
 draft: false
 ---
 

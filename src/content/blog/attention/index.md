@@ -1,8 +1,8 @@
 ---
 title: "Attention"
-description: "."
+description: "Explanation of the attention mechanism in Seq2Seq models, covering attention vectors, context vectors, teacher forcing, and similarity functions."
 date: "2021-09-08T05:27:10.397Z"
-tags: ["Attention", "NLP"]
+tags: ["nlp"]
 draft: false
 ---
 

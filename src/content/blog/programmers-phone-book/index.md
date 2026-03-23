@@ -1,6 +1,6 @@
 ---
 title: "[프로그래머스] 전화번호부"
-description: "."
+description: "Solution for the Programmers phone book problem using sorting and prefix comparison."
 date: "2021-10-21T14:57:35.954Z"
 tags: ["algorithm"]
 draft: false

@@ -1,8 +1,8 @@
 ---
 title: "Gradient descent 기본"
-description: "."
+description: "Gradient descent basics: differentiation, gradient vectors, partial derivatives, and the nabla operator."
 date: "2021-08-03T18:23:37.780Z"
-tags: ["ML"]
+tags: ["ml"]
 draft: false
 ---
 

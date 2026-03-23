@@ -1,8 +1,8 @@
 ---
 title: "AI 저작권법"
-description: "."
+description: "Overview of copyright and licensing considerations for AI projects, covering CCL, fair use, and the legal gray areas of AI-generated content."
 date: "2021-09-26T08:46:19.969Z"
-tags: ["boostcamp", "저작권"]
+tags: ["naver-boostcamp", "ethics"]
 draft: false
 ---
 

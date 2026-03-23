@@ -1,8 +1,8 @@
 ---
 title: "Advanced Self-supervised Pre-training model"
-description: "."
+description: "Overview of GPT-2, GPT-3, and ALBERT covering zero/few-shot learning, model scaling, and efficient pre-training approaches."
 date: "2021-09-18T11:08:52.241Z"
-tags: ["NLP"]
+tags: ["nlp"]
 draft: false
 ---
 

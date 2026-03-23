@@ -1,6 +1,6 @@
 ---
 title: "[백준] 암호 만들기"
-description: "."
+description: "Solution for Baekjoon 1759 (Password Creation) using combinations with vowel and consonant constraints."
 date: "2021-11-08T08:12:58.864Z"
 tags: ["algorithm"]
 draft: false

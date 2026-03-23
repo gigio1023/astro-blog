@@ -1,8 +1,8 @@
 ---
 title: "BERT 응용"
-description: "."
+description: "Practical applications of BERT for sentiment analysis, relation extraction, semantic similarity, NER, and machine reading comprehension."
 date: "2021-09-27T16:09:51.308Z"
-tags: ["NLP"]
+tags: ["nlp"]
 draft: false
 ---
 

@@ -1,8 +1,8 @@
 ---
 title: "Self-supervised Pre-training models"
-description: "."
+description: "Overview of self-supervised pre-training models including GPT-1 and BERT, covering masked language modeling and transfer learning."
 date: "2021-09-18T10:51:48.531Z"
-tags: ["NLP"]
+tags: ["nlp"]
 draft: false
 ---
 

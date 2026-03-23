@@ -1,8 +1,8 @@
 ---
 title: "Recent trends of NLP"
-description: "."
+description: "Survey of recent NLP trends covering QA, open-domain chatbots, unsupervised machine translation, text style transfer, and in-context learning."
 date: "2021-09-19T13:41:16.480Z"
-tags: ["NLP"]
+tags: ["nlp"]
 draft: false
 ---
 

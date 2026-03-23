@@ -1,8 +1,8 @@
 ---
 title: "Extraction-Based MRC"
-description: "."
+description: "Extraction-based machine reading comprehension: span prediction with BERT, preprocessing, fine-tuning, and post-processing."
 date: "2021-10-13T04:09:10.578Z"
-tags: ["boostcamp"]
+tags: ["naver-boostcamp"]
 draft: false
 ---
 

@@ -1,8 +1,8 @@
 ---
 title: "NLP 전처리"
-description: "."
+description: "NLP text preprocessing techniques: stopword removal, lemmatization, and punctuation handling with NLTK and spaCy."
 date: "2021-09-06T23:56:25.864Z"
-tags: ["NLP"]
+tags: ["nlp"]
 draft: false
 ---
 

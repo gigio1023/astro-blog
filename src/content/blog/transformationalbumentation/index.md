@@ -1,8 +1,8 @@
 ---
 title: "Transformation(Albumentation)"
-description: "."
+description: "Using the Albumentations library for image augmentation in PyTorch, with example pipelines for training and TTA."
 date: "2021-09-06T10:17:15.770Z"
-tags: ["CNN", "PyTorch", "ai competition"]
+tags: ["computer-vision", "pytorch", "ai-competition"]
 draft: false
 ---
 

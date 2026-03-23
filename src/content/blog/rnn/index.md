@@ -1,8 +1,8 @@
 ---
 title: "RNN"
-description: "."
+description: "Fundamentals of RNN including sequence data handling, latent autoregressive models, BPTT, and truncated backpropagation."
 date: "2021-08-06T07:23:27.018Z"
-tags: ["ML", "RNN", "math"]
+tags: ["ml", "nlp", "algorithm"]
 draft: false
 ---
 

@@ -1,8 +1,8 @@
 ---
 title: "Transformer 도입"
-description: "."
+description: "Introduction to the Transformer architecture: self-attention with Query/Key/Value, scaled dot-product attention, and how it overcomes RNN limitations."
 date: "2021-09-13T09:25:25.569Z"
-tags: ["NLP"]
+tags: ["nlp"]
 draft: false
 ---
 

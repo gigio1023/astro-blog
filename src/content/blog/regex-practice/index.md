@@ -1,8 +1,8 @@
 ---
 title: "Regex 연습"
-description: "."
+description: "Hands-on regex practice dissecting a password validation pattern with lookaheads and character classes."
 date: "2021-09-27T12:44:21.119Z"
-tags: ["NLP", "regex"]
+tags: ["nlp", "python"]
 draft: false
 ---
 

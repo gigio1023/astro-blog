@@ -2,7 +2,7 @@
 title: "Agent Library Review with MCP"
 description: "Hands-on review of OpenAI Agents SDK, LangGraph, Gemini Gen AI SDK, and MCP for building AI agents. Conclusion: just use LLM Provider SDKs directly."
 date: "2025-04-02T02:19:12+09:00"
-tags: ["agent", "llm", "langgraph", "mcp", "openai"]
+tags: ["agent"]
 draft: false
 lang: en
 translationOf: agent-library-review-with-mcp

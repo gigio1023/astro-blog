@@ -1,8 +1,8 @@
 ---
 title: "Quant trading / Researcher"
-description: "."
+description: "Introduction to quantitative trading strategies including arbitrage, market making, and statistical arbitrage."
 date: "2021-09-23T09:51:47.930Z"
-tags: ["quant trading"]
+tags: ["quant-trading"]
 draft: false
 ---
 

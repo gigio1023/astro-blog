@@ -1,6 +1,6 @@
 ---
 title: "[프로그래머스] 로또의 최고 순위와 최저 순위"
-description: "."
+description: "C++ solution for the Programmers lotto best/worst rank problem with notes on find and vector methods."
 date: "2022-01-31T08:04:48.906Z"
 tags: ["algorithm"]
 draft: false

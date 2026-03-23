@@ -1,8 +1,8 @@
 ---
 title: "Convolution 실습"
-description: "."
+description: "Practical CNN implementation in PyTorch covering add_module, training loops, and batch normalization."
 date: "2021-08-12T05:33:51.298Z"
-tags: ["CNN", "DL"]
+tags: ["computer-vision", "dl"]
 draft: false
 ---
 

@@ -1,8 +1,8 @@
 ---
 title: "Language model Benchmark 간단 정리"
-description: "."
+description: "Summary of language model benchmarks from GLUE to multilingual evaluations, covering the evolution from RNN to ELMo, BERT, and beyond."
 date: "2021-09-26T22:12:41.097Z"
-tags: ["NLP", "boostcamp"]
+tags: ["nlp", "naver-boostcamp"]
 draft: false
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "[프로그래머스] 입국심사"
-description: "."
+description: "Solution for the Programmers immigration problem using binary search on time cost."
 date: "2021-10-20T02:11:09.313Z"
 tags: ["algorithm"]
 draft: false

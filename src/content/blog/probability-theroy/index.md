@@ -1,8 +1,8 @@
 ---
 title: "확률론"
-description: "."
+description: "Probability theory foundations for machine learning: probability distributions, joint and conditional distributions, Bayes' rule, and expectation."
 date: "2021-01-01"
-tags: ["ML"]
+tags: ["ml"]
 draft: false
 ---
 

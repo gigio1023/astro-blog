@@ -1,8 +1,8 @@
 ---
 title: "Dense Embedding"
-description: "."
+description: "Dense embedding for passage retrieval: training bi-encoders with contrastive learning and negative sampling strategies."
 date: "2021-10-14T06:43:17.095Z"
-tags: ["MRC"]
+tags: ["nlp"]
 draft: false
 ---
 

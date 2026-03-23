@@ -1,8 +1,8 @@
 ---
 title: "Full stack ML Engineer"
-description: "."
+description: "What it means to be a full-stack ML engineer: roles, ML product lifecycle, team structure, and trade-offs."
 date: "2021-09-26T09:41:46.765Z"
-tags: ["ML Engineer", "boostcamp", "full-stack", "mlops"]
+tags: ["mlops", "naver-boostcamp"]
 draft: false
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "[HackerRank] Climbing the Leaderboard"
-description: "."
+description: "Solving HackerRank's Climbing the Leaderboard problem efficiently using sorted traversal instead of repeated search."
 date: "2021-11-18T08:48:12.142Z"
 tags: ["algorithm"]
 draft: false

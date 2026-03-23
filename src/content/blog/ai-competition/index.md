@@ -1,8 +1,8 @@
 ---
 title: "ai competition"
-description: "."
+description: "Guide to approaching AI competitions with EDA strategies for image classification tasks."
 date: "2021-08-23T04:42:14.134Z"
-tags: ["competition"]
+tags: ["ai-competition"]
 draft: false
 ---
 

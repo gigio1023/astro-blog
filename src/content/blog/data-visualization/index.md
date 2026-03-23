@@ -1,8 +1,8 @@
 ---
 title: "데이터 시각화"
-description: "."
+description: "Overview of data visualization concepts including data types, marks, channels, and pre-attentive attributes."
 date: "2021-08-09T13:06:49.641Z"
-tags: ["ML", "data viz"]
+tags: ["ml", "data-viz"]
 draft: false
 ---
 

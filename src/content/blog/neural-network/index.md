@@ -1,8 +1,8 @@
 ---
 title: "Neural network"
-description: "."
+description: "Introduction to neural networks covering linear regression, softmax classification, activation functions, and why deep layers are preferred."
 date: "2021-01-01"
-tags: ["Backpropagation", "ML"]
+tags: ["dl", "ml"]
 draft: false
 ---
 

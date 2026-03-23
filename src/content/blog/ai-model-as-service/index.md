@@ -1,8 +1,8 @@
 ---
 title: "AI model as Service"
-description: "."
+description: "End-to-end process of deploying AI models as services, from requirements analysis and dataset construction to modeling, testing, and team organization."
 date: "2021-09-23T05:09:46.199Z"
-tags: ["boostcamp"]
+tags: ["naver-boostcamp"]
 draft: false
 ---
 

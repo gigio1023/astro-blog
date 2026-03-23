@@ -1,6 +1,6 @@
 ---
 title: "MLOps 정리"
-description: "."
+description: "Curated list of MLOps tools and frameworks including Wandb, Hydra, DVC, ONNX, and CI/CD options for ML project workflows."
 date: "2021-09-22T17:27:56.922Z"
 tags: ["mlops"]
 draft: false

@@ -1,8 +1,8 @@
 ---
 title: "부스트캠프 AI Tech 2기 2주차 학습정리"
-description: "."
+description: "Week 2 of Naver Boostcamp AI Tech covering deep learning basics, data visualization, and sample variance with degrees of freedom."
 date: "2021-08-13T11:33:19.047Z"
-tags: ["Naver-Boostcamp"]
+tags: ["naver-boostcamp"]
 draft: false
 ---
 

@@ -1,8 +1,8 @@
 ---
 title: "QA with Phrase Retrieval"
-description: "."
+description: "Overview of phrase retrieval for open-domain QA, using dense-sparse representations to bypass the retriever-reader pipeline."
 date: "2021-10-20T06:13:25.221Z"
-tags: ["MRC"]
+tags: ["nlp"]
 draft: false
 ---
 

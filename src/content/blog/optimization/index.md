@@ -1,8 +1,8 @@
 ---
 title: "Optimization"
-description: "."
+description: "Deep learning optimization fundamentals: generalization, overfitting, cross-validation, bias-variance tradeoff, bootstrapping, bagging, and boosting."
 date: "2021-08-10T01:35:15.676Z"
-tags: ["DL", "optimization"]
+tags: ["dl"]
 draft: false
 ---
 

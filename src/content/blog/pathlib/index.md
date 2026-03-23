@@ -1,6 +1,6 @@
 ---
 title: "pathlib"
-description: "."
+description: "Introduction to Python's pathlib module for cleaner, object-oriented file path manipulation as an alternative to os.path."
 date: "2021-09-07T01:10:10.740Z"
 tags: ["python"]
 draft: false

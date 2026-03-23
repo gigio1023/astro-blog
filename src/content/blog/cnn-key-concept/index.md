@@ -1,8 +1,8 @@
 ---
 title: "CNN key concept"
-description: "."
+description: "Key CNN architectures from ILSVRC: AlexNet, VGGNet, GoogLeNet, and ResNet, with analysis of receptive fields and 1x1 convolutions."
 date: "2021-08-11T06:50:47.059Z"
-tags: ["CNN", "DL"]
+tags: ["computer-vision", "dl"]
 draft: false
 ---
 

@@ -1,8 +1,8 @@
 ---
 title: "pandas"
-description: "."
+description: "Quick reference for pandas essentials: DataFrame, Series, read_csv, indexing with loc and iloc."
 date: "2021-08-19T02:17:47.613Z"
-tags: ["pandas", "python"]
+tags: ["python"]
 draft: false
 ---
 

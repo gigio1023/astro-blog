@@ -1,8 +1,8 @@
 ---
 title: "Training proecss"
-description: "."
+description: "How gradient accumulation works in PyTorch for effective large-batch training on limited GPU memory."
 date: "2021-08-30T18:02:28.948Z"
-tags: ["DL", "PyTorch"]
+tags: ["dl", "pytorch"]
 draft: false
 ---
 

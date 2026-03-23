@@ -1,8 +1,8 @@
 ---
 title: "pytorch 기본 문법"
-description: "."
+description: "Essential PyTorch operations: view vs reshape, squeeze, matrix multiplication, index_select, gather, and more."
 date: "2021-08-17T13:07:14.697Z"
-tags: ["PyTorch"]
+tags: ["pytorch"]
 draft: false
 ---
 

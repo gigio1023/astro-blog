@@ -1,8 +1,8 @@
 ---
 title: "첫번째 Ai Competition 마무리"
-description: "."
+description: "Retrospective on a mask/age/gender image classification competition: model selection, augmentation, CutMix, and lessons learned."
 date: "2021-09-06T11:01:54.134Z"
-tags: ["ai competition", "boostcamp"]
+tags: ["ai-competition", "naver-boostcamp"]
 draft: false
 ---
 

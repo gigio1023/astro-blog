@@ -1,6 +1,6 @@
 ---
 title: "[프로그래머스] 영어 끝말잇기"
-description: "."
+description: "Solution for the Programmers word chain game problem using stack-based simulation and modular arithmetic."
 date: "2021-10-29T22:50:29.761Z"
 tags: ["algorithm"]
 draft: false
