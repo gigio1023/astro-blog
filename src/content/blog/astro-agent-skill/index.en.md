@@ -1,5 +1,5 @@
 ---
-title: "I Made an Agent Skill for My Astro Blog"
+title: "Agent Skill for Astro Blog"
 description: "Agents kept getting Astro 6 patterns wrong, so I put together a skill."
 date: "2026-03-23T14:00:00+09:00"
 tags: ["agent", "agent-skill"]
