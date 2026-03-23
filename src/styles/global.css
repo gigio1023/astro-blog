@@ -70,10 +70,10 @@
     @apply scheme-dark;
   }
 
-  /* Prevent layout shifts during view transitions */
+  /* Snappy view transitions — short enough to feel instant, long enough to avoid flash */
   ::view-transition-old(root),
   ::view-transition-new(root) {
-    animation-duration: 0.2s;
+    animation-duration: 0.1s;
   }
 
   /* Ensure stable font rendering to prevent layout shifts */
