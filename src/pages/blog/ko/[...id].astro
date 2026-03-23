@@ -16,6 +16,7 @@ import { SITE } from '@/consts'
 import {
   getAdjacentPosts,
   getAllPostsAndSubposts,
+  getAvailableTranslations,
   getCombinedReadingTime,
   getEnglishTitle,
   getParentId,
@@ -23,7 +24,6 @@ import {
   getPostReadingTime,
   getSubpostCount,
   getTOCSections,
-  getTranslation,
   hasSubposts,
   isSubpost,
   parseAuthors,
@@ -107,41 +107,12 @@ try {
   // Continue with default values - page will still render
 }
 
-// Translation support
-let translationPost: Awaited<ReturnType<typeof getTranslation>> = null
-let TranslationContent: typeof Content | null = null
-let translationHeadings: Awaited<ReturnType<typeof render>>['headings'] = []
-let translationTocSections: Awaited<ReturnType<typeof getTOCSections>> = []
-try {
-  translationPost = await getTranslation(currentPostId)
-  if (translationPost) {
-    const rendered = await render(translationPost)
-    TranslationContent = rendered.Content
-    translationHeadings = rendered.headings ?? []
-    if (translationHeadings.length > 0) {
-      translationTocSections = [{
-        type: 'parent' as const,
-        title: 'Overview',
-        headings: translationHeadings.map(h => ({
-          slug: h.slug,
-          text: h.text,
-          depth: h.depth,
-        })),
-      }]
-    }
-  }
-} catch (error) {
-  console.error('Error loading translation:', error)
-}
-
-const originalLang = post.data.lang || 'ko'
-const translationLang = translationPost?.data.lang || 'en'
-const defaultLang = 'en'
+const translations = await getAvailableTranslations(post.id)
 const englishTitle = await getEnglishTitle(post)
 ---
 
 <Layout hideFloatingSidebar={hasChildPosts || isCurrentSubpost}>
-  <PostHead slot="head" post={post} />
+  <PostHead slot="head" post={post} translations={translations} />
   {
     (hasChildPosts || isCurrentSubpost) && (
       <SubpostsHeader
@@ -151,7 +122,7 @@ const englishTitle = await getEnglishTitle(post)
     )
   }
   {
-    (headings?.length > 0 || translationHeadings?.length > 0) &&
+    headings?.length > 0 &&
       !(
         isCurrentSubpost &&
         headings.length === 1 &&
@@ -160,9 +131,6 @@ const englishTitle = await getEnglishTitle(post)
         <TOCHeader
           slot="table-of-contents"
           headings={headings}
-          translationHeadings={translationPost ? translationHeadings : undefined}
-          originalLang={translationPost ? originalLang : undefined}
-          translationLang={translationPost ? translationLang : undefined}
         />
       )
   }
@@ -177,19 +145,19 @@ const englishTitle = await getEnglishTitle(post)
           ...(isCurrentSubpost && parentPost
             ? [
                 {
-                  href: `/blog/${parentPost.id}`,
+                  href: `/blog/ko/${parentPost.id}`,
                   label: parentPost.data.title,
                   icon: 'lucide:book-open',
                 },
                 {
-                  href: `/blog/${currentPostId}`,
+                  href: `/blog/ko/${currentPostId}`,
                   label: englishTitle,
                   icon: 'lucide:file-text',
                 },
               ]
             : [
                 {
-                  href: `/blog/${currentPostId}`,
+                  href: `/blog/ko/${currentPostId}`,
                   label: englishTitle,
                   icon: 'lucide:book-open-text',
                 },
@@ -212,30 +180,9 @@ const englishTitle = await getEnglishTitle(post)
 
     <section class="col-start-2 flex flex-col gap-y-6 text-center">
       <div class="flex flex-col">
-        {translationPost ? (
-          <div>
-            <h1
-              data-lang={originalLang}
-              class:list={["mb-2 scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl", originalLang !== defaultLang && 'lang-hidden']}
-              id="post-title"
-            >
-              {post.data.title}
-            </h1>
-            <h1
-              data-lang={translationLang}
-              class:list={["mb-2 scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl", translationLang !== defaultLang && 'lang-hidden']}
-            >
-              {translationPost.data.title}
-            </h1>
-          </div>
-        ) : (
-          <h1
-            class="mb-2 scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl"
-            id="post-title"
-          >
-            {post.data.title}
-          </h1>
-        )}
+        <h1 class="mb-2 scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl" id="post-title">
+          {post.data.title}
+        </h1>
 
         <div class="mb-4 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap sm:gap-0">
           <div
@@ -326,11 +273,9 @@ const englishTitle = await getEnglishTitle(post)
             )
           }
 
-          {translationPost && (
-            <div class="sm:ml-4 sm:border-l sm:border-border sm:pl-4">
-              <LanguageSwitcher />
-            </div>
-          )}
+          <div class="sm:ml-4 sm:border-l sm:border-border sm:pl-4">
+            <LanguageSwitcher translations={translations} currentLang="ko" />
+          </div>
         </div>
       </div>
 
@@ -342,31 +287,17 @@ const englishTitle = await getEnglishTitle(post)
     </section>
 
     {
-      (tocSections.length > 0 || translationTocSections.length > 0) && (
+      tocSections.length > 0 && (
         <TOCSidebar
           sections={tocSections}
-          translationSections={translationPost ? translationTocSections : undefined}
-          originalLang={translationPost ? originalLang : undefined}
-          translationLang={translationPost ? translationLang : undefined}
           currentPostId={currentPostId}
         />
       )
     }
 
-    {translationPost && TranslationContent ? (
-      <div class="col-start-2">
-        <article data-lang={originalLang} class:list={["prose max-w-none", originalLang !== defaultLang && 'lang-hidden']}>
-          <Content />
-        </article>
-        <article data-lang={translationLang} class:list={["prose max-w-none", translationLang !== defaultLang && 'lang-hidden']}>
-          <TranslationContent />
-        </article>
-      </div>
-    ) : (
-      <article class="prose col-start-2 max-w-none">
-        <Content />
-      </article>
-    )}
+    <article class="prose col-start-2 max-w-none">
+      <Content />
+    </article>
 
     {
       (hasChildPosts || isCurrentSubpost) && (

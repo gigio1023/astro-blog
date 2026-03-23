@@ -1,0 +1,160 @@
+---
+import Breadcrumbs from '@/components/breadcrumbs.astro'
+import LanguageSwitcher from '@/components/language-switcher.astro'
+import PostHead from '@/components/post-head.astro'
+import TOCHeader from '@/components/toc-header.astro'
+import TOCSidebar from '@/components/toc-sidebar.astro'
+import Layout from '@/layouts/layout.astro'
+import {
+  getAvailableTranslations,
+  getPostReadingTime,
+} from '@/lib/data-utils'
+import { formatDate, getTagVariant } from '@/lib/utils'
+import { Icon } from 'astro-icon/components'
+import { Image } from 'astro:assets'
+import { getCollection, render } from 'astro:content'
+import { badgeVariants } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('blog')
+  const itPosts = allPosts.filter(p => p.data.lang === 'it' && !p.data.draft)
+  return itPosts.map(post => ({
+    params: { id: post.data.translationOf || post.id },
+    props: post,
+  }))
+}
+
+const post = Astro.props
+const slug = post.data.translationOf || post.id
+const { Content, headings } = await render(post)
+const postReadingTime = await getPostReadingTime(post.id)
+const translations = await getAvailableTranslations(slug)
+---
+
+<Layout>
+  <PostHead slot="head" post={post} translations={translations} />
+
+  {headings?.length > 0 && (
+    <TOCHeader slot="table-of-contents" headings={headings} />
+  )}
+
+  <section class="grid grid-cols-[minmax(0px,1fr)_min(calc(var(--breakpoint-md)-2rem),100%)_minmax(0px,1fr)] gap-y-6">
+    <div class="col-start-2">
+      <Breadcrumbs
+        items={[
+          { href: '/blog', label: 'Blog', icon: 'lucide:library-big' },
+          { label: post.data.title, icon: 'lucide:book-open-text' },
+        ]}
+      />
+    </div>
+
+    {post.data.image && (
+      <Image
+        src={post.data.image}
+        alt={post.data.title}
+        width={1200}
+        height={630}
+        class="col-span-full mx-auto w-full max-w-5xl object-cover"
+      />
+    )}
+
+    <section class="col-start-2 flex flex-col gap-y-6 text-center">
+      <div class="flex flex-col">
+        <h1 class="mb-2 scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl" id="post-title">
+          {post.data.title}
+        </h1>
+
+        <div class="mb-4 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap sm:gap-0">
+          <div class="text-muted-foreground divide-border flex items-center divide-x text-xs sm:text-sm">
+            <div class="flex items-center gap-2 px-2 first:pl-0 last:pr-0">
+              <span>{formatDate(post.data.date)}</span>
+            </div>
+            <div class="flex items-center gap-2 px-2 first:pl-0 last:pr-0">
+              <span>{postReadingTime}</span>
+            </div>
+          </div>
+
+          {post.data.tags && post.data.tags.length > 0 && (
+            <div class="flex flex-wrap items-center justify-center gap-1.5 sm:ml-3">
+              {post.data.tags.map((tag) => {
+                const { variant, className } = getTagVariant(tag)
+                return (
+                  <a
+                    href={`/tags/${tag}`}
+                    class={`${badgeVariants({ variant })} ${className || ''}`}
+                  >
+                    <Icon name="lucide:hash" class="size-3" />
+                    {tag}
+                  </a>
+                )
+              })}
+            </div>
+          )}
+
+          <div class="sm:ml-4 sm:border-l sm:border-border sm:pl-4">
+            <LanguageSwitcher translations={translations} currentLang="it" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {headings.length > 0 && (
+      <TOCSidebar
+        sections={[{
+          type: 'parent' as const,
+          title: 'Overview',
+          headings: headings.map(h => ({ slug: h.slug, text: h.text, depth: h.depth })),
+        }]}
+        currentPostId={slug}
+      />
+    )}
+
+    <article class="prose col-start-2 max-w-none">
+      <Content />
+    </article>
+  </section>
+
+  <Button
+    variant="outline"
+    size="icon"
+    className="group fixed right-8 bottom-8 z-50 hidden"
+    id="scroll-to-top"
+    title="Scroll to top"
+    aria-label="Scroll to top"
+  >
+    <Icon name="lucide:arrow-up" class="mx-auto size-4 transition-all group-hover:-translate-y-0.5" />
+  </Button>
+
+  <script>
+    document.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('#scroll-to-top')) {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+    })
+
+    function initScrollToTop() {
+      const handler = () => {
+        const btn = document.getElementById('scroll-to-top')
+        const footer = document.querySelector('footer')
+        if (!btn || !footer) return
+        const isFooterVisible = footer.getBoundingClientRect().top <= window.innerHeight
+        btn.classList.toggle('hidden', window.scrollY <= 300 || isFooterVisible)
+      }
+      window.addEventListener('scroll', handler, { passive: true })
+    }
+    document.addEventListener('astro:page-load', initScrollToTop)
+  </script>
+</Layout>
+
+<script>
+  function loadKatexCss() {
+    if (document.querySelector('.katex') && !document.querySelector('link[href*="katex.min.css"]')) {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css'
+      document.head.appendChild(link)
+    }
+  }
+  document.addEventListener('astro:page-load', loadKatexCss)
+</script>

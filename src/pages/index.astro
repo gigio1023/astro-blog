@@ -103,7 +103,7 @@ const websiteSchema = {
   {latestPost && (
     <section class="mt-5">
       <Link
-        href={`/blog/${latestPost.id}`}
+        href={`/blog/ko/${latestPost.id}`}
         class="group block rounded-lg border border-border/60 px-5 py-4 hover:border-primary/40 hover:bg-muted/20 transition-all duration-200"
       >
         <span class="text-[10px] font-semibold text-primary uppercase tracking-widest">Latest</span>
@@ -141,7 +141,7 @@ const websiteSchema = {
             <div class="space-y-1.5">
               {cat.posts.map(({ post, title }) => (
                 <Link
-                  href={`/blog/${post.id}`}
+                  href={`/blog/ko/${post.id}`}
                   class="block text-sm hover:text-primary transition-colors leading-snug py-0.5"
                 >
                   {title}
