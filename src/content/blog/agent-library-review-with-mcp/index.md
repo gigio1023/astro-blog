@@ -2,7 +2,7 @@
 title: "Agent 구현 + MCP 사용담: 아직 어설프다"
 description: "OpenAI Agents SDK, LangGraph, Gemini Gen AI SDK, MCP를 사용해서 agent를 구현해본 후기. 결론: LLM Provider SDK만 쓰는 게 제일 빠르다."
 date: "2025-04-02T02:19:12+09:00"
-tags: ["agent", "llm", "langgraph", "mcp", "openai"]
+tags: ["agent"]
 draft: false
 lang: ko
 ---

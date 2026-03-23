@@ -2,7 +2,7 @@
 title: "tqdm with epoch statics"
 description: "Quick tip on displaying training accuracy and loss inside tqdm progress bars in PyTorch."
 date: "2021-08-22T13:36:09.808Z"
-tags: ["pytorch", "tqdm"]
+tags: ["pytorch"]
 draft: false
 ---
 

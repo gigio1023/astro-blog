@@ -2,7 +2,7 @@
 title: "Generative model - 2"
 description: "Latent variable models explained: variational inference, ELBO, VAE, and adversarial auto-encoders (AAE)."
 date: "2021-08-14T12:01:37.562Z"
-tags: ["generative-model", "latent-variable-model"]
+tags: ["computer-vision"]
 draft: false
 ---
 

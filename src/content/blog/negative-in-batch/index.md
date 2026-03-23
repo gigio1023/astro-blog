@@ -2,7 +2,7 @@
 title: "Negative in-batch"
 description: "An approach that enables large-batch contrastive learning under memory constraints by using in-batch negatives instead of explicit negative sampling."
 date: "2021-10-18T17:53:53.788Z"
-tags: ["mrc"]
+tags: ["nlp"]
 draft: false
 ---
 

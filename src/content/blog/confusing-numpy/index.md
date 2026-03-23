@@ -2,7 +2,7 @@
 title: "헷갈리는 numpy"
 description: "Common NumPy pitfalls including dtype=object issues with mixed-type lists and axis behavior in np.mean."
 date: "2021-09-01T20:33:06.787Z"
-tags: ["pytorch", "numpy"]
+tags: ["pytorch", "python"]
 draft: false
 ---
 

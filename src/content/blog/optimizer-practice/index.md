@@ -2,7 +2,7 @@
 title: "Optimizer 실습"
 description: "Practical comparison of SGD, Momentum, and Adam optimizers on function approximation with noisy data in PyTorch."
 date: "2021-08-10T07:58:31.504Z"
-tags: ["dl", "optimizer", "pytorch"]
+tags: ["dl", "pytorch"]
 draft: false
 ---
 

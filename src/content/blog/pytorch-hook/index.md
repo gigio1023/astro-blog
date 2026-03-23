@@ -2,7 +2,7 @@
 title: "pytorch hook"
 description: "How to use PyTorch hooks for inspecting and modifying forward/backward passes in nn.Module."
 date: "2021-08-18T23:40:41.171Z"
-tags: ["pytorch", "hook"]
+tags: ["pytorch"]
 draft: false
 ---
 

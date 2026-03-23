@@ -2,7 +2,7 @@
 title: "I Tried Unity's Official MCP and It Didn't Work — Here's What Happened"
 description: "CoplayDev/unity-mcp kept disconnecting, so I tried the official package. The relay binary returned empty tools/list. Back to the community alternative."
 date: "2026-03-22T18:00:00+09:00"
-tags: ["unity", "mcp", "rabbit-hole"]
+tags: ["rabbit-hole", "agent"]
 draft: false
 lang: en
 translationOf: unity-official-mcp-broken-analysis

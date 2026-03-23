@@ -2,7 +2,7 @@
 title: "Matrix, Vector"
 description: "Linear algebra refresher covering vector norms, inner products, matrix multiplication, inverse matrices, and Moore-Penrose pseudo-inverse with NumPy examples."
 date: "2021-08-03T17:51:44.040Z"
-tags: ["matrix"]
+tags: ["python"]
 draft: false
 ---
 

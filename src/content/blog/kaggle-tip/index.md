@@ -2,7 +2,7 @@
 title: "Kaggle tip"
 description: "Practical tips for Kaggle competitions covering ranking systems, competition types, validation strategies, ensemble methods, and hardware recommendations."
 date: "2021-09-23T06:35:03.433Z"
-tags: ["naver-boostcamp", "kaggle"]
+tags: ["naver-boostcamp", "ai-competition"]
 draft: false
 ---
 

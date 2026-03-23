@@ -2,7 +2,7 @@
 title: "nvidia-driver"
 description: "Troubleshooting NVIDIA driver installation issues on Ubuntu, resolved by following the official NVIDIA documentation."
 date: "2021-10-06T21:59:12.874Z"
-tags: ["linux"]
+tags: ["dev-tools"]
 draft: false
 ---
 

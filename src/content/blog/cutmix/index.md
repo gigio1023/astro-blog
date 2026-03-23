@@ -2,7 +2,7 @@
 title: "CutMix"
 description: "CutMix data augmentation implementation in PyTorch, covering loss computation, accuracy, and F1 score calculation."
 date: "2021-08-27T23:02:28.794Z"
-tags: ["cnn", "pytorch", "ai-competition"]
+tags: ["computer-vision", "pytorch", "ai-competition"]
 draft: false
 ---
 

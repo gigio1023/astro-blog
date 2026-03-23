@@ -2,7 +2,7 @@
 title: "TIL train 계획 정리 2021.08.24"
 description: "Day 2 competition log covering ensemble strategies (bagging vs. boosting) and CNN model selection for image classification."
 date: "2021-08-24T15:53:05.920Z"
-tags: ["pytorch", "til", "ai-competition"]
+tags: ["pytorch", "naver-boostcamp", "ai-competition"]
 draft: false
 ---
 

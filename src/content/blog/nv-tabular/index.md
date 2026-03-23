@@ -2,7 +2,7 @@
 title: "NVTabular"
 description: "Introduction to NVTabular, NVIDIA's GPU-accelerated library for tabular data feature engineering and preprocessing."
 date: "2022-04-12T00:00:00.000Z"
-tags: ["ml", "nvt", "preprocessing"]
+tags: ["ml", "mlops"]
 draft: false
 ---
 

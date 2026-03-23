@@ -2,7 +2,7 @@
 title: "pytorch dataset, dataloader"
 description: "Guide to PyTorch Dataset and DataLoader: data flow, tensor conversion, samplers, collate_fn, and transforms."
 date: "2021-08-19T01:53:16.064Z"
-tags: ["pytorch", "dataloader", "dataset"]
+tags: ["pytorch"]
 draft: false
 ---
 

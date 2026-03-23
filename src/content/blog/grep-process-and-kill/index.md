@@ -2,7 +2,7 @@
 title: "grep process 한꺼번에 종료"
 description: "One-liner to find and kill all matching processes using ps, grep, awk, and xargs."
 date: "2021-10-29T08:57:49.695Z"
-tags: ["linux"]
+tags: ["dev-tools"]
 draft: false
 ---
 

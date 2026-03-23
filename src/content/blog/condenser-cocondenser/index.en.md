@@ -2,7 +2,7 @@
 title: "Condenser, coCondenser"
 description: "Paper review of Condenser and coCondenser for dense retrieval pre-training."
 date: "2022-05-16T00:00:00.000Z"
-tags: ["nlp", "paper-review", "dense-retrieval"]
+tags: ["nlp", "paper-review"]
 draft: false
 lang: en
 translationOf: "condenser-cocondenser"

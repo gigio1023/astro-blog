@@ -2,7 +2,7 @@
 title: "베이즈 통계학"
 description: "Fundamentals of Bayesian statistics covering Bayes' theorem, conditional probability, posterior updating, and causality interpretation."
 date: "2021-01-01"
-tags: ["ml", "math"]
+tags: ["ml", "algorithm"]
 draft: false
 ---
 

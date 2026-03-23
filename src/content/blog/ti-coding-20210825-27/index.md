@@ -2,7 +2,7 @@
 title: "TIL 코딩 정리 2021.08.25~27"
 description: "TIL notes on wandb logging, fine-tuning pre-trained models, early stopping, and ensemble learning during an image classification competition."
 date: "2021-08-26T23:45:48.082Z"
-tags: ["pytorch", "til", "ai-competition"]
+tags: ["pytorch", "naver-boostcamp", "ai-competition"]
 draft: false
 ---
 

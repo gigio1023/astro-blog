@@ -2,7 +2,7 @@
 title: "경량화 대회"
 description: "Key considerations for model compression competitions, covering FLOPs, memory access cost, and speed optimization guidelines from ShuffleNet v2."
 date: "2021-11-28T13:26:00.481Z"
-tags: ["lightweight"]
+tags: ["dl"]
 draft: false
 ---
 

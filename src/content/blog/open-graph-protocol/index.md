@@ -2,7 +2,7 @@
 title: "Open Graph Protocol"
 description: "Overview of Open Graph Protocol for standardized metadata in HTML, with tips on Facebook's Sharing Debugger and cache management."
 date: "2022-04-06T00:00:00.000Z"
-tags: ["blog"]
+tags: ["dev-tools"]
 draft: false
 ---
 

@@ -2,7 +2,7 @@
 title: "CutMix vertical"
 description: "Applying vertical CutMix augmentation for face mask classification to focus patches on facial regions."
 date: "2021-08-28T14:48:06.653Z"
-tags: ["cnn", "ai-competition", "cutmix"]
+tags: ["computer-vision", "ai-competition"]
 draft: false
 ---
 

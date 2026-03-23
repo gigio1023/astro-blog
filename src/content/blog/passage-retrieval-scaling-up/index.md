@@ -2,7 +2,7 @@
 title: "Passage Retrieval - Scaling up"
 description: "Scaling passage retrieval with approximate similarity search techniques: scalar quantization, inverted file indexing, and FAISS."
 date: "2021-10-17T08:32:29.667Z"
-tags: ["mrc"]
+tags: ["nlp"]
 draft: false
 ---
 

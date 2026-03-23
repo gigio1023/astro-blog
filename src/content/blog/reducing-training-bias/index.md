@@ -2,7 +2,7 @@
 title: "Reducing Training Bias"
 description: "Types of training bias in MRC and ODQA, and techniques to mitigate them including negative sampling and annotation bias handling."
 date: "2021-10-18T03:44:02.826Z"
-tags: ["mrc"]
+tags: ["nlp"]
 draft: false
 ---
 

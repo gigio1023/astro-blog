@@ -2,7 +2,7 @@
 title: "Convolution"
 description: "Fundamentals of convolution operations including stride, padding, parameter counting, and 1x1 convolutions."
 date: "2021-08-11T02:38:17.395Z"
-tags: ["cnn", "dl"]
+tags: ["computer-vision", "dl"]
 draft: false
 ---
 

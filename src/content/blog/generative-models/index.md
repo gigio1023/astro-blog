@@ -2,7 +2,7 @@
 title: "Generative Models"
 description: "Introduction to generative models: probability distributions, independence assumptions, chain rule, and auto-regressive models."
 date: "2021-08-13T15:08:09.373Z"
-tags: ["dl", "naver-boostcamp", "generative-model", "computer-vision"]
+tags: ["dl", "naver-boostcamp", "computer-vision"]
 draft: false
 ---
 

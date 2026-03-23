@@ -2,7 +2,7 @@
 title: "CNN"
 description: "Fundamentals of CNN covering convolution operations, kernel mechanics, multi-dimensional convolutions, and backpropagation."
 date: "2021-01-01"
-tags: ["cnn", "ml", "math"]
+tags: ["computer-vision", "ml", "algorithm"]
 draft: false
 ---
 

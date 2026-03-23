@@ -2,7 +2,7 @@
 title: "Transformer 실습"
 description: "Hands-on PyTorch implementation of Scaled Dot-Product Attention and Multi-Head Attention for the Transformer."
 date: "2021-08-13T13:09:33.204Z"
-tags: ["pytorch", "transformer"]
+tags: ["pytorch", "nlp"]
 draft: false
 ---
 

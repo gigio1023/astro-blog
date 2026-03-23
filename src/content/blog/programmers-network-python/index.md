@@ -2,7 +2,7 @@
 title: "[프로그래머스] 네트워크(python)"
 description: "Solution for the Programmers network problem using DFS to count connected components."
 date: "2021-08-15T19:49:33.274Z"
-tags: ["algorithm", "programmers", "python"]
+tags: ["algorithm", "python"]
 draft: false
 ---
 

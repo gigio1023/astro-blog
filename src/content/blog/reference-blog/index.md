@@ -1,7 +1,7 @@
 ---
 title: "참고 블로그"
 description: "A curated list of reference blogs for machine learning and engineering study."
-tags: ["blog"]
+tags: ["dev-tools"]
 date: "2021-08-11T08:57:12.960Z"
 draft: false
 ---

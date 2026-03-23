@@ -2,7 +2,7 @@
 title: "Ensemble"
 description: "Ensemble methods for AI competitions: hard voting, soft voting, and weighted voting to improve model performance."
 date: "2021-08-31T18:22:32.656Z"
-tags: ["dl", "pytorch", "ensemble"]
+tags: ["dl", "pytorch"]
 draft: false
 ---
 

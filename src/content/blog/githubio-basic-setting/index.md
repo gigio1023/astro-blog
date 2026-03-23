@@ -2,7 +2,7 @@
 title: "github.io basic"
 description: "Setting up a GitHub Pages blog with Jekyll: installation, configuration, YAML front matter, and theme customization."
 date: "2022-04-06T00:00:00.000Z"
-tags: ["blog"]
+tags: ["dev-tools"]
 draft: false
 ---
 

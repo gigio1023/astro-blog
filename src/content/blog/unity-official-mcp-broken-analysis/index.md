@@ -2,7 +2,7 @@
 title: "Unity 공식 MCP를 시도했다가 실패한 기록"
 description: "CoplayDev/unity-mcp의 연결 끊김 문제 때문에 공식 패키지를 시도했는데, relay binary의 tools/list가 빈 배열을 반환해서 결국 돌아온 이야기"
 date: "2026-03-22T18:00:00+09:00"
-tags: ["unity", "mcp", "rabbit-hole"]
+tags: ["rabbit-hole", "agent"]
 draft: false
 ---
 

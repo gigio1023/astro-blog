@@ -2,7 +2,7 @@
 title: "TIL train 계획 정리 2021.08.23"
 description: "Training plan for a mask classification competition: per-feature models with ensemble learning, plus Jupyter vs. CLI workflow notes."
 date: "2021-08-23T16:57:30.489Z"
-tags: ["pytorch", "til", "ai-competition"]
+tags: ["pytorch", "naver-boostcamp", "ai-competition"]
 draft: false
 ---
 

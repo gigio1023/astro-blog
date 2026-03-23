@@ -2,7 +2,7 @@
 title: "Unicode, Tokenization"
 description: "Basics of Unicode handling in Python and subword tokenization methods including BPE (Byte-Pair Encoding)."
 date: "2021-10-12T02:26:14.074Z"
-tags: ["mrc", "python"]
+tags: ["nlp", "python"]
 draft: false
 ---
 

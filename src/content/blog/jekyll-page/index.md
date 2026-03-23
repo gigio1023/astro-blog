@@ -1,7 +1,7 @@
 ---
 title: "Jekyll Page"
 description: "Guide to creating non-date-based Jekyll pages with custom permalinks, layouts, and a custom 404 page for GitHub Pages."
-tags: ["blog"]
+tags: ["dev-tools"]
 date: "2022-04-06T00:00:00.000Z"
 draft: false
 ---

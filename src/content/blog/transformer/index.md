@@ -2,7 +2,7 @@
 title: "Transformer"
 description: "Core concepts of the Transformer model: encoder self-attention, Query/Key/Value embeddings, and multi-head attention mechanics."
 date: "2021-08-13T11:44:01.736Z"
-tags: ["dl", "transformer"]
+tags: ["dl", "nlp"]
 draft: false
 ---
 

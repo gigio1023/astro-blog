@@ -2,7 +2,7 @@
 title: "Generation-based MRC"
 description: "Generation-based MRC using seq2seq models like BART: comparison with extraction-based approaches, preprocessing, and decoding strategies."
 date: "2021-10-13T04:58:10.269Z"
-tags: ["mrc"]
+tags: ["nlp"]
 draft: false
 ---
 

@@ -2,7 +2,7 @@
 title: "pytorch apply"
 description: "How PyTorch's nn.Module.apply() maps a function across all submodules via postorder traversal."
 date: "2021-08-19T00:07:50.898Z"
-tags: ["pytorch", "apply"]
+tags: ["pytorch"]
 draft: false
 ---
 

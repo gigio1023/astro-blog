@@ -2,7 +2,7 @@
 title: "Hyperparameter tuning"
 description: "Overview of hyperparameter tuning methods including grid search, random search, and Bayesian optimization, with an introduction to Ray for parallel tuning."
 date: "2021-08-22T19:43:58.594Z"
-tags: ["pytorch", "hyperparameter-tuning"]
+tags: ["pytorch", "dl"]
 draft: false
 ---
 

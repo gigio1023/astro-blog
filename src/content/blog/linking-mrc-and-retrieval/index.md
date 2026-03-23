@@ -2,7 +2,7 @@
 title: "Linking MRC and Retrieval"
 description: "Deep dive into Open Domain Question Answering, covering the Retriever-Reader approach, distant supervision, and passage granularity strategies."
 date: "2021-10-17T08:45:26.446Z"
-tags: ["mrc"]
+tags: ["nlp"]
 draft: false
 ---
 

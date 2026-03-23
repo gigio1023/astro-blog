@@ -2,7 +2,7 @@
 title: "Linux server sleep"
 description: "Troubleshooting and fixing unexpected auto-sleep shutdowns on a Linux server by disabling systemd sleep targets."
 date: "2021-10-03T21:06:55.212Z"
-tags: ["linux"]
+tags: ["dev-tools"]
 draft: false
 ---
 
