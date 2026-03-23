@@ -43,12 +43,16 @@ export const BREVO = {
 
 export const NAV_LINKS: SocialLink[] = [
   {
+    href: '/',
+    label: 'Home',
+  },
+  {
     href: '/blog',
-    label: 'Blog',
+    label: 'Posts',
   },
   {
     href: '/about',
-    label: 'About',
+    label: 'Profile',
   },
 ]
 
