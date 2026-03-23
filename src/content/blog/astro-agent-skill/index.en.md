@@ -81,22 +81,9 @@ I've cataloged about 20 patterns like these, including Tailwind v4's CSS-native 
 
 I referenced Thariq's [Lessons from Building Claude Code: How We Use Skills](https://x.com/trq212/status/2033949937936085378) while putting this together. It covers how Anthropic runs hundreds of skills internally. Beyond the basics like gotchas-first structure and progressive disclosure, a few points were worth noting.
 
-**The description field is for the model.** When a Claude Code session starts, it scans every installed skill's description to decide "is there a skill for this request?" The description isn't a human-readable summary — it's the trigger condition for the model. After reading this, I rewrote the description to be quite long and specific.
-
-```yaml
-description: "Use when editing .astro/.mdx files, modifying astro.config.*,
-  working with content collections (build-time or live),
-  adding Tailwind CSS v4, using client directives (client:load/idle/visible),
-  handling forms/actions with Zod 4, configuring server features
-  (sessions, i18n, env vars, CSP, Cloudflare Workers),
-  using view transitions or ClientRouter (<ClientRouter />),
-  or setting up adapters (Node/Vercel/Netlify/Cloudflare) in an Astro project."
-```
-
-Each condition is spelled out so the skill triggers automatically when the agent touches `.astro` files or modifies `astro.config`. A vague description like "Astro development helper" makes the trigger timing ambiguous.
+The skill covers `.astro`/`.mdx` files, Content Collections, Tailwind v4, `client:` directives, Actions/Zod 4, server features (sessions, i18n, env vars, CSP), View Transitions, and adapter setup. I tend to invoke `/astro-dev` explicitly out of habit, but since the description is written as a trigger condition, it also fires automatically when the agent touches Astro code.
 
 **Give the agent code so it spends turns on composition.** Including scripts or templates in a skill means the agent assembles from known-good pieces instead of reconstructing boilerplate from scratch. In this skill, the `templates/` directory has drop-in config files for Astro 6 + Tailwind v4.
-
 ```
 templates/
 ├── astro.config.ts    # Astro 6 + Tailwind v4 + MDX + Fonts API
