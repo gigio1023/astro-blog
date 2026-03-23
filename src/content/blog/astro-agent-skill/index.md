@@ -80,7 +80,7 @@ const blog = defineCollection({
 
 스킬을 만들면서 Thariq의 [Lessons from Building Claude Code: How We Use Skills](https://x.com/trq212/status/2033949937936085378)를 참고했다. Anthropic 내부에서 수백 개의 스킬을 운영하면서 나온 이야기인데, gotchas 중심으로 만들라거나 progressive disclosure를 하라는 것 같은 기본적인 내용 외에 몇 가지 참고할 만한 포인트가 있었다.
 
-스킬이 커버하는 범위는 `.astro`/`.mdx` 파일 수정, Content Collections, Tailwind v4, `client:` 디렉티브, Actions/Zod 4, 서버 기능(세션, i18n, 환경변수, CSP), View Transitions, 어댑터 설정 등이다. Astro 프로젝트에서 에이전트가 코드를 건드릴 때 자동으로 트리거된다.
+스킬이 커버하는 범위는 `.astro`/`.mdx` 파일 수정, Content Collections, Tailwind v4, `client:` 디렉티브, Actions/Zod 4, 서버 기능(세션, i18n, 환경변수, CSP), View Transitions, 어댑터 설정 등이다. 나는 습관적으로 `/astro-dev`를 직접 달아서 프롬프팅하긴 하는데, description을 트리거 조건으로 작성해뒀기 때문에 Astro 프로젝트에서 코드를 건드리면 자동으로 트리거되기도 한다.
 
 **에이전트에게 코드를 줘서 composition에 턴을 쓰게 하라.** 스킬에 스크립트나 템플릿을 포함하면 에이전트가 보일러플레이트를 처음부터 만드는 대신 조합하는 데 시간을 쓴다는 이야기다. 이 스킬에서는 `templates/` 디렉토리에 Astro 6 + Tailwind v4 기준 설정 파일을 넣어뒀다.
 
