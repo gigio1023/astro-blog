@@ -2,11 +2,14 @@
 import Breadcrumbs from '@/components/breadcrumbs.astro'
 import LanguageSwitcher from '@/components/language-switcher.astro'
 import PostHead from '@/components/post-head.astro'
+import PostNavigation from '@/components/post-navigation.astro'
 import TOCHeader from '@/components/toc-header.astro'
 import TOCSidebar from '@/components/toc-sidebar.astro'
 import Layout from '@/layouts/layout.astro'
 import {
+  getAdjacentPosts,
   getAvailableTranslations,
+  getEnglishTitle,
   getPostReadingTime,
 } from '@/lib/data-utils'
 import { formatDate, getTagVariant } from '@/lib/utils'
@@ -30,6 +33,17 @@ const slug = post.data.translationOf || post.id
 const { Content, headings } = await render(post)
 const postReadingTime = await getPostReadingTime(post.id)
 const translations = await getAvailableTranslations(slug)
+const navigation = await getAdjacentPosts(slug)
+
+// Resolve English titles for navigation posts
+if (navigation.newer) {
+  const enTitle = await getEnglishTitle(navigation.newer)
+  navigation.newer = { ...navigation.newer, data: { ...navigation.newer.data, title: enTitle } }
+}
+if (navigation.older) {
+  const enTitle = await getEnglishTitle(navigation.older)
+  navigation.older = { ...navigation.older, data: { ...navigation.older.data, title: enTitle } }
+}
 ---
 
 <Layout>
@@ -97,6 +111,12 @@ const translations = await getAvailableTranslations(slug)
           </div>
         </div>
       </div>
+
+      <PostNavigation
+        newerPost={navigation.newer}
+        olderPost={navigation.older}
+        lang="it"
+      />
     </section>
 
     {headings.length > 0 && (
@@ -113,6 +133,12 @@ const translations = await getAvailableTranslations(slug)
     <article class="prose col-start-2 max-w-none">
       <Content />
     </article>
+
+    <PostNavigation
+      newerPost={navigation.newer}
+      olderPost={navigation.older}
+      lang="it"
+    />
   </section>
 
   <Button
@@ -127,23 +153,22 @@ const translations = await getAvailableTranslations(slug)
   </Button>
 
   <script>
+    // Event delegation — survives DOM swaps (guardrail #18)
     document.addEventListener('click', (e) => {
       if ((e.target as HTMLElement).closest('#scroll-to-top')) {
         window.scrollTo({ top: 0, behavior: 'smooth' })
       }
     })
 
-    function initScrollToTop() {
-      const handler = () => {
-        const btn = document.getElementById('scroll-to-top')
-        const footer = document.querySelector('footer')
-        if (!btn || !footer) return
-        const isFooterVisible = footer.getBoundingClientRect().top <= window.innerHeight
-        btn.classList.toggle('hidden', window.scrollY <= 300 || isFooterVisible)
-      }
-      window.addEventListener('scroll', handler, { passive: true })
-    }
-    document.addEventListener('astro:page-load', initScrollToTop)
+    // Bare window listener — script is deduplicated (guardrail #11),
+    // window persists across navigations, handler re-queries DOM each time
+    window.addEventListener('scroll', () => {
+      const btn = document.getElementById('scroll-to-top')
+      const footer = document.querySelector('footer')
+      if (!btn || !footer) return
+      const isFooterVisible = footer.getBoundingClientRect().top <= window.innerHeight
+      btn.classList.toggle('hidden', window.scrollY <= 300 || isFooterVisible)
+    }, { passive: true })
   </script>
 </Layout>
 
