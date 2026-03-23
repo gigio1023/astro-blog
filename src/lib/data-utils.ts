@@ -47,10 +47,6 @@ export async function getAvailableTranslations(
   return result
 }
 
-/** Get the base slug for any post (handles translations) */
-export function getBaseSlug(post: CollectionEntry<'blog'>): string {
-  return post.data.translationOf || post.id
-}
 
 export async function getEnglishTitle(
   post: CollectionEntry<'blog'>,

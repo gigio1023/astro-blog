@@ -1,6 +1,7 @@
 ---
 import Breadcrumbs from '@/components/breadcrumbs.astro'
 import Disqus from '@/components/disqus.astro'
+import LanguageSwitcher from '@/components/language-switcher.astro'
 import Link from '@/components/link.astro'
 import PostHead from '@/components/post-head.astro'
 import PostNavigation from '@/components/post-navigation.astro'
@@ -111,7 +112,7 @@ const englishTitle = await getEnglishTitle(post)
 ---
 
 <Layout hideFloatingSidebar={hasChildPosts || isCurrentSubpost}>
-  <PostHead slot="head" post={post} />
+  <PostHead slot="head" post={post} translations={translations} />
   {
     (hasChildPosts || isCurrentSubpost) && (
       <SubpostsHeader
@@ -272,20 +273,9 @@ const englishTitle = await getEnglishTitle(post)
             )
           }
 
-          {translations.length > 1 && (
-            <div class="flex items-center gap-2 text-sm sm:ml-4 sm:border-l sm:border-border sm:pl-4">
-              {translations.map(({ lang, url }) => (
-                <a
-                  href={url}
-                  class={lang === 'ko'
-                    ? 'rounded-full bg-foreground text-background px-3 py-0.5 font-medium'
-                    : 'rounded-full border border-border px-3 py-0.5 text-muted-foreground hover:text-foreground transition-colors'}
-                >
-                  {lang.toUpperCase()}
-                </a>
-              ))}
-            </div>
-          )}
+          <div class="sm:ml-4 sm:border-l sm:border-border sm:pl-4">
+            <LanguageSwitcher translations={translations} currentLang="ko" />
+          </div>
         </div>
       </div>
 

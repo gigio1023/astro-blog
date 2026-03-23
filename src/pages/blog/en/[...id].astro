@@ -1,15 +1,13 @@
 ---
 import Breadcrumbs from '@/components/breadcrumbs.astro'
+import LanguageSwitcher from '@/components/language-switcher.astro'
 import PostHead from '@/components/post-head.astro'
-import PostNavigation from '@/components/post-navigation.astro'
 import TOCHeader from '@/components/toc-header.astro'
 import TOCSidebar from '@/components/toc-sidebar.astro'
 import Layout from '@/layouts/layout.astro'
-import { SITE } from '@/consts'
 import {
   getAvailableTranslations,
   getPostReadingTime,
-  parseAuthors,
 } from '@/lib/data-utils'
 import { formatDate, getTagVariant } from '@/lib/utils'
 import { Icon } from 'astro-icon/components'
@@ -30,13 +28,12 @@ export async function getStaticPaths() {
 const post = Astro.props
 const slug = post.data.translationOf || post.id
 const { Content, headings } = await render(post)
-const authors = await parseAuthors(post.data.authors ?? [])
-const postReadingTime = '0 min read' // simplified for translations
+const postReadingTime = await getPostReadingTime(post.id)
 const translations = await getAvailableTranslations(slug)
 ---
 
 <Layout>
-  <PostHead slot="head" post={post} />
+  <PostHead slot="head" post={post} translations={translations} />
 
   {headings?.length > 0 && (
     <TOCHeader slot="table-of-contents" headings={headings} />
@@ -73,6 +70,9 @@ const translations = await getAvailableTranslations(slug)
             <div class="flex items-center gap-2 px-2 first:pl-0 last:pr-0">
               <span>{formatDate(post.data.date)}</span>
             </div>
+            <div class="flex items-center gap-2 px-2 first:pl-0 last:pr-0">
+              <span>{postReadingTime}</span>
+            </div>
           </div>
 
           {post.data.tags && post.data.tags.length > 0 && (
@@ -92,20 +92,9 @@ const translations = await getAvailableTranslations(slug)
             </div>
           )}
 
-          {translations.length > 1 && (
-            <div class="flex items-center gap-1.5 sm:ml-4 sm:border-l sm:border-border sm:pl-4">
-              {translations.map(({ lang, url }) => (
-                <a
-                  href={url}
-                  class={lang === 'en'
-                    ? 'rounded-full bg-foreground text-background px-3 py-0.5 text-sm font-medium'
-                    : 'rounded-full border border-border px-3 py-0.5 text-sm text-muted-foreground hover:text-foreground transition-colors'}
-                >
-                  {lang.toUpperCase()}
-                </a>
-              ))}
-            </div>
-          )}
+          <div class="sm:ml-4 sm:border-l sm:border-border sm:pl-4">
+            <LanguageSwitcher translations={translations} currentLang="en" />
+          </div>
         </div>
       </div>
     </section>
@@ -138,18 +127,25 @@ const translations = await getAvailableTranslations(slug)
   </Button>
 
   <script>
+    // Event delegation — survives DOM swaps (guardrail #18)
     document.addEventListener('click', (e) => {
       if ((e.target as HTMLElement).closest('#scroll-to-top')) {
         window.scrollTo({ top: 0, behavior: 'smooth' })
       }
     })
-    window.addEventListener('scroll', () => {
-      const btn = document.getElementById('scroll-to-top')
-      const footer = document.querySelector('footer')
-      if (!btn || !footer) return
-      const isFooterVisible = footer.getBoundingClientRect().top <= window.innerHeight
-      btn.classList.toggle('hidden', window.scrollY <= 300 || isFooterVisible)
-    }, { passive: true })
+
+    // astro:page-load for scroll listener (guardrail #17)
+    function initScrollToTop() {
+      const handler = () => {
+        const btn = document.getElementById('scroll-to-top')
+        const footer = document.querySelector('footer')
+        if (!btn || !footer) return
+        const isFooterVisible = footer.getBoundingClientRect().top <= window.innerHeight
+        btn.classList.toggle('hidden', window.scrollY <= 300 || isFooterVisible)
+      }
+      window.addEventListener('scroll', handler, { passive: true })
+    }
+    document.addEventListener('astro:page-load', initScrollToTop)
   </script>
 </Layout>
 
