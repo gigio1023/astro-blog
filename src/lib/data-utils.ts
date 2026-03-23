@@ -33,7 +33,7 @@ export async function getAvailableTranslations(
     (p) => p.id === slug && !p.data.draft && (p.data.lang === 'ko' || !p.data.lang),
   )
   if (koPost) {
-    result.push({ lang: 'ko', url: `/ko/blog/${slug}` })
+    result.push({ lang: 'ko', url: `/blog/ko/${slug}` })
   }
 
   // Check translations
@@ -41,7 +41,7 @@ export async function getAvailableTranslations(
     (p) => p.data.translationOf === slug && !p.data.draft,
   )
   for (const t of translations) {
-    result.push({ lang: t.data.lang || 'en', url: `/${t.data.lang}/blog/${slug}` })
+    result.push({ lang: t.data.lang || 'en', url: `/blog/${t.data.lang}/${slug}` })
   }
 
   return result

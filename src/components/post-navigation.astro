@@ -15,7 +15,7 @@ const isSubpost = !!parentPost
   )}
 >
   <Link
-    href={olderPost ? `/ko/blog/${olderPost.id}` : '#'}
+    href={olderPost ? `/blog/ko/${olderPost.id}` : '#'}
     class={cn(
       buttonVariants({ variant: 'outline' }),
       'rounded-lg group flex items-center justify-start size-full',
@@ -43,7 +43,7 @@ const isSubpost = !!parentPost
   {
     isSubpost && (
       <Link
-        href={parentPost ? `/ko/blog/${parentPost.id}` : '#'}
+        href={parentPost ? `/blog/ko/${parentPost.id}` : '#'}
         class={cn(
           buttonVariants({ variant: 'outline' }),
           'group flex size-full items-center justify-center rounded-lg',
@@ -67,7 +67,7 @@ const isSubpost = !!parentPost
   }
 
   <Link
-    href={newerPost ? `/ko/blog/${newerPost.id}` : '#'}
+    href={newerPost ? `/blog/ko/${newerPost.id}` : '#'}
     class={cn(
       buttonVariants({ variant: 'outline' }),
       'rounded-lg group flex items-center justify-end size-full',

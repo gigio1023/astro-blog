@@ -144,19 +144,19 @@ const englishTitle = await getEnglishTitle(post)
           ...(isCurrentSubpost && parentPost
             ? [
                 {
-                  href: `/ko/blog/${parentPost.id}`,
+                  href: `/blog/ko/${parentPost.id}`,
                   label: parentPost.data.title,
                   icon: 'lucide:book-open',
                 },
                 {
-                  href: `/ko/blog/${currentPostId}`,
+                  href: `/blog/ko/${currentPostId}`,
                   label: englishTitle,
                   icon: 'lucide:file-text',
                 },
               ]
             : [
                 {
-                  href: `/ko/blog/${currentPostId}`,
+                  href: `/blog/ko/${currentPostId}`,
                   label: englishTitle,
                   icon: 'lucide:book-open-text',
                 },
