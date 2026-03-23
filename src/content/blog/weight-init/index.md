@@ -1,8 +1,8 @@
 ---
 title: "weight init"
-description: "."
+description: "Why weight initialization matters in deep learning and why zero initialization should be avoided."
 date: "2021-08-11T06:35:45.694Z"
-tags: ["DL", "ML", "PyTorch"]
+tags: ["dl", "ml", "pytorch"]
 draft: false
 ---
 

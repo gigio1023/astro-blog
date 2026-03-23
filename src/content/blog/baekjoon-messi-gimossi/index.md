@@ -1,8 +1,8 @@
 ---
 title: "[백준] Messi Gimossi"
-description: "."
+description: "Solution for Baekjoon 17297 (Messi Gimossi) using Fibonacci-based string search with a binary search-like approach."
 date: "2021-09-02T20:17:18.103Z"
-tags: ["Pyton", "algorithm"]
+tags: ["python", "algorithm"]
 draft: false
 ---
 

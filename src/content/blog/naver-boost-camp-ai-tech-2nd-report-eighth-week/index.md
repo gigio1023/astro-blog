@@ -1,8 +1,8 @@
 ---
 title: "부스트캠프 AI Tech 2기 8주차 학습정리"
-description: "."
+description: "Week 8 retrospective of Naver Boostcamp AI Tech covering NLP lectures, MLOps tooling research, and validation set distribution discussions."
 date: "2021-09-24T09:24:46.070Z"
-tags: ["boostcamp"]
+tags: ["naver-boostcamp"]
 draft: false
 ---
 

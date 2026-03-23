@@ -1,6 +1,7 @@
 ---
 title: "Mac basic settings"
-description: "."
+description: "Essential Mac setup checklist covering Rosetta 2, Homebrew for ARM and Intel, oh-my-zsh, language toggle key remapping, and menu bar customization."
+tags: ["mac"]
 date: "2022-05-19T00:00:00.000Z"
 draft: false
 ---

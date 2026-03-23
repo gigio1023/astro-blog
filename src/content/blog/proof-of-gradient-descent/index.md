@@ -1,8 +1,8 @@
 ---
 title: "Gradient descent 증명"
-description: "."
+description: "Mathematical derivation of gradient descent for linear regression, from L2 norm cost functions to SGD."
 date: "2021-08-04T06:19:39.104Z"
-tags: ["ML", "math"]
+tags: ["ml", "math"]
 draft: false
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "python3 container"
-description: "."
+description: "Overview of Python collections containers: UserDict, OrderedDict, and deque with practical usage notes."
 date: "2021-10-27T00:53:46.790Z"
 tags: ["python"]
 draft: false

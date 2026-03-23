@@ -1,6 +1,6 @@
 ---
 title: "[프로그래머스] 프린터"
-description: "."
+description: "Solution for the Programmers printer queue problem using priority-based simulation."
 date: "2022-01-20T09:56:01.000Z"
 tags: ["algorithm"]
 draft: false

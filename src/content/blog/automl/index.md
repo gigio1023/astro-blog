@@ -1,6 +1,7 @@
 ---
 title: "AutoML"
-description: "."
+description: "Introduction to AutoML and hyperparameter optimization using Bayesian Optimization with Gaussian Process Regression."
+tags: ["ml", "dl", "optimization", "lightweight", "naver-boostcamp"]
 date: "2021-11-28T14:04:07.541Z"
 draft: false
 ---

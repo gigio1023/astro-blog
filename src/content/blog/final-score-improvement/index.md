@@ -1,8 +1,8 @@
 ---
 title: "마지막 점수 올리기"
-description: "."
+description: "Last-minute competition score boosting techniques: test-time augmentation (TTA) with soft voting and half-precision training."
 date: "2021-09-02T01:27:24.523Z"
-tags: ["CNN", "PyTorch", "ai competition"]
+tags: ["cnn", "pytorch", "ai-competition"]
 draft: false
 ---
 

@@ -1,8 +1,8 @@
 ---
 title: "Word Embedding"
-description: "."
+description: "Introduction to word embedding and Word2Vec: how words are mapped to vector spaces to capture semantic relationships."
 date: "2021-09-06T11:04:54.688Z"
-tags: ["NLP"]
+tags: ["nlp"]
 draft: false
 ---
 

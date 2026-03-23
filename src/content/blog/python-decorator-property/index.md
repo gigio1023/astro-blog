@@ -1,6 +1,6 @@
 ---
 title: "Python decorator, property"
-description: "."
+description: "How to use Python's @property decorator for clean getter/setter patterns and backward compatibility."
 date: "2021-08-03T16:41:17.158Z"
 tags: ["python"]
 draft: false

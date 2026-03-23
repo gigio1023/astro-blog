@@ -1,8 +1,8 @@
 ---
 title: "Preprocessing"
-description: "."
+description: "Image preprocessing and data augmentation techniques for deep learning competitions, including resizing, bounding box cropping, and torchvision transforms."
 date: "2021-08-24T02:04:59.305Z"
-tags: ["PyTorch", "ai competition"]
+tags: ["pytorch", "ai-competition"]
 draft: false
 ---
 

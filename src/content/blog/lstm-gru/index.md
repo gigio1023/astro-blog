@@ -1,8 +1,8 @@
 ---
 title: "LSTM, GRU"
-description: "."
+description: "Detailed explanation of LSTM and GRU architectures, covering gate mechanisms, cell state, and how they solve RNN's long-term dependency problem."
 date: "2021-09-07T06:49:00.329Z"
-tags: ["NLP"]
+tags: ["nlp"]
 draft: false
 ---
 

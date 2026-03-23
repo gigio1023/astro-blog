@@ -1,6 +1,6 @@
 ---
 title: "[HakerRank] Roads and Libraries"
-description: "."
+description: "Solution for the HackerRank Roads and Libraries problem using DFS to minimize the cost of building roads and libraries across connected city groups."
 date: "2021-11-19T12:04:28.529Z"
 tags: ["algorithm"]
 draft: false

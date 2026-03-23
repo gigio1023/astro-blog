@@ -1,8 +1,8 @@
 ---
 title: "facet"
-description: "."
+description: "Using matplotlib facets with GridSpec and subplots to visualize datasets from multiple perspectives."
 date: "2021-08-22T21:04:31.712Z"
-tags: ["data viz"]
+tags: ["data-viz"]
 draft: false
 ---
 

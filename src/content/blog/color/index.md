@@ -1,8 +1,8 @@
 ---
 title: "color"
-description: "."
+description: "Guide to color usage in data visualization, covering sequential and diverging colormaps, HSI color space, and color palettes."
 date: "2021-08-22T20:58:50.619Z"
-tags: ["data viz"]
+tags: ["data-viz"]
 draft: false
 ---
 

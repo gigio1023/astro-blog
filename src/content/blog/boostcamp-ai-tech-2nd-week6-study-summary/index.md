@@ -1,8 +1,8 @@
 ---
 title: "부스트캠프 AI Tech 2기 6주차 학습정리"
-description: "."
+description: "Week 6 study summary of Naver Boostcamp AI Tech covering NLP lectures, bucketing for data batching, and peer session discussions."
 date: "2021-09-10T10:21:43.642Z"
-tags: ["boostcamp"]
+tags: ["naver-boostcamp"]
 draft: false
 ---
 

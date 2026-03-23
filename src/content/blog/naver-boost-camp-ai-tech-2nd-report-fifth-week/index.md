@@ -1,8 +1,8 @@
 ---
 title: "부스트캠프 AI Tech 2기 7주차 학습정리"
-description: "."
+description: "Week 7 retrospective of Naver Boostcamp AI Tech covering Transformer and BERT studies, mentoring Q&A on attention mechanisms and positional encoding."
 date: "2021-09-17T11:34:08.418Z"
-tags: ["boostcamp"]
+tags: ["naver-boostcamp"]
 draft: false
 ---
 

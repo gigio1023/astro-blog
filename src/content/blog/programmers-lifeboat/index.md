@@ -1,6 +1,6 @@
 ---
 title: "[프로그래머스] 구명보트"
-description: "."
+description: "Solution for the Programmers lifeboat problem using a greedy two-pointer approach."
 date: "2021-10-22T03:45:53.478Z"
 tags: ["algorithm"]
 draft: false

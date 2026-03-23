@@ -1,8 +1,8 @@
 ---
 title: "pytorch transfer"
-description: "."
+description: "Transfer learning in PyTorch: freezing layers, stepping frozen strategies, and model file formats."
 date: "2021-08-20T04:11:55.216Z"
-tags: ["PyTorch"]
+tags: ["pytorch"]
 draft: false
 ---
 

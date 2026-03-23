@@ -1,8 +1,8 @@
 ---
 title: "Med-BERT"
-description: "."
+description: "Paper review of Med-BERT, a BERT-style model pre-trained on structured EHR data with ICD codes for disease prediction tasks."
 date: "2022-05-17T00:00:00.000Z"
-tags: ["nlp", "medical ai", "paper-review"]
+tags: ["nlp", "medical-ai", "paper-review"]
 draft: false
 ---
 

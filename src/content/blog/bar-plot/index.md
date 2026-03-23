@@ -1,8 +1,8 @@
 ---
 title: "Bar plot"
-description: "."
+description: "Guide to bar plot visualization techniques in matplotlib, covering stacked, overlapped, and grouped bar charts with best practices."
 date: "2021-08-16T12:14:26.551Z"
-tags: ["data viz", "python"]
+tags: ["data-viz", "python"]
 draft: false
 ---
 

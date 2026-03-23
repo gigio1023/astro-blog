@@ -1,6 +1,6 @@
 ---
 title: "[프로그래머스] 타겟 넘버(python)"
-description: "."
+description: "Solution for the Programmers target number problem with DFS, BFS, and itertools.product approaches."
 date: "2021-08-15T15:52:19.688Z"
 tags: ["algorithm", "python"]
 draft: false

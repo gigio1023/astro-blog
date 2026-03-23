@@ -1,8 +1,8 @@
 ---
 title: "Passage Retrieval"
-description: "."
+description: "Fundamentals of passage retrieval for open-domain QA, covering sparse embedding, TF-IDF, and similarity search in vector space."
 date: "2021-10-13T15:00:36.624Z"
-tags: ["MRC"]
+tags: ["mrc"]
 draft: false
 ---
 

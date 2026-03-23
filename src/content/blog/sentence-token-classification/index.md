@@ -1,8 +1,8 @@
 ---
 title: "문장 토큰 분류"
-description: "."
+description: "Token-level classification tasks with BERT, covering Named Entity Recognition (NER) and POS tagging for Korean text."
 date: "2021-09-28T12:22:48.886Z"
-tags: ["BERT", "NLP"]
+tags: ["bert", "nlp"]
 draft: false
 ---
 

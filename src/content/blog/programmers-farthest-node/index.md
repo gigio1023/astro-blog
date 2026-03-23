@@ -1,6 +1,6 @@
 ---
 title: "[프로그래머스] 가장 먼 노드"
-description: "."
+description: "Solution for the Programmers farthest node problem using BFS on an undirected graph."
 date: "2021-11-12T08:07:04.858Z"
 tags: ["algorithm"]
 draft: false

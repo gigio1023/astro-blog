@@ -1,8 +1,8 @@
 ---
 title: "NLP trends"
-description: "."
+description: "Survey of NLP trends including reinforcement learning for summarization and QA, and multimodal NLP+CV approaches like Show and Tell and GLAC Net."
 date: "2021-10-29T09:55:54.188Z"
-tags: ["NLP"]
+tags: ["nlp"]
 draft: false
 ---
 

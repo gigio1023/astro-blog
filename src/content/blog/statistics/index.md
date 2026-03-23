@@ -1,8 +1,8 @@
 ---
 title: "통계론"
-description: "."
+description: "Foundations of statistical modeling: parametric vs. nonparametric methods, probability distributions, MLE, and log-likelihood."
 date: "2021-01-01"
-tags: ["ML"]
+tags: ["ml"]
 draft: false
 ---
 

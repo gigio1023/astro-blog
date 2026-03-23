@@ -1,8 +1,8 @@
 ---
 title: "GPT 언어 모델"
-description: "."
+description: "Evolution of GPT language models from GPT-1 to GPT-3: architecture changes, zero/few-shot learning, and scaling effects."
 date: "2021-10-12T05:01:34.907Z"
-tags: ["GPT"]
+tags: ["gpt"]
 draft: false
 ---
 

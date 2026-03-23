@@ -1,8 +1,8 @@
 ---
 title: "NLP 헷갈렸던 점들"
-description: "."
+description: "Clarifying commonly confused NLP concepts: argmax vs. multinomial sampling, beam search vs. sampling, and Pre-LN vs. Post-LN in GPT and Transformer."
 date: "2021-09-20T05:49:40.684Z"
-tags: ["NLP"]
+tags: ["nlp"]
 draft: false
 ---
 

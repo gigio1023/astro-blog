@@ -1,6 +1,7 @@
 ---
 title: "parameter 수"
-description: "."
+description: "Discussion on how the relationship between model parameter count and generalization performance shifted with scaling law findings."
+tags: ["dl", "naver-boostcamp"]
 date: "2021-08-13T09:58:27.732Z"
 draft: false
 ---

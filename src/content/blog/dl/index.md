@@ -1,8 +1,8 @@
 ---
 title: "DL "
-description: "."
+description: "Deep learning fundamentals covering key components (data, model, loss, optimizer) and a brief history from AlexNet to GPT-3."
 date: "2021-01-01"
-tags: ["DL", "ML"]
+tags: ["dl", "ml"]
 draft: false
 ---
 

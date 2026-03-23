@@ -1,8 +1,8 @@
 ---
 title: "Training BERT"
-description: "."
+description: "BERT training pipeline details: tokenizer creation, dataset construction with NSP, masking strategies, segment handling, and truncation."
 date: "2021-09-28T02:22:24.556Z"
-tags: ["BERT", "NLP"]
+tags: ["bert", "nlp"]
 draft: false
 ---
 

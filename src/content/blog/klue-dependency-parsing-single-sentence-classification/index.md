@@ -1,8 +1,8 @@
 ---
 title: "KLUE 의존 구문 분석, 단일문장 분류"
-description: "."
+description: "Overview of Korean dependency parsing and single sentence classification tasks in KLUE, including BERT-based model architecture and training pipeline."
 date: "2021-09-28T08:46:25.075Z"
-tags: ["NLP", "klue"]
+tags: ["nlp", "klue"]
 draft: false
 ---
 

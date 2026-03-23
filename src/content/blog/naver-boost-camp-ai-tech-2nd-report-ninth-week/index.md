@@ -1,8 +1,8 @@
 ---
 title: "부스트캠프 AI Tech 2기 9주차 학습정리"
-description: "."
+description: "Week 9 of Naver Boostcamp AI Tech covering NLP competition setup, model experimentation, and leaderboard submissions."
 date: "2021-10-01T08:50:31.119Z"
-tags: ["boostcamp"]
+tags: ["naver-boostcamp"]
 draft: false
 ---
 

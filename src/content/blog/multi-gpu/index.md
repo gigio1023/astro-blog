@@ -1,8 +1,8 @@
 ---
 title: "Multi gpu"
-description: "."
+description: "Guide to multi-GPU training in PyTorch covering model parallelism, DataParallel, and DistributedDataParallel with code examples."
 date: "2021-08-20T08:14:42.707Z"
-tags: ["PyTorch", "multi-gpu"]
+tags: ["pytorch", "multi-gpu"]
 draft: false
 ---
 

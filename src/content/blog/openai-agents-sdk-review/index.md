@@ -1,6 +1,6 @@
 ---
 title: "OpenAI Agents SDK review"
-description: "."
+description: "Hands-on review of OpenAI Agents SDK comparing it to LangChain, covering tools, guardrails, tracing, and the agent loop architecture."
 date: "2025-03-13T02:19:12+09:00"
 tags: ["agent", "llm"]
 draft: false

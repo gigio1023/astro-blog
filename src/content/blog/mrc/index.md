@@ -1,8 +1,8 @@
 ---
 title: "MRC"
-description: "."
+description: "Introduction to Machine Reading Comprehension covering dataset types, key challenges like coreference resolution and multi-hop reasoning, and evaluation metrics."
 date: "2021-10-12T01:31:41.828Z"
-tags: ["MRC"]
+tags: ["mrc"]
 draft: false
 ---
 

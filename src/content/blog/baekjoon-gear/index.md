@@ -1,6 +1,6 @@
 ---
 title: "[백준] 톱니바퀴"
-description: "."
+description: "Solution for Baekjoon 14891 (Gear/Cogwheel) using recursive state checking and deque-based rotation."
 date: "2021-10-26T20:12:15.305Z"
 tags: ["algorithm"]
 draft: false

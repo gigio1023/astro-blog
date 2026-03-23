@@ -1,6 +1,6 @@
 ---
 title: "Kaggle dataset"
-description: "."
+description: "Quick shell script for batch-downloading Kaggle competition datasets using the Kaggle API for local server training."
 date: "2021-11-10T15:31:55.836Z"
 tags: ["kaggle"]
 draft: false

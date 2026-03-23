@@ -2,7 +2,7 @@
 title: "Med-BERT"
 description: "A review of Med-BERT, a BERT-based model pretrained on structured EHR data for disease prediction."
 date: "2022-05-17T00:00:00.000Z"
-tags: ["nlp", "medical ai", "paper-review"]
+tags: ["nlp", "medical-ai", "paper-review"]
 draft: false
 lang: en
 translationOf: "med-bert"

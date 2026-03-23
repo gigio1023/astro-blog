@@ -1,8 +1,8 @@
 ---
 title: "Bag-of-Words"
-description: "."
+description: "Introduction to Bag-of-Words text representation with one-hot encoding and Naive Bayes classification."
 date: "2021-09-06T07:04:30.522Z"
-tags: ["NLP"]
+tags: ["nlp"]
 draft: false
 ---
 

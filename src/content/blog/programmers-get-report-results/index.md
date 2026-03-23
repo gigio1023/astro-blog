@@ -1,6 +1,6 @@
 ---
 title: "[프로그래머스] 신고 결과 받기"
-description: "."
+description: "C++ solution for the Programmers report results problem using unordered_map, set, and stringstream."
 date: "2022-01-30T17:51:20.099Z"
 tags: ["algorithm"]
 draft: false

@@ -1,8 +1,8 @@
 ---
 title: "Unicode, Tokenization"
-description: "."
+description: "Basics of Unicode handling in Python and subword tokenization methods including BPE (Byte-Pair Encoding)."
 date: "2021-10-12T02:26:14.074Z"
-tags: ["MRC", "python"]
+tags: ["mrc", "python"]
 draft: false
 ---
 

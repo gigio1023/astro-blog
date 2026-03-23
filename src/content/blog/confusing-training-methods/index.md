@@ -1,8 +1,8 @@
 ---
 title: "헷갈렸던 training 방법"
-description: "."
+description: "Clarifying common mistakes in PyTorch training loops, validation ordering, and K-fold cross validation usage."
 date: "2021-08-29T01:31:27.009Z"
-tags: ["DL", "PyTorch"]
+tags: ["dl", "pytorch"]
 draft: false
 ---
 

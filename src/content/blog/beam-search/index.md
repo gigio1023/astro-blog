@@ -1,8 +1,8 @@
 ---
 title: "Beam search"
-description: "."
+description: "Explanation of beam search decoding as a trade-off between greedy decoding and exhaustive search in sequence generation."
 date: "2021-09-08T10:39:16.519Z"
-tags: ["NLP"]
+tags: ["nlp"]
 draft: false
 ---
 

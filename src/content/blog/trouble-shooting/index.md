@@ -1,8 +1,8 @@
 ---
 title: "Trouble shooting"
-description: "."
+description: "Common PyTorch troubleshooting tips for GPU memory issues, OOM errors, tensor accumulation, and inference best practices."
 date: "2021-08-22T20:10:07.453Z"
-tags: ["PyTorch"]
+tags: ["pytorch"]
 draft: false
 ---
 

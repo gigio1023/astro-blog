@@ -1,8 +1,8 @@
 ---
 title: "Airflow and Kubernetes"
-description: "."
+description: "Comparison of two approaches for running Airflow on Kubernetes: deploying Airflow components as pods vs. using KubernetesExecutor with KubernetesPodOperator."
 date: "2022-04-08T00:00:00.000Z"
-tags: ["MLOps"]
+tags: ["mlops"]
 draft: false
 ---
 

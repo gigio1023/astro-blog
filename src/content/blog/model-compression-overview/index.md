@@ -1,6 +1,6 @@
 ---
 title: "경량화 overview"
-description: "."
+description: "Comprehensive overview of model compression techniques: NAS, network pruning, knowledge distillation, tensor decomposition, and quantization."
 date: "2021-11-28T13:07:01.511Z"
 tags: ["lightweight"]
 draft: false

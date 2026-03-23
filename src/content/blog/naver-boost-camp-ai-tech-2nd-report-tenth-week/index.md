@@ -1,8 +1,8 @@
 ---
 title: "부스트캠프 AI Tech 2기 10주차 학습정리"
-description: "."
+description: "Week 10 of Naver Boostcamp AI Tech with a retrospective on the Relation Extraction competition."
 date: "2021-10-08T08:42:13.106Z"
-tags: ["boostcamp"]
+tags: ["naver-boostcamp"]
 draft: false
 ---
 

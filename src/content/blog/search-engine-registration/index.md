@@ -1,6 +1,6 @@
 ---
 title: "Search Engine Registration"
-description: "."
+description: "Step-by-step guide to registering a blog with Google Search Console, Google Analytics, and Naver Search Advisor."
 date: "2022-04-06T00:00:00.000Z"
 tags: ["blog"]
 draft: false

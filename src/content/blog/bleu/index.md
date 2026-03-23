@@ -1,8 +1,8 @@
 ---
 title: "BLEU"
-description: "."
+description: "Explanation of BLEU score for machine translation evaluation, including precision, recall, F1 score, n-gram overlap, and brevity penalty."
 date: "2021-09-10T05:52:17.974Z"
-tags: ["NLP"]
+tags: ["nlp"]
 draft: false
 ---
 

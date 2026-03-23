@@ -1,8 +1,8 @@
 ---
 title: "부스트캠프 AI Tech 2기 4주차 학습정리"
-description: "."
+description: "Week 4 retrospective of Naver Boostcamp AI Tech covering image classification competition, CNN model comparisons, and CutMix augmentation."
 date: "2021-08-27T08:55:22.918Z"
-tags: ["boostcamp"]
+tags: ["naver-boostcamp"]
 draft: false
 ---
 

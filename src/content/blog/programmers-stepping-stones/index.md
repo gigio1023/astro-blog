@@ -1,6 +1,6 @@
 ---
 title: "[프로그래머스] 징검다리"
-description: "."
+description: "Solution for the Programmers stepping stones problem using binary search on minimum distance."
 date: "2021-10-22T17:34:24.867Z"
 tags: ["algorithm"]
 draft: false

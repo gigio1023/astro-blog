@@ -1,6 +1,6 @@
 ---
 title: "[백준] Z"
-description: "."
+description: "Solution for Baekjoon 1074 (Z) using recursive quadrant division and cumulative counting."
 date: "2021-11-11T03:15:39.453Z"
 tags: ["algorithm"]
 draft: false

@@ -1,8 +1,8 @@
 ---
 title: "pytorch template, tip"
-description: "."
+description: "PyTorch project tips: template structure, getattr for dynamic config, and abstract methods."
 date: "2021-08-17T13:22:09.135Z"
-tags: ["PyTorch", "python"]
+tags: ["pytorch", "python"]
 draft: false
 ---
 

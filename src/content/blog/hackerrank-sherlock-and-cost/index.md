@@ -1,6 +1,6 @@
 ---
 title: "[HackerRank] Sherlock and Cost"
-description: "."
+description: "Dynamic programming solution for the HackerRank Sherlock and Cost problem, maximizing the sum of absolute differences in a sequence."
 date: "2021-11-19T09:34:40.268Z"
 tags: ["algorithm"]
 draft: false

@@ -1,6 +1,6 @@
 ---
 title: "m1 gpu acceleration"
-description: "."
+description: "Setup guide for GPU acceleration on Apple Silicon M1 with PyTorch MPS backend and HuggingFace Transformers."
 date: "2022-05-20T00:00:00.000Z"
 tags: ["mac", "gpu"]
 draft: false

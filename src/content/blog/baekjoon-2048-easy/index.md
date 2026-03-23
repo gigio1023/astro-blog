@@ -1,6 +1,6 @@
 ---
 title: "[백준] 2048 (Easy)"
-description: "."
+description: "Solution for Baekjoon 12100 (2048 Easy) using brute-force simulation with block merging and four-directional movement."
 date: "2021-10-13T14:59:23.302Z"
 tags: ["algorithm", "python"]
 draft: false

@@ -1,6 +1,6 @@
 ---
 title: "numpy.matmul, numpy.dot"
-description: "."
+description: "Difference between numpy.matmul and numpy.dot for high-dimensional matrix multiplication."
 date: "2021-01-01"
 tags: ["numpy", "python"]
 draft: false
