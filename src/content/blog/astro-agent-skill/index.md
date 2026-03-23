@@ -2,7 +2,7 @@
 title: "Astro 블로그를 위한 Agent Skill을 만들었다"
 description: "에이전트가 Astro 6 코드를 반복적으로 틀리길래, 스킬을 하나 만들어봤다."
 date: "2026-03-23T14:00:00+09:00"
-tags: ["agent", "dev-tools"]
+tags: ["agent", "agent-skill"]
 draft: false
 lang: ko
 ---

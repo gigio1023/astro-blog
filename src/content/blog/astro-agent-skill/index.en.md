@@ -2,7 +2,7 @@
 title: "I Made an Agent Skill for My Astro Blog"
 description: "Agents kept getting Astro 6 patterns wrong, so I put together a skill."
 date: "2026-03-23T14:00:00+09:00"
-tags: ["agent", "dev-tools"]
+tags: ["agent", "agent-skill"]
 draft: false
 lang: en
 translationOf: "astro-agent-skill"
