@@ -140,7 +140,7 @@ const englishTitle = await getEnglishTitle(post)
     <div class="col-start-2">
       <Breadcrumbs
         items={[
-          { href: '/ko/blog', label: 'Blog', icon: 'lucide:library-big' },
+          { href: '/blog', label: 'Blog', icon: 'lucide:library-big' },
           ...(isCurrentSubpost && parentPost
             ? [
                 {
@@ -201,7 +201,7 @@ const englishTitle = await getEnglishTitle(post)
                       />
                       {author.isRegistered ? (
                         <Link
-                          href={`/ko/authors/${author.id}`}
+                          href={`/authors/${author.id}`}
                           underline
                           class="text-foreground"
                         >
@@ -253,7 +253,7 @@ const englishTitle = await getEnglishTitle(post)
                   return (
                     <div class="group relative">
                       <a
-                        href={`/ko/tags/${tag}`}
+                        href={`/tags/${tag}`}
                         class={`${badgeVariants({ variant })} ${className || ''}`}
                       >
                         <Icon name="lucide:hash" class="size-3" />

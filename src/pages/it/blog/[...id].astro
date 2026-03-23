@@ -46,7 +46,7 @@ const translations = await getAvailableTranslations(slug)
     <div class="col-start-2">
       <Breadcrumbs
         items={[
-          { href: '/ko/blog', label: 'Blog', icon: 'lucide:library-big' },
+          { href: '/blog', label: 'Blog', icon: 'lucide:library-big' },
           { label: post.data.title, icon: 'lucide:book-open-text' },
         ]}
       />
@@ -81,7 +81,7 @@ const translations = await getAvailableTranslations(slug)
                 const { variant, className } = getTagVariant(tag)
                 return (
                   <a
-                    href={`/ko/tags/${tag}`}
+                    href={`/tags/${tag}`}
                     class={`${badgeVariants({ variant })} ${className || ''}`}
                   >
                     <Icon name="lucide:hash" class="size-3" />

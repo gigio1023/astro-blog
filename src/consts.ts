@@ -43,15 +43,15 @@ export const BREVO = {
 
 export const NAV_LINKS: SocialLink[] = [
   {
-    href: '/ko/',
+    href: '/',
     label: 'Home',
   },
   {
-    href: '/ko/blog',
+    href: '/blog',
     label: 'Posts',
   },
   {
-    href: '/ko/about',
+    href: '/about',
     label: 'Profile',
   },
 ]
@@ -87,6 +87,6 @@ export const ICON_MAP: IconMap = {
 // Newsletter consent text (centralized for GDPR compliance)
 export const NEWSLETTER_CONSENT_TEXT = {
   text: 'I agree to receive newsletter emails.',
-  privacyLink: '/ko/privacy',
+  privacyLink: '/privacy',
   privacyText: 'Privacy Policy',
 }
