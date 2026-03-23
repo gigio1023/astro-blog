@@ -78,23 +78,42 @@ const blog = defineCollection({
 
 ## 어떤 기준으로 만들었나
 
-Thariq의 [Lessons from Building Claude Code: How We Use Skills](https://x.com/trq212/status/2033949937936085378)에서 많이 참고했다. Anthropic 내부에서 수백 개의 스킬을 운영하면서 정리한 내용인데, 이 중 몇 가지가 직접적으로 적용됐다.
+스킬을 만들 때 나름대로 기준을 두고 있었는데, Thariq의 [Lessons from Building Claude Code: How We Use Skills](https://x.com/trq212/status/2033949937936085378)를 읽고 나서 좀 더 명료해진 부분이 있었다. Anthropic 내부에서 수백 개의 스킬을 운영하면서 정리한 노하우인데, 이걸 참고해서 기존에 만들던 것을 다듬었다.
 
-### Don't State the Obvious
+**Don't State the Obvious.** Claude는 이미 코딩에 대해 많이 알고 있으니까 스킬에는 에이전트가 평소에 하지 않는 방향으로 생각하게 만드는 정보를 넣으라는 이야기다. 처음에는 "Content Collections는 이렇게 쓰는 거다" 같은 일반적인 설명도 넣고 있었는데, 이걸 읽고 가드레일 형태로 정리하는 쪽으로 바꿨다. 에이전트가 틀리는 지점만 짚는 거다.
 
-Claude는 이미 코딩에 대해 많이 알고 있으니까, 스킬에는 Claude가 평소에 하지 않는 방향으로 생각하게 만드는 정보를 넣으라는 이야기다. Astro 스킬에서 이건 가드레일로 구현했다. "Content Collections는 이렇게 쓰는 거다" 같은 일반적인 설명이 아니라, "에이전트가 `Astro.glob()`을 생성하려고 할 때 그건 삭제된 API다"처럼 에이전트가 실제로 틀리는 지점만 짚었다. 에이전트가 이미 아는 것을 반복하면 컨텍스트만 낭비된다.
+```markdown
+# 이런 식으로 가드레일을 작성했다
 
-### Build a Gotchas Section
+**3. `Astro.glob()` does not exist:**
+// agents generate this (removed API)
+const posts = await Astro.glob('./posts/*.md')
 
-스킬에서 가장 가치가 높은 콘텐츠는 gotchas 섹션이라는 이야기다. 에이전트가 실패하는 지점을 모아서 계속 업데이트하라는 건데, 이 스킬의 가드레일 20개가 전부 이 방식으로 만들어졌다. 처음부터 20개를 설계한 게 아니라 에이전트가 틀리는 걸 볼 때마다 하나씩 추가한 것이다.
+// correct pattern
+import { getCollection } from 'astro:content'
+const posts = await getCollection('blog')
+```
 
-### Use the File System & Progressive Disclosure
+"이 API는 이렇게 쓰는 거다"가 아니라 "에이전트가 이걸 쓰려고 하면 그건 삭제된 API다"라는 방향이다. 에이전트가 이미 아는 것을 반복하면 컨텍스트만 낭비된다.
 
-스킬은 마크다운 파일 하나가 아니라 폴더라는 이야기다. 파일 시스템 자체를 progressive disclosure의 수단으로 쓰라는 건데, 이 스킬에서는 SKILL.md를 진입점으로 두고 세부 내용은 `references/` 폴더 아래 9개 파일로 분리했다. SKILL.md에 있는 라우터가 작업에 따라 어떤 파일을 읽어야 하는지 안내한다. 모든 걸 한꺼번에 로드하면 컨텍스트만 커지니까, 필요한 모듈만 읽도록 한 것이다.
+**Build a Gotchas Section.** 스킬에서 가장 가치가 높은 콘텐츠는 gotchas 섹션이고, 에이전트가 실패하는 지점을 모아서 계속 업데이트하라는 이야기다. 이 스킬의 가드레일 20개가 전부 이 방식으로 만들어졌다. 처음부터 20개를 설계한 게 아니라 에이전트가 틀리는 걸 볼 때마다 하나씩 추가한 것이다.
 
-### Avoid Railroading Claude
+**Use the File System & Progressive Disclosure.** 스킬을 폴더 구조로 나눠서 progressive disclosure를 하라는 건 스킬을 만드는 사람이라면 대부분 알고 있는 내용이고, 이 스킬도 처음부터 `references/` 폴더로 분리해서 만들고 있었다. 다만 글을 읽고 나서 라우터를 좀 더 명시적으로 만들었다. SKILL.md에 작업별로 어떤 파일을 읽어야 하는지 테이블로 안내하는 부분이다.
 
-지나치게 구체적으로 지시하면 에이전트가 상황에 맞게 판단할 여지가 없어진다. 이 스킬에서는 "이건 틀린 패턴이고, 올바른 패턴은 이거다"까지만 알려주고, 실제 적용은 에이전트에게 맡기는 방식으로 작성했다. 예를 들어 `client:` 디렉티브 선택 가이드에서는 결정 트리를 제공하되 최종 판단은 에이전트가 컴포넌트의 맥락을 보고 하도록 했다.
+```markdown
+# SKILL.md의 라우터 부분
+
+| What you're doing | Read this file |
+|---|---|
+| Content collections (schema, loader, querying, Zod 4) | references/content-collections.md |
+| Blog features (RSS, pagination, tags, SEO, TOC) | references/blog-recipes.md |
+| Tailwind CSS (config, theming, classes, fonts) | references/tailwind.md |
+| Client directives / islands / hydration | references/islands-and-hydration.md |
+```
+
+에이전트가 "지금 뭘 하고 있으니까 이 파일을 읽어라"를 명시적으로 알려주는 구조다. 모든 걸 한꺼번에 로드하면 컨텍스트만 커지니까 필요한 모듈만 읽도록 한 것이다.
+
+**Avoid Railroading Claude.** 지나치게 구체적으로 지시하면 에이전트가 상황에 맞게 판단할 여지가 없어진다. 이 스킬에서는 "이건 틀린 패턴이고, 올바른 패턴은 이거다"까지만 알려주고 실제 적용은 에이전트에게 맡기는 방식으로 작성했다. 예를 들어 `client:` 디렉티브 선택 가이드에서는 결정 트리를 제공하되 최종 판단은 에이전트가 컴포넌트의 맥락을 보고 하도록 했다.
 
 ---
 

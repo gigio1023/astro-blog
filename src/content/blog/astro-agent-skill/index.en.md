@@ -79,23 +79,42 @@ I've cataloged about 20 patterns like these, including Tailwind v4's CSS-native 
 
 ## Design Principles
 
-I drew heavily from Thariq's [Lessons from Building Claude Code: How We Use Skills](https://x.com/trq212/status/2033949937936085378), which summarizes how Anthropic uses hundreds of skills internally. A few points applied directly.
+I had my own criteria when putting this together, but reading Thariq's [Lessons from Building Claude Code: How We Use Skills](https://x.com/trq212/status/2033949937936085378) helped clarify a few things. It summarizes how Anthropic uses hundreds of skills internally. I refined what I was already doing based on the article.
 
-### Don't State the Obvious
+**Don't State the Obvious.** Claude already knows a lot about coding, so skills should focus on information that pushes it out of its default thinking. I had initially included general explanations like "this is how Content Collections work," but after reading this I restructured toward guardrails that only target points where agents actually fail.
 
-Claude already knows a lot about coding, so skills should focus on information that pushes it out of its default thinking. In this skill, that became the guardrails. Rather than general explanations like "this is how Content Collections work," each guardrail targets a specific point where agents actually fail: "when you're about to use `Astro.glob()`, that API was removed." Repeating what the agent already knows just wastes context.
+```markdown
+# How a guardrail is written in the skill
 
-### Build a Gotchas Section
+**3. `Astro.glob()` does not exist:**
+// agents generate this (removed API)
+const posts = await Astro.glob('./posts/*.md')
 
-The highest-value content in any skill is the gotchas section, built from actual failure points and updated over time. The 20 guardrails in this skill were all created this way. I didn't design 20 guardrails upfront. Each one was added after watching an agent get something wrong.
+// correct pattern
+import { getCollection } from 'astro:content'
+const posts = await getCollection('blog')
+```
 
-### Use the File System & Progressive Disclosure
+The direction is "if the agent tries to use this, it's a removed API" rather than "here's how to use this API." Repeating what the agent already knows just wastes context.
 
-A skill is a folder, not just a markdown file. The file system itself serves as progressive disclosure. In this skill, SKILL.md is the entry point with guardrails and a router, while detailed references live in 9 separate files under `references/`. The router in SKILL.md directs the agent to the right file based on the task. Loading everything at once just inflates context, so only the relevant module gets read.
+**Build a Gotchas Section.** The highest-value content in any skill is the gotchas section, built from actual failure points and updated over time. The 20 guardrails in this skill were all created this way. I didn't design 20 upfront. Each one was added after watching an agent get something wrong.
 
-### Avoid Railroading Claude
+**Use the File System & Progressive Disclosure.** Splitting a skill into a folder structure with progressive disclosure is something most skill authors already know, and I was already doing it with the `references/` directory. But reading the article made me add a more explicit router. The SKILL.md now has a table that directs agents to the right file based on what they're working on.
 
-Being too specific in instructions removes the agent's ability to adapt. This skill tells the agent "this is the wrong pattern, here's the correct one" and leaves actual application to the agent's judgment. For example, the `client:` directive guide provides a decision tree but lets the agent make the final call based on component context.
+```markdown
+# The router in SKILL.md
+
+| What you're doing | Read this file |
+|---|---|
+| Content collections (schema, loader, querying, Zod 4) | references/content-collections.md |
+| Blog features (RSS, pagination, tags, SEO, TOC) | references/blog-recipes.md |
+| Tailwind CSS (config, theming, classes, fonts) | references/tailwind.md |
+| Client directives / islands / hydration | references/islands-and-hydration.md |
+```
+
+It explicitly tells the agent "you're doing X, so read this file." Loading everything at once just inflates context, so only the relevant module gets read.
+
+**Avoid Railroading Claude.** Being too specific removes the agent's ability to adapt. This skill tells the agent "this is the wrong pattern, here's the correct one" and leaves actual application to the agent's judgment. For example, the `client:` directive guide provides a decision tree but lets the agent make the final call based on component context.
 
 ---
 
