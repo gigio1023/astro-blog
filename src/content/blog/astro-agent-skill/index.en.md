@@ -132,17 +132,14 @@ Decision frameworks for choices like `client:load` vs `client:idle` vs `client:v
 npx skills add gigio1023/astro-dev-skill
 ```
 
-Using it alongside the Astro Docs MCP gives you a setup where MCP handles doc searches and the skill handles guardrails and recipes.
+Using it alongside the Astro Docs MCP gives you a setup where MCP handles doc searches and the skill handles guardrails and recipes. The Astro Docs MCP is a remote HTTP server provided by the Astro team — no npm package to install.
 
-```json
-{
-  "mcpServers": {
-    "astro-docs": {
-      "command": "npx",
-      "args": ["-y", "@anthropic-ai/astro-docs-mcp"]
-    }
-  }
-}
+For Claude Code:
+
+```bash
+claude mcp add --transport http astro-docs https://mcp.docs.astro.build/mcp
 ```
 
-GitHub: [gigio1023/astro-dev-skill](https://github.com/gigio1023/astro-dev-skill)
+For Codex and other editors, see the official [Astro: Build with AI](https://docs.astro.build/en/guides/build-with-ai/) guide.
+
+[![gigio1023/astro-dev-skill - GitHub](https://gh-card.dev/repos/gigio1023/astro-dev-skill.svg)](https://github.com/gigio1023/astro-dev-skill)
