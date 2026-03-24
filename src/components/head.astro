@@ -7,12 +7,14 @@ interface Props {
   title?: string
   description?: string
   image?: string
+  skipMeta?: boolean // Set true when slot (PostHead) provides its own OG/Twitter/canonical tags
 }
 
-const { 
-  title = SITE.title, 
+const {
+  title = SITE.title,
   description = SITE.description,
-  image
+  image,
+  skipMeta = false,
 } = Astro.props
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).href
@@ -48,35 +50,39 @@ const ogImage = image || (cleanPathname ? new URL(`/og${cleanPathname}.png`, Ast
   />
   <meta name="generator" content={Astro.generator} />
 
-  <!-- Primary Meta Tags (deduplicated) -->
-  <meta name="title" content={title} />
-  {(() => {
-    const desc = description && description.length > 160 ? `${description.slice(0, 157)}…` : description
-    return <meta name="description" content={desc} />
-  })()}
-  <link rel="canonical" href={canonicalURL} />
+  {/* Primary Meta Tags — skipped when PostHead provides its own */}
+  {!skipMeta && (
+    <>
+      <meta name="title" content={title} />
+      {(() => {
+        const desc = description && description.length > 160 ? `${description.slice(0, 157)}…` : description
+        return <meta name="description" content={desc} />
+      })()}
+      <link rel="canonical" href={canonicalURL} />
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content={canonicalURL} />
-  <meta property="og:title" content={title} />
-  {(() => {
-    const desc = description && description.length > 160 ? `${description.slice(0, 157)}…` : description
-    return <meta property="og:description" content={desc} />
-  })()}
-  <meta property="og:image" content={ogImage} />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
+      {/* Open Graph / Facebook */}
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content={canonicalURL} />
+      <meta property="og:title" content={title} />
+      {(() => {
+        const desc = description && description.length > 160 ? `${description.slice(0, 157)}…` : description
+        return <meta property="og:description" content={desc} />
+      })()}
+      <meta property="og:image" content={ogImage} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
 
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:url" content={canonicalURL} />
-  <meta name="twitter:title" content={title} />
-  {(() => {
-    const desc = description && description.length > 160 ? `${description.slice(0, 157)}…` : description
-    return <meta name="twitter:description" content={desc} />
-  })()}
-  <meta name="twitter:image" content={ogImage} />
+      {/* Twitter */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:url" content={canonicalURL} />
+      <meta name="twitter:title" content={title} />
+      {(() => {
+        const desc = description && description.length > 160 ? `${description.slice(0, 157)}…` : description
+        return <meta name="twitter:description" content={desc} />
+      })()}
+      <meta name="twitter:image" content={ogImage} />
+    </>
+  )}
 
   <meta name="HandheldFriendly" content="True" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -139,14 +145,13 @@ const ogImage = image || (cleanPathname ? new URL(`/og${cleanPathname}.png`, Ast
         gtag('js', new Date());
         gtag('config', gaId, { send_page_view: false });
 
-        // Track pageviews on initial load and SPA navigations
+        // Track pageviews — astro:page-load fires on initial load AND SPA navigations
         function trackPageView() {
           gtag('event', 'page_view', {
             page_path: window.location.pathname,
             page_title: document.title,
           });
         }
-        trackPageView();
         document.addEventListener('astro:page-load', trackPageView);
       </script>
     </>

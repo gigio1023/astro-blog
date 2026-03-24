@@ -111,7 +111,7 @@ const translations = await getAvailableTranslations(post.id)
 const englishTitle = await getEnglishTitle(post)
 ---
 
-<Layout hideFloatingSidebar={hasChildPosts || isCurrentSubpost}>
+<Layout hideFloatingSidebar={hasChildPosts || isCurrentSubpost} lang="ko" skipMeta>
   <PostHead slot="head" post={post} translations={translations} />
   {
     (hasChildPosts || isCurrentSubpost) && (
