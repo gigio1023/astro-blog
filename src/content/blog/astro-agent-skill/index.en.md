@@ -12,7 +12,7 @@ translationOf: "astro-agent-skill"
 - The Astro Docs MCP only works when the agent asks, and agents don't ask when they think they're right.
 - So I made an Agent Skill that the agent references before generating code.
 
-> GitHub: [gigio1023/astro-dev-skill](https://github.com/gigio1023/astro-dev-skill)
+[![gigio1023/astro-dev-skill](https://opengraph.githubassets.com/1/gigio1023/astro-dev-skill)](https://github.com/gigio1023/astro-dev-skill)
 
 ---
 
