@@ -26,7 +26,7 @@ Bought `sungho-gigio.com` from Cloudflare Registrar. $10.46/year, at-cost pricin
 
 Still didn't work at first. I'd registered it as a "URL Prefix" property in GSC. Switched to "Domain" property, verified ownership via Cloudflare DNS TXT record, and it worked immediately. Six months of debugging ended by changing a property type.
 
-## I picked Ghost
+## Why Ghost
 
 With the sitemap fixed, Hugo's design felt a bit bare, so I looked at other frameworks. Asked ChatGPT for a comparison — top recommendation was Astro. Zero JS by default, Islands Architecture, Content Collections. A good fit for a blog.
 
@@ -49,7 +49,7 @@ All of this to run one blog. I think the learning was worth it, but I was drifti
 
 One thing I confirmed during this: Cloudflare's free tier is surprisingly generous. Tunnel, Zero Trust (50 users), DNS, SSL, Email Routing — all free.
 
-## The writer changed
+## A different writer
 
 Ghost's WYSIWYG editor is built for humans writing in a browser. Starting late 2025, I was spending more time working with tools like Claude Code, and I needed agents to read and write Markdown files directly. Ghost's Admin API doesn't really support that workflow.
 

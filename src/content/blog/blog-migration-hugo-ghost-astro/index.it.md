@@ -26,7 +26,7 @@ Ho comprato `sungho-gigio.com` da Cloudflare Registrar. $10.46/anno, prezzo at-c
 
 All'inizio non funzionava comunque. Avevo registrato il sito come "URL Prefix" property in GSC. Ho cambiato in "Domain" property, verificato la proprietà con un record TXT nel DNS di Cloudflare, e ha funzionato subito. Sei mesi di debug risolti cambiando un tipo di property.
 
-## Ho scelto Ghost
+## Perché Ghost
 
 Con la sitemap risolta, il design del blog Hugo mi sembrava un po' scarno, così ho valutato altri framework. Ho chiesto un confronto a ChatGPT — la prima raccomandazione era Astro. Zero JS di default, Islands Architecture, Content Collections. Perfetto per un blog.
 
@@ -49,7 +49,7 @@ Tutto questo per gestire un blog. Penso che l'esperienza formativa ne sia valsa 
 
 Una cosa che ho verificato in questa fase: il tier gratuito di Cloudflare è sorprendentemente generoso. Tunnel, Zero Trust (50 utenti), DNS, SSL, Email Routing — tutto gratis.
 
-## Chi scrive è cambiato
+## Un autore diverso
 
 L'editor WYSIWYG di Ghost è pensato per persone che scrivono nel browser. Dalla fine del 2025, passavo sempre più tempo a lavorare con strumenti come Claude Code, e avevo bisogno che gli agent potessero leggere e scrivere file Markdown direttamente. L'Admin API di Ghost non supporta davvero quel flusso di lavoro.
 

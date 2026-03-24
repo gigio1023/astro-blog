@@ -25,7 +25,7 @@ Hugo 설정을 뒤지고, robots.txt를 확인하고, sitemap.xml을 밸리데�
 
 도메인을 연결해도 처음에는 안 됐다. GSC에서 "URL Prefix" property로 등록했기 때문이다. "Domain" property로 바꾸고 Cloudflare DNS TXT 레코드로 인증하니까 바로 됐다. 6개월의 삽질이 property 타입 하나 바꾸는 걸로 끝났다.
 
-## Ghost를 골랐다
+## 그래서 Ghost
 
 sitemap은 해결됐는데, Hugo 블로그 디자인이 좀 허전해서 프레임워크를 바꾸고 싶어졌다. ChatGPT한테 비교를 시켰는데 1순위 추천이 Astro였다. 0KB JS 기본, Islands Architecture, Content Collections. 블로그에 딱 맞는 도구.
 
@@ -48,7 +48,7 @@ flowchart LR
 
 이때 확인한 건데, Cloudflare 무료 티어가 꽤 관대하다. Tunnel, Zero Trust(50유저), DNS, SSL, Email Routing이 전부 무료다.
 
-## 글 쓰는 주체가 바뀌었다
+## 글 쓰는 주체
 
 Ghost의 WYSIWYG 에디터는 사람이 브라우저에서 직접 글을 쓰는 데 최적화돼 있다. 2025년 말부터 Claude Code 같은 도구로 작업하는 비중이 늘면서, 에이전트가 Markdown 파일을 직접 읽고 쓸 수 있어야 한다는 필요가 생겼다. Ghost Admin API로는 이게 제한적이다.
 
