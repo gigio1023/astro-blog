@@ -322,7 +322,7 @@ export type TOCSection = {
   subpostId?: string
 }
 
-export async function getTOCSections(postId: string): Promise<TOCSection[]> {
+export async function getTOCSections(postId: string, lang?: string): Promise<TOCSection[]> {
   const post = await getPostById(postId)
   if (!post) return []
 
@@ -333,7 +333,9 @@ export async function getTOCSections(postId: string): Promise<TOCSection[]> {
 
   const sections: TOCSection[] = []
 
-  const { headings: parentHeadings } = await render(parentPost)
+  // Use translated version if lang is specified, fall back to base post
+  const parentToRender = lang ? (await getTranslation(parentId, lang) ?? parentPost) : parentPost
+  const { headings: parentHeadings } = await render(parentToRender)
   if (parentHeadings.length > 0) {
     sections.push({
       type: 'parent',
@@ -348,11 +350,12 @@ export async function getTOCSections(postId: string): Promise<TOCSection[]> {
 
   const subposts = await getSubpostsForParent(parentId)
   for (const subpost of subposts) {
-    const { headings: subpostHeadings } = await render(subpost)
+    const subpostToRender = lang ? (await getTranslation(subpost.id, lang) ?? subpost) : subpost
+    const { headings: subpostHeadings } = await render(subpostToRender)
     if (subpostHeadings.length > 0) {
       sections.push({
         type: 'subpost',
-        title: subpost.data.title,
+        title: subpostToRender.data.title,
         headings: subpostHeadings.map((heading, index) => ({
           slug: heading.slug,
           text: heading.text,

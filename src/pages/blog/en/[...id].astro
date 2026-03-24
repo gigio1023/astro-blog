@@ -62,7 +62,7 @@ try {
     hasChildPosts && !isCurrentSubpost
       ? await getCombinedReadingTime(currentPostId)
       : null
-  tocSections = await getTOCSections(currentPostId)
+  tocSections = await getTOCSections(currentPostId, 'en')
 } catch (error) {
   console.error('Error fetching post metadata:', error)
 }

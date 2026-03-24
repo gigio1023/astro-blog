@@ -87,7 +87,7 @@ try {
     hasChildPosts && !isCurrentSubpost
       ? await getCombinedReadingTime(currentPostId)
       : null
-  tocSections = await getTOCSections(currentPostId)
+  tocSections = await getTOCSections(currentPostId, 'ko')
 
   // Resolve English titles for navigation posts
   if (navigation.newer) {
