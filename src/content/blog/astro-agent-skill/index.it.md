@@ -12,7 +12,7 @@ translationOf: "astro-agent-skill"
 - L'Astro Docs MCP funziona solo quando l'agente chiede, e gli agenti non chiedono quando pensano di avere ragione.
 - Quindi ho creato un Agent Skill che l'agente consulta prima di generare codice.
 
-> GitHub: [gigio1023/astro-dev-skill](https://github.com/gigio1023/astro-dev-skill)
+[![gigio1023/astro-dev-skill](https://opengraph.githubassets.com/1/gigio1023/astro-dev-skill)](https://github.com/gigio1023/astro-dev-skill)
 
 ---
 
