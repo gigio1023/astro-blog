@@ -11,7 +11,7 @@ lang: ko
 - Astro Docs MCP는 에이전트가 질문할 때만 동작하는데, 에이전트는 자기가 틀린 줄 모르니까 질문을 안 한다.
 - 그래서 에이전트가 코드를 생성하기 전에 참조하는 Agent Skill을 만들었다.
 
-[![gigio1023/astro-dev-skill](https://opengraph.githubassets.com/1/gigio1023/astro-dev-skill)](https://github.com/gigio1023/astro-dev-skill)
+GitHub: [gigio1023/astro-dev-skill](https://github.com/gigio1023/astro-dev-skill)
 
 ---
 
