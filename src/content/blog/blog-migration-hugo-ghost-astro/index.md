@@ -2,7 +2,7 @@
 title: "sitemap 하나 등록하려고 k8s까지 갔다 온 이야기"
 description: "6개월의 삽질 기록."
 date: "2026-03-24T18:00:00+09:00"
-tags: ["rabbit-hole", "dev-tools", "mlops"]
+tags: ["rabbit-hole", "dev-tools"]
 draft: false
 lang: ko
 ---

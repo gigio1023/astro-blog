@@ -2,7 +2,7 @@
 title: "Volevo solo registrare una sitemap e ho finito per costruire un cluster k8s"
 description: "Sei mesi di debug, un acquisto di dominio."
 date: "2026-03-24T18:00:00+09:00"
-tags: ["rabbit-hole", "dev-tools", "mlops"]
+tags: ["rabbit-hole", "dev-tools"]
 draft: false
 lang: it
 translationOf: "blog-migration-hugo-ghost-astro"
