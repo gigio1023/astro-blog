@@ -17,6 +17,7 @@ import remarkMath from 'remark-math'
 import { pluginCollapsibleSections } from '@expressive-code/plugin-collapsible-sections'
 import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 
+import { remarkDemoteHeadings } from './src/plugins/remark-demote-headings'
 import { remarkMermaid } from './src/plugins/remark-mermaid'
 import tailwindcss from '@tailwindcss/vite'
 
@@ -106,6 +107,6 @@ export default defineConfig({
         },
       ],
     ],
-    remarkPlugins: [remarkMermaid, remarkMath, remarkEmoji],
+    remarkPlugins: [remarkDemoteHeadings, remarkMermaid, remarkMath, remarkEmoji],
   },
 })
