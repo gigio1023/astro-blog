@@ -1,16 +1,27 @@
 ---
 import Breadcrumbs from '@/components/breadcrumbs.astro'
+import Disqus from '@/components/disqus.astro'
 import LanguageSwitcher from '@/components/language-switcher.astro'
 import PostHead from '@/components/post-head.astro'
 import PostNavigation from '@/components/post-navigation.astro'
+import SubpostsHeader from '@/components/subposts-header.astro'
+import SubpostsSidebar from '@/components/subposts-sidebar.astro'
 import TOCHeader from '@/components/toc-header.astro'
 import TOCSidebar from '@/components/toc-sidebar.astro'
 import Layout from '@/layouts/layout.astro'
+import { SITE } from '@/consts'
 import {
   getAdjacentPosts,
   getAvailableTranslations,
+  getCombinedReadingTime,
   getEnglishTitle,
+  getParentId,
+  getParentPost,
   getPostReadingTime,
+  getSubpostCount,
+  getTOCSections,
+  hasSubposts,
+  isSubpost,
 } from '@/lib/data-utils'
 import { formatDate, getTagVariant } from '@/lib/utils'
 import { Icon } from 'astro-icon/components'
@@ -30,10 +41,31 @@ export async function getStaticPaths() {
 
 const post = Astro.props
 const slug = post.data.translationOf || post.id
+const currentPostId = slug
 const { Content, headings } = await render(post)
 const postReadingTime = await getPostReadingTime(post.id)
 const translations = await getAvailableTranslations(slug)
 const navigation = await getAdjacentPosts(slug)
+
+const isCurrentSubpost = isSubpost(currentPostId)
+let parentPost: Awaited<ReturnType<typeof getParentPost>> = null
+let hasChildPosts = false
+let subpostCount = 0
+let combinedReadingTime: string | null = null
+let tocSections: Awaited<ReturnType<typeof getTOCSections>> = []
+
+try {
+  parentPost = isCurrentSubpost ? await getParentPost(currentPostId) : null
+  hasChildPosts = await hasSubposts(currentPostId)
+  subpostCount = !isCurrentSubpost ? await getSubpostCount(currentPostId) : 0
+  combinedReadingTime =
+    hasChildPosts && !isCurrentSubpost
+      ? await getCombinedReadingTime(currentPostId)
+      : null
+  tocSections = await getTOCSections(currentPostId)
+} catch (error) {
+  console.error('Error fetching post metadata:', error)
+}
 
 // Resolve English titles for navigation posts
 if (navigation.newer) {
@@ -44,21 +76,57 @@ if (navigation.older) {
   const enTitle = await getEnglishTitle(navigation.older)
   navigation.older = { ...navigation.older, data: { ...navigation.older.data, title: enTitle } }
 }
+if (navigation.parent) {
+  const enTitle = await getEnglishTitle(navigation.parent)
+  navigation.parent = { ...navigation.parent, data: { ...navigation.parent.data, title: enTitle } }
+}
 ---
 
-<Layout>
+<Layout hideFloatingSidebar={hasChildPosts || isCurrentSubpost}>
   <PostHead slot="head" post={post} translations={translations} />
-
-  {headings?.length > 0 && (
-    <TOCHeader slot="table-of-contents" headings={headings} />
-  )}
+  {
+    (hasChildPosts || isCurrentSubpost) && (
+      <SubpostsHeader
+        slot="subposts-navigation"
+        parentId={isCurrentSubpost ? getParentId(currentPostId) : currentPostId}
+        lang="en"
+      />
+    )
+  }
+  {headings?.length > 0 &&
+    !(
+      isCurrentSubpost &&
+      headings.length === 1 &&
+      headings[0].text === post.data.title
+    ) && (
+      <TOCHeader slot="table-of-contents" headings={headings} />
+    )}
 
   <section class="grid grid-cols-[minmax(0px,1fr)_min(calc(var(--breakpoint-md)-2rem),100%)_minmax(0px,1fr)] gap-y-6">
     <div class="col-start-2">
       <Breadcrumbs
         items={[
           { href: '/blog', label: 'Blog', icon: 'lucide:library-big' },
-          { label: post.data.title, icon: 'lucide:book-open-text' },
+          ...(isCurrentSubpost && parentPost
+            ? [
+                {
+                  href: `/blog/en/${parentPost.id}`,
+                  label: parentPost.data.title,
+                  icon: 'lucide:book-open',
+                },
+                {
+                  href: `/blog/en/${currentPostId}`,
+                  label: post.data.title,
+                  icon: 'lucide:file-text',
+                },
+              ]
+            : [
+                {
+                  href: `/blog/en/${currentPostId}`,
+                  label: post.data.title,
+                  icon: 'lucide:book-open-text',
+                },
+              ]),
         ]}
       />
     </div>
@@ -85,8 +153,27 @@ if (navigation.older) {
               <span>{formatDate(post.data.date)}</span>
             </div>
             <div class="flex items-center gap-2 px-2 first:pl-0 last:pr-0">
-              <span>{postReadingTime}</span>
+              <span>
+                {postReadingTime}
+                {
+                  combinedReadingTime &&
+                    combinedReadingTime !== postReadingTime && (
+                      <span class="text-muted-foreground">
+                        {' '}
+                        ({combinedReadingTime} total)
+                      </span>
+                    )
+                }
+              </span>
             </div>
+            {
+              subpostCount > 0 && (
+                <div class="flex items-center gap-1 px-2 first:pl-0 last:pr-0">
+                  <Icon name="lucide:file-text" class="size-3" />
+                  {subpostCount} subpost{subpostCount === 1 ? '' : 's'}
+                </div>
+              )
+            }
           </div>
 
           {post.data.tags && post.data.tags.length > 0 && (
@@ -115,30 +202,64 @@ if (navigation.older) {
       <PostNavigation
         newerPost={navigation.newer}
         olderPost={navigation.older}
+        parentPost={isCurrentSubpost ? navigation.parent : undefined}
         lang="en"
       />
     </section>
 
-    {headings.length > 0 && (
-      <TOCSidebar
-        sections={[{
-          type: 'parent' as const,
-          title: 'Overview',
-          headings: headings.map(h => ({ slug: h.slug, text: h.text, depth: h.depth })),
-        }]}
-        currentPostId={slug}
-      />
-    )}
+    {
+      tocSections.length > 0 ? (
+        <TOCSidebar
+          sections={tocSections}
+          currentPostId={currentPostId}
+        />
+      ) : headings.length > 0 && (
+        <TOCSidebar
+          sections={[{
+            type: 'parent' as const,
+            title: 'Overview',
+            headings: headings.map(h => ({ slug: h.slug, text: h.text, depth: h.depth })),
+          }]}
+          currentPostId={currentPostId}
+        />
+      )
+    }
 
     <article class="prose col-start-2 max-w-none">
       <Content />
     </article>
 
+    {
+      (hasChildPosts || isCurrentSubpost) && (
+        <SubpostsSidebar
+          parentId={
+            isCurrentSubpost ? getParentId(currentPostId) : currentPostId
+          }
+          className="w-64"
+          lang="en"
+        />
+      )
+    }
+
     <PostNavigation
       newerPost={navigation.newer}
       olderPost={navigation.older}
+      parentPost={isCurrentSubpost ? navigation.parent : undefined}
       lang="en"
     />
+
+    {
+      /* Only show Disqus on main posts, not subposts */
+      !isCurrentSubpost && (
+        <div class="col-start-2 mt-12">
+          <Disqus
+            identifier={`blog-${currentPostId}`}
+            title={post.data.title}
+            url={new URL(`/blog/${currentPostId}`, SITE.href).href}
+          />
+        </div>
+      )
+    }
   </section>
 
   <Button
@@ -182,4 +303,72 @@ if (navigation.older) {
     }
   }
   document.addEventListener('astro:page-load', loadKatexCss)
+</script>
+
+<script>
+  async function renderMermaid() {
+    const blocks = document.querySelectorAll<HTMLPreElement>('pre.mermaid')
+    if (blocks.length === 0) return
+
+    const cdn = 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'
+    const { default: mermaid } = await import(/* @vite-ignore */ cdn)
+
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark'
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: dark ? 'dark' : 'neutral',
+    })
+
+    for (const pre of blocks) {
+      const source = pre.textContent?.trim()
+      if (!source) continue
+      try {
+        const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`
+        const { svg } = await mermaid.render(id, source)
+        const div = document.createElement('div')
+        div.className = 'mermaid-diagram flex justify-center my-4'
+        div.innerHTML = svg
+
+        // Override ALL mermaid colors universally
+        const svgEl = div.querySelector('svg')
+        if (svgEl) {
+          const p = `#${svgEl.id}`
+          const s = svgEl.querySelector('style')
+          if (s && svgEl.id) {
+            s.textContent += dark ? `
+              ${p} { background-color: transparent !important; }
+              ${p} .node rect, ${p} .node circle, ${p} .node ellipse, ${p} .node polygon, ${p} .node path { fill: #2d333b !important; stroke: #555 !important; }
+              ${p} .label, ${p} .label text, ${p} span, ${p} p { fill: #e0e0e0 !important; color: #e0e0e0 !important; }
+              ${p} .edgeLabel, ${p} .edgeLabel p, ${p} .labelBkg, ${p} span.edgeLabel { background-color: #2d333b !important; color: #e0e0e0 !important; }
+              ${p} .edgeLabel rect { opacity: 1 !important; fill: #2d333b !important; }
+              ${p} .cluster rect { fill: #22272e !important; stroke: #555 !important; }
+              ${p} .cluster text, ${p} .cluster span { fill: #e0e0e0 !important; color: #e0e0e0 !important; }
+              ${p} .flowchart-link { stroke: #888 !important; }
+              ${p} .edgePath .path { stroke: #888 !important; }
+              ${p} .marker, ${p} .arrowheadPath { fill: #888 !important; stroke: #888 !important; }
+              ${p} .flowchartTitleText { fill: #e0e0e0 !important; }
+            ` : `
+              ${p} { background-color: transparent !important; }
+              ${p} .node rect, ${p} .node circle, ${p} .node ellipse, ${p} .node polygon, ${p} .node path { fill: #e8eaed !important; stroke: #aaa !important; }
+              ${p} .label, ${p} .label text, ${p} span, ${p} p { fill: #1e293b !important; color: #1e293b !important; }
+              ${p} .edgeLabel, ${p} .edgeLabel p, ${p} .labelBkg, ${p} span.edgeLabel { background-color: #e8eaed !important; color: #1e293b !important; }
+              ${p} .edgeLabel rect { opacity: 1 !important; fill: #e8eaed !important; }
+              ${p} .cluster rect { fill: #f1f3f5 !important; stroke: #aaa !important; }
+              ${p} .cluster text, ${p} .cluster span { fill: #1e293b !important; color: #1e293b !important; }
+              ${p} .flowchart-link { stroke: #666 !important; }
+              ${p} .edgePath .path { stroke: #666 !important; }
+              ${p} .marker, ${p} .arrowheadPath { fill: #666 !important; stroke: #666 !important; }
+              ${p} .flowchartTitleText { fill: #1e293b !important; }
+            `
+          }
+        }
+
+        pre.replaceWith(div)
+      } catch (e) {
+        console.error('Mermaid render error:', e)
+      }
+    }
+  }
+
+  document.addEventListener('astro:page-load', renderMermaid)
 </script>
