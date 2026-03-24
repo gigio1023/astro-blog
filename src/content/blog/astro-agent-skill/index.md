@@ -139,6 +139,6 @@ Claude Code 기준:
 claude mcp add --transport http astro-docs https://mcp.docs.astro.build/mcp
 ```
 
-다른 에디터(Cursor, VS Code, Windsurf 등) 설정은 공식 [Astro: Build with AI](https://docs.astro.build/en/guides/build-with-ai/) 가이드를 참고.
+Codex 등 다른 에디터 설정은 공식 [Astro: Build with AI](https://docs.astro.build/en/guides/build-with-ai/) 가이드를 참고.
 
 [![gigio1023/astro-dev-skill - GitHub](https://gh-card.dev/repos/gigio1023/astro-dev-skill.svg)](https://github.com/gigio1023/astro-dev-skill)

@@ -140,6 +140,6 @@ For Claude Code:
 claude mcp add --transport http astro-docs https://mcp.docs.astro.build/mcp
 ```
 
-For setup instructions on other editors (Cursor, VS Code, Windsurf, etc.), see the official [Astro: Build with AI](https://docs.astro.build/en/guides/build-with-ai/) guide.
+For Codex and other editors, see the official [Astro: Build with AI](https://docs.astro.build/en/guides/build-with-ai/) guide.
 
 [![gigio1023/astro-dev-skill - GitHub](https://gh-card.dev/repos/gigio1023/astro-dev-skill.svg)](https://github.com/gigio1023/astro-dev-skill)
