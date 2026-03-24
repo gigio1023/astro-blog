@@ -128,10 +128,8 @@ Sono inclusi anche framework decisionali come `client:load` vs `client:idle` vs 
 
 ## Come si usa
 
-Con Claude Code, basta clonare nella directory degli skill e aggiungere il percorso in CLAUDE.md.
-
 ```bash
-git clone https://github.com/gigio1023/astro-dev-skill.git ~/.claude/skills/astro-dev-skill
+npx skills add gigio1023/astro-dev-skill
 ```
 
 Usandolo insieme all'Astro Docs MCP, l'MCP gestisce la ricerca nella documentazione aggiornata, e lo skill fornisce guardrail e ricette.

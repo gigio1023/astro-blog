@@ -128,10 +128,8 @@ Decision frameworks for choices like `client:load` vs `client:idle` vs `client:v
 
 ## Usage
 
-For Claude Code, clone to your skills directory and add the path to your CLAUDE.md.
-
 ```bash
-git clone https://github.com/gigio1023/astro-dev-skill.git ~/.claude/skills/astro-dev-skill
+npx skills add gigio1023/astro-dev-skill
 ```
 
 Using it alongside the Astro Docs MCP gives you a setup where MCP handles doc searches and the skill handles guardrails and recipes.
