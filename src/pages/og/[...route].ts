@@ -2,14 +2,34 @@ import { OGImageRoute } from 'astro-og-canvas'
 
 // Content pages (blog posts, etc.)
 const contentPages = import.meta.glob('/src/content/**/*.{md,mdx}', { eager: true })
-const contentPagesMap = Object.entries(contentPages).reduce((acc, [path, page]) => {
-  const newPath = path.replace('/src/content', '')
-  return { ...acc, [newPath]: page }
-}, {})
+
+// Map content file paths to the URL paths the site actually uses:
+//   index.md   (lang: ko)  -> /blog/ko/{slug}.png
+//   index.en.md             -> /blog/en/{slug}.png
+//   index.it.md             -> /blog/it/{slug}.png
+const contentPagesMap: Record<string, any> = {}
+for (const [path, page] of Object.entries(contentPages)) {
+  const relativePath = path.replace('/src/content', '')
+  contentPagesMap[relativePath] = page
+}
+
+/** Convert a content file path to the OG image slug the pages expect. */
+function contentPathToSlug(path: string, page: any): string {
+  // path looks like: /blog/{slug}/index.md or /blog/{slug}/index.en.md
+  const match = path.match(/^\/blog\/([^/]+)\/index(?:\.([a-z]{2}))?\.mdx?$/)
+  if (match) {
+    const slug = match[1]
+    const lang = match[2] || (page as any).frontmatter?.lang || 'ko'
+    return `/blog/${lang}/${slug}.png`
+  }
+  // Fallback: strip extension, add .png
+  return path.replace(/\.[^.]*$/, '') + '.png'
+}
 
 export const { getStaticPaths, GET } = OGImageRoute({
   param: 'route',
   pages: contentPagesMap,
+  getSlug: contentPathToSlug,
   getImageOptions: (_path, page) => ({
     title: page.frontmatter.title || page.frontmatter.name || '',
     description: page.frontmatter.description || '',
