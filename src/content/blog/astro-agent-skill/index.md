@@ -127,10 +127,8 @@ skills/astro-dev/
 
 ## 쓰는 법
 
-Claude Code 기준으로는 스킬 디렉토리에 클론하고 CLAUDE.md에 경로를 추가하면 된다.
-
 ```bash
-git clone https://github.com/gigio1023/astro-dev-skill.git ~/.claude/skills/astro-dev-skill
+npx skills add gigio1023/astro-dev-skill
 ```
 
 Astro Docs MCP와 같이 쓰면 MCP가 최신 문서 검색을, 스킬이 가드레일과 레시피를 담당하는 구조가 된다.
