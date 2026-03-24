@@ -69,6 +69,8 @@ const articleSchema = {
 <meta property="og:title" content={ogTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={postImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content={title} />
 <meta property="og:type" content="article" />
 <meta property="og:locale" content={post.data.lang === 'en' ? 'en_US' : post.data.lang === 'it' ? 'it_IT' : 'ko_KR'} />
@@ -88,6 +90,7 @@ const articleSchema = {
 }
 
 <!-- Enhanced Twitter Card tags -->
+<meta name="twitter:url" content={postUrl} />
 <meta name="twitter:title" content={ogTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={postImage} />

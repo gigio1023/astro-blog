@@ -82,7 +82,7 @@ if (navigation.parent) {
 }
 ---
 
-<Layout hideFloatingSidebar={hasChildPosts || isCurrentSubpost}>
+<Layout hideFloatingSidebar={hasChildPosts || isCurrentSubpost} lang="en" skipMeta>
   <PostHead slot="head" post={post} translations={translations} />
   {
     (hasChildPosts || isCurrentSubpost) && (
