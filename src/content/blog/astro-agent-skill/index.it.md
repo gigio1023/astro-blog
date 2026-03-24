@@ -132,17 +132,14 @@ Sono inclusi anche framework decisionali come `client:load` vs `client:idle` vs 
 npx skills add gigio1023/astro-dev-skill
 ```
 
-Usandolo insieme all'Astro Docs MCP, l'MCP gestisce la ricerca nella documentazione aggiornata, e lo skill fornisce guardrail e ricette.
+Usandolo insieme all'Astro Docs MCP, l'MCP gestisce la ricerca nella documentazione aggiornata, e lo skill fornisce guardrail e ricette. L'Astro Docs MCP e un server HTTP remoto fornito dal team Astro — nessun pacchetto npm da installare.
 
-```json
-{
-  "mcpServers": {
-    "astro-docs": {
-      "command": "npx",
-      "args": ["-y", "@anthropic-ai/astro-docs-mcp"]
-    }
-  }
-}
+Per Claude Code:
+
+```bash
+claude mcp add --transport http astro-docs https://mcp.docs.astro.build/mcp
 ```
 
-GitHub: [gigio1023/astro-dev-skill](https://github.com/gigio1023/astro-dev-skill)
+Per le istruzioni di configurazione su altri editor (Cursor, VS Code, Windsurf, ecc.), consulta la guida ufficiale [Astro: Build with AI](https://docs.astro.build/en/guides/build-with-ai/).
+
+[![gigio1023/astro-dev-skill - GitHub](https://gh-card.dev/repos/gigio1023/astro-dev-skill.svg)](https://github.com/gigio1023/astro-dev-skill)

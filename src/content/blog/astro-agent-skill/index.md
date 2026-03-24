@@ -131,17 +131,14 @@ skills/astro-dev/
 npx skills add gigio1023/astro-dev-skill
 ```
 
-Astro Docs MCP와 같이 쓰면 MCP가 최신 문서 검색을, 스킬이 가드레일과 레시피를 담당하는 구조가 된다.
+Astro Docs MCP와 같이 쓰면 MCP가 최신 문서 검색을, 스킬이 가드레일과 레시피를 담당하는 구조가 된다. Astro Docs MCP는 Astro 팀이 제공하는 원격 HTTP 서버로, npm 패키지 설치가 필요 없다.
 
-```json
-{
-  "mcpServers": {
-    "astro-docs": {
-      "command": "npx",
-      "args": ["-y", "@anthropic-ai/astro-docs-mcp"]
-    }
-  }
-}
+Claude Code 기준:
+
+```bash
+claude mcp add --transport http astro-docs https://mcp.docs.astro.build/mcp
 ```
 
-GitHub: [gigio1023/astro-dev-skill](https://github.com/gigio1023/astro-dev-skill)
+다른 에디터(Cursor, VS Code, Windsurf 등) 설정은 공식 [Astro: Build with AI](https://docs.astro.build/en/guides/build-with-ai/) 가이드를 참고.
+
+[![gigio1023/astro-dev-skill - GitHub](https://gh-card.dev/repos/gigio1023/astro-dev-skill.svg)](https://github.com/gigio1023/astro-dev-skill)
