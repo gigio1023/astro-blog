@@ -1,262 +1,135 @@
-<div align="center">
+# astro-blog
 
-## merox-erudite
+Multilingual (ko/en/it) Astro blog with dynamic OG image generation, structured data (JSON-LD), and SPA-like view transitions.
 
-[![License](https://img.shields.io/github/license/meroxdotdev/merox-erudite?color=0a0a0a&logo=github&logoColor=fff&style=for-the-badge)](LICENSE)
+**Live**: [sunghogigio.com](https://sunghogigio.com)
 
-</div>
+---
 
-**merox-erudite** is a customized version of the [astro-erudite](https://github.com/jktrn/astro-erudite) theme, enhanced with additional features and modifications for a more complete blogging experience.
+## What This Is
 
-> **📖 Want to learn more about the original theme?**  
-> This theme is based on [astro-erudite](https://github.com/jktrn/astro-erudite) by [@jktrn](https://github.com/jktrn). For detailed documentation, architecture details, and the original design philosophy, visit the [official astro-erudite repository](https://github.com/jktrn/astro-erudite).
+A fork of [merox-erudite](https://github.com/meroxdotdev/merox-erudite) (itself built on [astro-erudite](https://github.com/jktrn/astro-erudite)). The base themes provide Astro Islands, shadcn/ui components, Tailwind styling, MDX authoring, Expressive Code blocks, view transitions, multi-author support, tag system, RSS/sitemap, newsletter (Brevo), Disqus comments, analytics (GA4/Umami), and AdSense integration.
 
-## 🎯 What's Different from astro-erudite?
+Everything listed below is what was built on top of that foundation.
 
-This theme includes several enhancements and customizations:
+## What I Added
 
-### ✨ New Features
+### Trilingual i18n
 
-- **Newsletter Integration** - Brevo (formerly Sendinblue) newsletter subscription with GDPR-compliant consent
-- **Disqus Comments** - Integrated comment system with lazy loading and view transition support
-- **Google AdSense** - Built-in AdSense component with view transition support
-- **Analytics Support** - Google Analytics and Umami Analytics integration
-- **SEO Enhancements** - FAQ Schema and HowTo Schema components for better search visibility
-- **Enhanced Homepage** - Custom hero section with experience timeline and skills showcase
-- **Improved Typography** - Geist font family integration
-- **Better Accessibility** - Enhanced focus indicators and screen reader support
+- Three languages: Korean (default), English, Italian
+- Per-language routes (`/blog/ko/`, `/blog/en/`, `/blog/it/`) with dedicated page files
+- Translation linking via `translationOf` frontmatter field
+- Language switcher component on every post
+- `hreflang` alternate tags with `x-default` fallback
+- Dynamic `<html lang>` attribute matching each page's actual language
+- English-first RSS feed with fallback to base post data
 
-### 🎨 Design Improvements
+### Dynamic OG Images
 
-- Custom color palette optimized for readability
-- Improved contrast ratios for better accessibility
-- Enhanced dark mode support
-- Modern hero section with background image support
-- Experience timeline component
-- Skills showcase with animated tech badges
+- Build-time generation with [satori](https://github.com/vercel/satori) + [@resvg/resvg-js](https://github.com/yisibl/resvg-js)
+- Nebula-style gradient background with paw watermark
+- Multilingual font stack: Geist (Latin) + Pretendard (Korean)
+- Adaptive title size based on character count
+- One image generated per language variant per post
 
-### 🔧 Technical Enhancements
+### Full-Text Search
 
-- Updated dependencies to latest versions
-- Improved error handling and error boundaries
-- Better view transition support
-- Optimized performance with lazy loading
-- Enhanced TypeScript types
+- Client-side search powered by [FlexSearch](https://github.com/nicola-cal/flexsearch)
+- Prerendered JSON index covering title, description, tags, and full content
+- Fuzzy matching with relevance scoring (exact > prefix > contains)
+- Keyboard navigation, search history (last 10), contextual snippet extraction
+- localStorage caching for instant subsequent loads
 
-## 📋 Features
+### Structured Data (JSON-LD)
 
-All features from astro-erudite plus:
+- `BlogPosting` on every post (headline, author, publisher, dates, keywords)
+- `BreadcrumbList` with positional items on all navigable pages
+- `WebSite` and `Person` schemas on homepage and about page
+- Reusable `FAQPage` and `HowTo` schema components for rich snippet eligibility
 
-- [Astro](https://astro.build/)'s [Islands](https://docs.astro.build/en/concepts/islands/) architecture
-- [shadcn/ui](https://ui.shadcn.com/) with [Tailwind](https://tailwindcss.com/) styling
-- [Expressive Code](https://expressive-code.com/) for code blocks
-- Blog authoring with [MDX](https://mdxjs.com/) and $\LaTeX$ math rendering
-- Astro [View Transitions](https://docs.astro.build/en/guides/view-transitions/)
-- SEO optimization with granular metadata
-- [RSS](https://en.wikipedia.org/wiki/RSS) feed and sitemap generation
-- Subpost support for series content
-- Author profiles and multi-author support
-- Project tags and categorization
-- **Newsletter subscription** (Brevo integration)
-- **Disqus comments** (optional)
-- **Google AdSense** support (optional)
-- **Analytics** (Google Analytics & Umami)
+### Series / Subpost System
 
-## 🚀 Getting Started
+- Parent-child post relationships via folder nesting (`post/index.md` + `post/sub.md`)
+- Sidebar + header navigation showing all posts in a series
+- Combined reading time aggregated across parent and children
+- Merged table of contents spanning subposts
+- Custom ordering via `order` frontmatter field
 
-1. **Use this template** - Click the "Use this template" button to create a new repository
+### SEO Meta Architecture
 
-2. **Clone the repository:**
-   ```bash
-   git clone https://github.com/[YOUR_USERNAME]/[YOUR_REPO_NAME].git
-   cd [YOUR_REPO_NAME]
-   ```
+- Deduplicated meta tags: `head.astro` skips OG/Twitter/canonical when `post-head.astro` provides article-specific versions (`skipMeta` prop)
+- `og:type` correctly set to `"article"` on posts, `"website"` on other pages (no conflicts)
+- `article:published_time`, `article:modified_time`, `article:tag` meta tags
+- Language-specific `og:locale` and `og:locale:alternate`
+- `og:image` dimensions and `twitter:url` on article pages
 
-3. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+### Content Rendering
 
-4. **Configure environment variables** (optional):
-   Create a `.env` file with:
-   ```env
-   # Newsletter (Brevo)
-   BREVO_API_KEY=your-api-key
-   BREVO_LIST_ID=your-list-id
-   BREVO_TEMPLATE_ID=5
+- Mermaid diagrams via custom remark plugin + client-side CDN rendering (theme-aware, dark/light)
+- KaTeX math rendering with on-demand CSS loading (only when `.katex` elements detected)
+- Both re-initialize correctly on view transition navigations via `astro:page-load`
 
-   # Analytics
-   PUBLIC_GOOGLE_ANALYTICS_ID=your-ga-id
-   PUBLIC_UMAMI_WEBSITE_ID=your-umami-id
+## Tech Stack
 
-   # Disqus
-   PUBLIC_DISQUS_SHORTNAME=your-shortname
-   ```
+| Layer | Technology |
+|-------|-----------|
+| Framework | [Astro](https://astro.build/) |
+| UI | [shadcn/ui](https://ui.shadcn.com/) + [React](https://react.dev/) |
+| Styling | [Tailwind CSS v4](https://tailwindcss.com/) |
+| Content | [MDX](https://mdxjs.com/) + Astro Content Collections |
+| OG Images | [satori](https://github.com/vercel/satori) + [resvg](https://github.com/yisibl/resvg-js) |
+| Code Blocks | [Expressive Code](https://expressive-code.com/) + [Shiki](https://shiki.style/) |
+| Search | [FlexSearch](https://github.com/nicola-cal/flexsearch) |
+| Hosting | [Cloudflare Pages](https://pages.cloudflare.com/) |
 
-5. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
+## Getting Started
 
-6. **Open your browser** and visit `http://localhost:1234`
-
-## ⚙️ Configuration
-
-### Site Configuration
-
-Edit `src/consts.ts` to customize:
-
-```ts
-export const SITE: Site = {
-  title: 'Your Site Name',
-  description: 'Your site description',
-  href: 'https://yourdomain.com',
-  author: 'your-author-id',
-  locale: 'en-US',
-  featuredPostCount: 2,
-  postsPerPage: 6,
-}
-
-export const NAV_LINKS: SocialLink[] = [
-  { href: '/blog', label: 'Blog' },
-  { href: '/about', label: 'About' },
-]
-
-export const SOCIAL_LINKS: SocialLink[] = [
-  { href: 'https://github.com/username', label: 'GitHub' },
-  // ... more links
-]
+```bash
+git clone https://github.com/gigio1023/astro-blog.git
+cd astro-blog
+npm install
+npm run dev     # localhost:1234
 ```
 
-### Newsletter Setup
+### Environment Variables (all optional)
 
-1. Sign up for [Brevo](https://www.brevo.com/) (free tier available)
-2. Get your API key from Settings → API Keys
-3. Create a list and get the List ID
-4. Add environment variables to `.env`
-
-### Disqus Setup
-
-1. Create a [Disqus](https://disqus.com/) account
-2. Register your site to get a shortname
-3. Add `PUBLIC_DISQUS_SHORTNAME` to `.env`
-
-### AdSense Setup
-
-1. Edit `src/components/AdSense.astro`
-2. Replace `ca-pub-XXXXX` with your AdSense publisher ID
-3. Replace `data-ad-slot` with your ad slot ID
-
-## 📝 Adding Content
-
-### Blog Posts
-
-Add MDX files to `src/content/blog/`:
-
-```yaml
----
-title: 'Your Post Title'
-description: 'A brief description'
-date: 2024-01-01
-tags: ['tag1', 'tag2']
-image: './image.png'
-authors: ['author-id']
-draft: false
----
+```env
+PUBLIC_GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
+PUBLIC_UMAMI_WEBSITE_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+PUBLIC_DISQUS_SHORTNAME=your-shortname
+BREVO_API_KEY=xkeysib-...
+BREVO_LIST_ID=3
+BREVO_TEMPLATE_ID=5
 ```
 
-### Authors
+### Configuration
 
-Add author files to `src/content/authors/`:
+Edit `src/consts.ts` for site metadata, navigation, and social links.
 
-```yaml
----
-name: 'Author Name'
-pronouns: 'they/them'
-avatar: 'https://gravatar.com/avatar/...'
-bio: 'Author bio'
-website: 'https://example.com'
-github: 'https://github.com/username'
----
+## Project Structure
+
+```
+src/
+  content/blog/       # Posts (index.md + index.en.md + index.it.md per slug)
+  pages/blog/{ko,en,it}/  # Language-specific post routes
+  pages/og/           # satori OG image generation
+  pages/api/          # Search index endpoint
+  components/         # Astro + React components
+  plugins/            # Custom remark plugins (Mermaid)
+  lib/                # Data utilities, helpers
+functions/            # Cloudflare Pages Functions (newsletter)
 ```
 
-## 🎨 Customization
+## Credits
 
-### Colors
+This project builds on excellent open-source work:
 
-Edit `src/styles/global.css` to customize the color palette:
+- **[astro-erudite](https://github.com/jktrn/astro-erudite)** by [@jktrn](https://github.com/jktrn) — the original theme that established the design system, component architecture, and content collection patterns
+- **[merox-erudite](https://github.com/meroxdotdev/merox-erudite)** by [@meroxdotdev](https://github.com/meroxdotdev) (Robert Melcher) — added newsletter, Disqus, analytics, AdSense, and accessibility improvements
+- **[Astro Micro](https://astro-micro.vercel.app/)** by [trevortylerlee](https://github.com/trevortylerlee) — the original inspiration for the erudite lineage
 
-```css
-:root {
-  --primary: hsl(214 95% 52%);
-  /* ... more colors */
-}
+The foundation these contributors built made everything above possible.
 
-[data-theme='dark'] {
-  --primary: hsl(214 95% 62%);
-  /* ... more colors */
-}
-```
+## License
 
-### Fonts
-
-The theme uses Geist font family. Font files are in `public/fonts/`. To change fonts:
-
-1. Replace font files in `public/fonts/`
-2. Update `@font-face` declarations in `src/styles/global.css`
-3. Update `--font-sans` and `--font-mono` in the theme configuration
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 💻 Development Transparency
-
-**Important Note:** This theme was developed exclusively using [Cursor](https://cursor.sh/) (an AI-powered code editor) with paid subscription. I am not a programmer by profession—I'm a System Administrator with a passion for sharing knowledge through blogging.
-
-The development process involved:
-- Iterative conversations with Cursor's AI assistant
-- Learning and understanding code through AI explanations
-- Testing and refining features with AI guidance
-- Building on the excellent foundation of astro-erudite
-
-This transparency is important because:
-1. **Honesty** - You should know how this theme was created
-2. **Accessibility** - It demonstrates that you don't need to be a professional developer to create useful tools
-3. **AI-Assisted Development** - Shows the potential of AI coding assistants for non-programmers
-
-While the code was written with AI assistance, all decisions about features, design, and implementation were made by me based on my needs as a blogger. The theme has been tested and is fully functional.
-
-## 🙏 Credits
-
-### Original Theme
-
-This theme is a fork and customization of **[astro-erudite](https://github.com/jktrn/astro-erudite)** by [@jktrn](https://github.com/jktrn).
-
-For comprehensive documentation, detailed feature explanations, and the original theme's design philosophy, please visit the [official astro-erudite repository](https://github.com/jktrn/astro-erudite).
-
-### Additional Credits
-
-- Originally inspired by [Astro Micro](https://astro-micro.vercel.app/) by [trevortylerlee](https://github.com/trevortylerlee)
-- Developed with [Cursor](https://cursor.sh/) AI coding assistant
-
-## 📚 Resources
-
-### Official Theme Documentation
-
-- **[astro-erudite Repository](https://github.com/jktrn/astro-erudite)** - Original theme with comprehensive documentation
-- **[astro-erudite Live Demo](https://astro-erudite.vercel.app/)** - See the original theme in action
-
-### Technology Documentation
-
-- [Astro Documentation](https://docs.astro.build/)
-- [Tailwind CSS](https://tailwindcss.com/docs)
-- [shadcn/ui](https://ui.shadcn.com/)
-- [MDX Documentation](https://mdxjs.com/)
-
----
-
-Built with ❤️ by [merox](https://merox.dev)
-
-*Developed using [Cursor](https://cursor.sh/) AI coding assistant*
-
+[MIT](LICENSE)
