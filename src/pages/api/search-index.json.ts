@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro'
-import { getAllPosts, getTranslation } from '@/lib/data-utils'
+import { getAllPosts, getLocalizedTitle, getLocalizedDescription, getTranslation } from '@/lib/data-utils'
+import { DEFAULT_LANG } from '@/consts'
 
 export const prerender = true
 
@@ -9,12 +10,12 @@ export const GET: APIRoute = async () => {
 
     const searchIndex = await Promise.all(
       posts.map(async (post) => {
-        const enTranslation = await getTranslation(post.id, 'en')
-        const title = enTranslation?.data.title ?? post.data.title
-        const description = enTranslation?.data.description ?? post.data.description
+        const title = await getLocalizedTitle(post, DEFAULT_LANG)
+        const description = await getLocalizedDescription(post, DEFAULT_LANG)
 
-        // Use English translation body if available, otherwise fall back to base post
-        const sourcePost = enTranslation ?? post
+        // Use translation body in default language if available, otherwise fall back to base post
+        const translation = await getTranslation(post.id, DEFAULT_LANG)
+        const sourcePost = translation ?? post
         const htmlContent = (sourcePost as { body?: string }).body || ''
         const textContent = htmlContent
           .replace(/<[^>]+>/g, ' ')
@@ -28,9 +29,8 @@ export const GET: APIRoute = async () => {
           date: post.data.date?.toISOString() || new Date().toISOString(),
           tags: post.data.tags || [],
           authors: post.data.authors || [],
-          url: `/blog/en/${post.id}`,
-          // Include full content for better search results
-          content: textContent, // Full content for indexing
+          url: `/blog/${DEFAULT_LANG}/${post.id}`,
+          content: textContent,
         }
       }),
     )
@@ -44,7 +44,6 @@ export const GET: APIRoute = async () => {
     })
   } catch (error) {
     console.error('Error generating search index:', error)
-    // Return empty array on error instead of failing
     return new Response(JSON.stringify([]), {
       status: 200,
       headers: {
@@ -54,4 +53,3 @@ export const GET: APIRoute = async () => {
     })
   }
 }
-

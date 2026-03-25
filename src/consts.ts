@@ -1,12 +1,17 @@
 import type { IconMap, SocialLink, Site } from '@/types'
 
+export type SupportedLang = 'ko' | 'en' | 'it'
+
+/** Site-wide display language for non-post pages (homepage, blog listing, RSS, search). */
+export const DEFAULT_LANG: SupportedLang = 'en'
+
 export const SITE: Site = {
   title: 'Sungho Park',
   description:
     'AI Engineer',
   href: 'https://sunghogigio.com',
   author: 'Sungho Park',
-  locale: 'ko-KR',
+  locale: 'en-US',
   featuredPostCount: 2,
   postsPerPage: 6,
 }

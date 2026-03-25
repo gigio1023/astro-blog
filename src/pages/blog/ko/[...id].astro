@@ -2,10 +2,9 @@
 import BlogPostLayout from '@/layouts/blog-post-layout.astro'
 import {
   getAdjacentPosts,
-  getAllPostsAndSubposts,
   getAvailableTranslations,
   getCombinedReadingTime,
-  getEnglishTitle,
+  getLocalizedTitle,
   getParentPost,
   getPostReadingTime,
   getSubpostCount,
@@ -14,18 +13,20 @@ import {
   isSubpost,
   parseAuthors,
 } from '@/lib/data-utils'
-import { render } from 'astro:content'
+import { getCollection, render } from 'astro:content'
 
 export async function getStaticPaths() {
-  const posts = await getAllPostsAndSubposts()
-  return posts.map((post) => ({
-    params: { id: post.id },
+  const allPosts = await getCollection('blog')
+  const koPosts = allPosts.filter(p => p.data.lang === 'ko' && !p.data.draft)
+  return koPosts.map(post => ({
+    params: { id: post.data.translationOf || post.id },
     props: post,
   }))
 }
 
 const post = Astro.props
-const currentPostId = Astro.params.id
+const slug = post.data.translationOf || post.id
+const currentPostId = slug
 
 let Content: Awaited<ReturnType<typeof render>>['Content']
 let headings: Awaited<ReturnType<typeof render>>['headings'] = []
@@ -45,45 +46,42 @@ try {
   console.error('Error parsing authors:', error)
 }
 
-const isCurrentSubpost = isSubpost(currentPostId)
+const postReadingTime = await getPostReadingTime(slug)
+const translations = await getAvailableTranslations(slug)
+const navigation = await getAdjacentPosts(slug)
 
-let navigation: Awaited<ReturnType<typeof getAdjacentPosts>> = { newer: null, older: null, parent: null }
+const isCurrentSubpost = isSubpost(currentPostId)
 let parentPost: Awaited<ReturnType<typeof getParentPost>> = null
 let hasChildPosts = false
 let subpostCount = 0
-let postReadingTime = '0 min read'
 let combinedReadingTime: string | null = null
 let tocSections: Awaited<ReturnType<typeof getTOCSections>> = []
 
 try {
-  navigation = await getAdjacentPosts(currentPostId)
   parentPost = isCurrentSubpost ? await getParentPost(currentPostId) : null
   hasChildPosts = await hasSubposts(currentPostId)
   subpostCount = !isCurrentSubpost ? await getSubpostCount(currentPostId) : 0
-  postReadingTime = await getPostReadingTime(currentPostId)
   combinedReadingTime =
     hasChildPosts && !isCurrentSubpost
       ? await getCombinedReadingTime(currentPostId)
       : null
   tocSections = await getTOCSections(currentPostId, 'ko')
-
-  if (navigation.newer) {
-    const enTitle = await getEnglishTitle(navigation.newer)
-    navigation.newer = { ...navigation.newer, data: { ...navigation.newer.data, title: enTitle } }
-  }
-  if (navigation.older) {
-    const enTitle = await getEnglishTitle(navigation.older)
-    navigation.older = { ...navigation.older, data: { ...navigation.older.data, title: enTitle } }
-  }
-  if (navigation.parent) {
-    const enTitle = await getEnglishTitle(navigation.parent)
-    navigation.parent = { ...navigation.parent, data: { ...navigation.parent.data, title: enTitle } }
-  }
 } catch (error) {
   console.error('Error fetching post metadata:', error)
 }
 
-const translations = await getAvailableTranslations(post.id)
+if (navigation.newer) {
+  const title = await getLocalizedTitle(navigation.newer, 'ko')
+  navigation.newer = { ...navigation.newer, data: { ...navigation.newer.data, title } }
+}
+if (navigation.older) {
+  const title = await getLocalizedTitle(navigation.older, 'ko')
+  navigation.older = { ...navigation.older, data: { ...navigation.older.data, title } }
+}
+if (navigation.parent) {
+  const title = await getLocalizedTitle(navigation.parent, 'ko')
+  navigation.parent = { ...navigation.parent, data: { ...navigation.parent.data, title } }
+}
 ---
 
 <BlogPostLayout

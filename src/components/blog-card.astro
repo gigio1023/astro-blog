@@ -1,12 +1,13 @@
 ---
 import {
   getCombinedReadingTime,
-  getEnglishDescription,
-  getEnglishTitle,
+  getLocalizedDescription,
+  getLocalizedTitle,
   getSubpostCount,
   isSubpost,
   parseAuthors,
 } from '@/lib/data-utils'
+import { DEFAULT_LANG } from '@/consts'
 import { formatDate } from '@/lib/utils'
 import { getTagVariant } from '@/lib/utils'
 import { Icon } from 'astro-icon/components'
@@ -22,12 +23,12 @@ const formattedDate = formatDate(entry.data.date)
 const readTime = await getCombinedReadingTime(entry.id)
 const authors = await parseAuthors(entry.data.authors ?? [])
 const subpostCount = !isSubpost(entry.id) ? await getSubpostCount(entry.id) : 0
-const title = await getEnglishTitle(entry)
-const description = await getEnglishDescription(entry)
+const title = await getLocalizedTitle(entry, DEFAULT_LANG)
+const description = await getLocalizedDescription(entry, DEFAULT_LANG)
 ---
 
 <Link
-  href={`/blog/en/${entry.id}`}
+  href={`/blog/${DEFAULT_LANG}/${entry.id}`}
   class="group block py-4 transition-all duration-200 hover:bg-muted/30 -mx-2 px-2 rounded-md"
 >
   <div class="flex items-start justify-between gap-4">

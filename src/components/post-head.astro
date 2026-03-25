@@ -1,5 +1,5 @@
 ---
-import { SITE } from '@/consts'
+import { SITE, DEFAULT_LANG } from '@/consts'
 import type { CollectionEntry } from 'astro:content'
 
 interface Props {
@@ -76,7 +76,7 @@ const articleSchema = {
 <meta property="og:locale" content={post.data.lang === 'en' ? 'en_US' : post.data.lang === 'it' ? 'it_IT' : 'ko_KR'} />
 <meta property="og:site_name" content={SITE.title} />
 <meta property="og:url" content={postUrl} />
-{translations.filter(t => t.lang !== (post.data.lang || 'ko')).map(({ lang }) => (
+{translations.filter(t => t.lang !== post.data.lang).map(({ lang }) => (
   <meta property="og:locale:alternate" content={lang === 'en' ? 'en_US' : lang === 'it' ? 'it_IT' : 'ko_KR'} />
 ))}
 <meta property="article:published_time" content={publishedTime} />
@@ -105,6 +105,6 @@ const articleSchema = {
   <link rel="alternate" hreflang={lang} href={new URL(url, SITE.href).href} />
 ))}
 {translations.length > 0 && (() => {
-  const defaultTranslation = translations.find(t => t.lang === 'en') || translations[0]
+  const defaultTranslation = translations.find(t => t.lang === DEFAULT_LANG) || translations[0]
   return <link rel="alternate" hreflang="x-default" href={new URL(defaultTranslation.url, SITE.href).href} />
 })()}
