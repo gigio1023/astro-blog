@@ -8,9 +8,9 @@ lang: it
 translationOf: "ai-token-spending-knowledge-system"
 ---
 
-- 21,4 miliardi di token in 12 settimane con abbonamenti personali. La maggior parte è andata a costruire una base di conoscenza personale di 3.200 file Markdown, non a scrivere codice.
-- Quando un agente sbaglia, correggo l'ambiente. Quando un'attività si ripete, la trasformo in uno skill. 19 skill girano su questo repo.
-- Ricerca comparativa sull'immigrazione in Europa, uno skill di consulenza psicologica: tutto sullo stesso sistema.
+- 21,4 miliardi di token in 12 settimane con abbonamenti personali. La maggior parte non è andata a scrivere codice, ma a costruire conoscenza strutturata e a far girare ricerca e decisioni sopra, tramite agent harness.
+- Le interfacce possono cambiare, ma conoscenza ben organizzata e guide funzionano su qualsiasi strumento.
+- Anche con modelli migliori, il ruolo di definire direzione e confini probabilmente non scomparirà.
 
 ---
 
@@ -27,7 +27,7 @@ Dal 1° gennaio al 25 marzo 2026. Circa 12 settimane. Aggregato da `bunx ccusage
 
 ## Costruire l'ambiente
 
-Lo sviluppo personale si è limitato a qualche progetto Unity e a questo blog. Il grosso dei token è andato a costruire e consolidare una base di conoscenza personale: 3.200 file Markdown, 370.000 righe. Contiene cose come note di ricerca tecnica, pianificazione finanziaria, ricerca comparativa sulle politiche migratorie, e anche la gestione delle todo list. In pratica i temi sono molti di più, ma ci sono troppe informazioni personali per elencarli.
+Lo sviluppo personale si è limitato a qualche progetto Unity e a questo blog. Il grosso dei token è andato a costruire una base di conoscenza personale — 3.200 file Markdown, 370.000 righe — e a trasformarla in un sistema in cui gli agenti possono fare ricerca e prendere decisioni. Contiene cose come note di ricerca tecnica, pianificazione finanziaria, ricerca comparativa sulle politiche migratorie, e anche la gestione delle todo list. In pratica i temi sono molti di più, ma ci sono troppe informazioni personali per elencarli.
 
 OpenAI ha un concetto che chiama harness engineering: "ogni volta che un agente fa un errore, ci si prende il tempo di progettare una soluzione perché quell'errore non si ripeta mai più." Sto applicando lo stesso principio al mio sistema di conoscenza personale. Quando un agente fa riferimento a informazioni errate, correggo la catena INDEX. Quando manca letteratura, la raccolgo. Quando un'attività si ripete, la trasformo in un agent skill. Ci sono 19 skill su questo repo. Uno skill vault-health rileva link rotti e file non referenziati, e uno skill di revisione settimanale riassume i cambiamenti e stabilisce le priorità per la settimana successiva.
 
@@ -81,7 +81,7 @@ Un professionista formato è migliore sotto ogni aspetto, legalmente e praticame
 
 Ci si potrebbe chiedere perché questa non sia una storia incentrata su OpenClaw. Si potrebbe costruire lo stesso sistema su OpenClaw. Onestamente, non penso che OpenClaw in sé sia così importante. Cloni il repo di conoscenza, gli dici "lavora solo da questo repo," e lo fa. Finché si fa il backup dei file di memoria, OpenClaw è un'interfaccia remota basata su Discord molto accessibile, ma non è il nucleo.
 
-Il nucleo è il sistema di conoscenza sottostante e gli agent skill che ci girano sopra. Le interfacce possono cambiare, ma conoscenza ben organizzata e guide funzionano su qualsiasi strumento. Anche adesso, gli skill impostano la direzione su argomenti sconosciuti e mantengono la qualità su compiti ripetitivi. Man mano che i modelli migliorano, gli skill potrebbero aver bisogno di meno dettaglio, ma il ruolo di definire direzione e confini probabilmente non scomparirà.
+Il nucleo è il sistema di conoscenza sottostante e gli agent skill che ci fanno ricerca e decisioni sopra. Le interfacce possono cambiare, ma conoscenza ben organizzata e guide funzionano su qualsiasi strumento. Anche adesso, gli skill impostano la direzione su argomenti sconosciuti e mantengono la qualità su compiti ripetitivi. Man mano che i modelli migliorano, gli skill potrebbero aver bisogno di meno dettaglio, ma il ruolo di definire direzione e confini probabilmente non scomparirà.
 
 Non penso che questo sistema sia finito. Accumulare informazioni personali in un repo privato è di per sé un rischio, e non sono ancora sicuro che Obsidian sia un livello necessario. Ma nel tempo che ci è voluto per accumulare 3.200 file, non ho mai pensato "dovrei buttare tutto e tornare a Notion." Ognuno usa questi strumenti a modo suo, e questo è solo uno dei modi.
 
