@@ -8,9 +8,9 @@ lang: it
 translationOf: "ai-token-spending-knowledge-system"
 ---
 
-- 21,4 miliardi di token in 12 settimane con abbonamenti personali. Equivalente a consumo: $7.994. La spesa effettiva sono solo i canoni di abbonamento.
-- Per me, più tempo è andato a costruire l'ambiente in cui gli agenti possono operare che a scrivere codice.
-- Una volta che quell'ambiente esisteva, sia il lavoro che i progetti personali ci giravano sopra.
+- 21,4 miliardi di token in 12 settimane con abbonamenti personali. La maggior parte è andata a costruire una base di conoscenza personale di 3.200 file Markdown, non a scrivere codice.
+- Quando un agente sbaglia, correggo l'ambiente. Quando un'attività si ripete, la trasformo in uno skill. 19 skill girano su questo repo.
+- Ricerca comparativa sull'immigrazione in Europa, uno skill di consulenza psicologica: tutto sullo stesso sistema.
 
 ---
 

@@ -8,9 +8,9 @@ lang: en
 translationOf: "ai-token-spending-knowledge-system"
 ---
 
-- 21.4 billion tokens over 12 weeks on personal subscriptions. Pay-as-you-go equivalent: $7,994. Actual spend is just the subscription fees.
-- For me, more time went into building the environment where agents can operate than into writing code.
-- Once that environment existed, both work and personal projects ran on top of it.
+- 21.4 billion tokens over 12 weeks on personal subscriptions. Most went into building a personal knowledge base of 3,200 Markdown files, not writing code.
+- When an agent makes a mistake, I fix the environment. When a task repeats, I turn it into a skill. 19 skills run on this repo.
+- Comparative immigration research across Europe, a counseling skill — all running on the same system.
 
 ---
 
