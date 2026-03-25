@@ -1,5 +1,6 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content'
 import { readingTime, calculateWordCountFromHtml } from '@/lib/utils'
+import type { SupportedLang } from '@/consts'
 
 export async function getAllAuthors(): Promise<CollectionEntry<'authors'>[]> {
   return await getCollection('authors')
@@ -7,6 +8,11 @@ export async function getAllAuthors(): Promise<CollectionEntry<'authors'>[]> {
 
 export function isTranslation(post: CollectionEntry<'blog'>): boolean {
   return !!post.data.translationOf
+}
+
+/** Get the canonical slug for a post (the shared identifier across translations). */
+export function getPostSlug(post: CollectionEntry<'blog'>): string {
+  return post.data.translationOf || post.id
 }
 
 export async function getTranslation(
@@ -21,47 +27,68 @@ export async function getTranslation(
   )
 }
 
-/** Returns available language URLs for a post slug */
+/** Find a post in a specific language by its canonical slug. */
+async function findPostBySlugAndLang(
+  slug: string,
+  lang: SupportedLang,
+): Promise<CollectionEntry<'blog'> | null> {
+  const posts = await getCollection('blog')
+  // Check if the base post (id === slug) is in the target language
+  const basePost = posts.find((p) => p.id === slug && !p.data.draft)
+  if (basePost && basePost.data.lang === lang) return basePost
+  // Check translations
+  return posts.find(
+    (p) => p.data.translationOf === slug && !p.data.draft && p.data.lang === lang,
+  ) || null
+}
+
+/** Get the title of a post in a specific language, falling back to the post's own title. */
+export async function getLocalizedTitle(
+  post: CollectionEntry<'blog'>,
+  lang: SupportedLang,
+): Promise<string> {
+  if (post.data.lang === lang) return post.data.title
+  const slug = getPostSlug(post)
+  const localized = await findPostBySlugAndLang(slug, lang)
+  return localized?.data.title ?? post.data.title
+}
+
+/** Get the description of a post in a specific language, falling back to the post's own description. */
+export async function getLocalizedDescription(
+  post: CollectionEntry<'blog'>,
+  lang: SupportedLang,
+): Promise<string> {
+  if (post.data.lang === lang) return post.data.description
+  const slug = getPostSlug(post)
+  const localized = await findPostBySlugAndLang(slug, lang)
+  return localized?.data.description ?? post.data.description
+}
+
+/** Returns available language URLs for a post slug. */
 export async function getAvailableTranslations(
   slug: string,
 ): Promise<{ lang: string; url: string }[]> {
   const posts = await getCollection('blog')
   const result: { lang: string; url: string }[] = []
 
-  // Check if KO version exists (base post)
-  const koPost = posts.find(
-    (p) => p.id === slug && !p.data.draft && (p.data.lang === 'ko' || !p.data.lang),
+  // Base post (id matches slug)
+  const basePost = posts.find(
+    (p) => p.id === slug && !p.data.draft,
   )
-  if (koPost) {
-    result.push({ lang: 'ko', url: `/blog/ko/${slug}` })
+  if (basePost) {
+    const lang = basePost.data.lang || 'ko'
+    result.push({ lang, url: `/blog/${lang}/${slug}` })
   }
 
-  // Check translations
+  // All translations pointing to this slug
   const translations = posts.filter(
     (p) => p.data.translationOf === slug && !p.data.draft,
   )
   for (const t of translations) {
-    result.push({ lang: t.data.lang || 'en', url: `/blog/${t.data.lang}/${slug}` })
+    result.push({ lang: t.data.lang, url: `/blog/${t.data.lang}/${slug}` })
   }
 
   return result
-}
-
-
-export async function getEnglishTitle(
-  post: CollectionEntry<'blog'>,
-): Promise<string> {
-  if (post.data.lang === 'en') return post.data.title
-  const translation = await getTranslation(post.id)
-  return translation?.data.title ?? post.data.title
-}
-
-export async function getEnglishDescription(
-  post: CollectionEntry<'blog'>,
-): Promise<string> {
-  if (post.data.lang === 'en') return post.data.description
-  const translation = await getTranslation(post.id)
-  return translation?.data.description ?? post.data.description
 }
 
 export async function getAllPosts(): Promise<CollectionEntry<'blog'>[]> {

@@ -1,7 +1,7 @@
-import { SITE } from '@/consts'
+import { SITE, DEFAULT_LANG } from '@/consts'
 import rss from '@astrojs/rss'
 import type { APIContext } from 'astro'
-import { getAllPosts, getTranslation } from '@/lib/data-utils'
+import { getAllPosts, getLocalizedTitle, getLocalizedDescription } from '@/lib/data-utils'
 
 export async function GET(context: APIContext) {
   try {
@@ -9,15 +9,14 @@ export async function GET(context: APIContext) {
 
     const items = await Promise.all(
       posts.map(async (post) => {
-        const enTranslation = await getTranslation(post.id, 'en')
-        const title = enTranslation?.data.title ?? post.data.title
-        const description = enTranslation?.data.description ?? post.data.description
+        const title = await getLocalizedTitle(post, DEFAULT_LANG)
+        const description = await getLocalizedDescription(post, DEFAULT_LANG)
 
         return {
           title,
           description,
           pubDate: post.data.date,
-          link: `/blog/en/${post.id}/`,
+          link: `/blog/${DEFAULT_LANG}/${post.id}/`,
         }
       }),
     )

@@ -4,7 +4,7 @@ import {
   getAdjacentPosts,
   getAvailableTranslations,
   getCombinedReadingTime,
-  getEnglishTitle,
+  getLocalizedTitle,
   getParentPost,
   getPostReadingTime,
   getSubpostCount,
@@ -58,16 +58,16 @@ try {
 }
 
 if (navigation.newer) {
-  const enTitle = await getEnglishTitle(navigation.newer)
-  navigation.newer = { ...navigation.newer, data: { ...navigation.newer.data, title: enTitle } }
+  const title = await getLocalizedTitle(navigation.newer, 'it')
+  navigation.newer = { ...navigation.newer, data: { ...navigation.newer.data, title } }
 }
 if (navigation.older) {
-  const enTitle = await getEnglishTitle(navigation.older)
-  navigation.older = { ...navigation.older, data: { ...navigation.older.data, title: enTitle } }
+  const title = await getLocalizedTitle(navigation.older, 'it')
+  navigation.older = { ...navigation.older, data: { ...navigation.older.data, title } }
 }
 if (navigation.parent) {
-  const enTitle = await getEnglishTitle(navigation.parent)
-  navigation.parent = { ...navigation.parent, data: { ...navigation.parent.data, title: enTitle } }
+  const title = await getLocalizedTitle(navigation.parent, 'it')
+  navigation.parent = { ...navigation.parent, data: { ...navigation.parent.data, title } }
 }
 ---
 

@@ -4,15 +4,15 @@ import Link from '@/components/link.astro'
 import PageHead from '@/components/page-head.astro'
 import Layout from '@/layouts/layout.astro'
 import { Icon } from 'astro-icon/components'
-import { getAllPosts, getEnglishTitle, getEnglishDescription } from '@/lib/data-utils'
-import { SOCIAL_LINKS, ICON_MAP, SITE } from '@/consts'
+import { getAllPosts, getLocalizedTitle, getLocalizedDescription } from '@/lib/data-utils'
+import { SOCIAL_LINKS, ICON_MAP, SITE, DEFAULT_LANG } from '@/consts'
 import type { SocialLink } from '@/types'
 import { formatDate } from '@/lib/utils'
 
 const allPosts = await getAllPosts()
 const latestPost = allPosts[0]
-const latestTitle = latestPost ? await getEnglishTitle(latestPost) : ''
-const latestDesc = latestPost ? await getEnglishDescription(latestPost) : ''
+const latestTitle = latestPost ? await getLocalizedTitle(latestPost, DEFAULT_LANG) : ''
+const latestDesc = latestPost ? await getLocalizedDescription(latestPost, DEFAULT_LANG) : ''
 
 // Featured: paper-review and agent tagged posts (max 6)
 const featuredTags = ['paper-review', 'agent']
@@ -27,15 +27,15 @@ const categories = [
   { label: 'Troubleshooting', tag: 'rabbit-hole', icon: 'lucide:bug' },
 ]
 
-// Resolve English titles for featured posts
+// Resolve titles in default language for featured posts
 const featuredWithTitles = await Promise.all(
   featuredPosts.map(async (post) => ({
     post,
-    title: await getEnglishTitle(post),
+    title: await getLocalizedTitle(post, DEFAULT_LANG),
   }))
 )
 
-// Resolve category posts with English titles
+// Resolve category posts with localized titles
 const categoryData = await Promise.all(
   categories.map(async (cat) => {
     const posts = allPosts
@@ -44,7 +44,7 @@ const categoryData = await Promise.all(
     const withTitles = await Promise.all(
       posts.map(async (post) => ({
         post,
-        title: await getEnglishTitle(post),
+        title: await getLocalizedTitle(post, DEFAULT_LANG),
       }))
     )
     return { ...cat, posts: withTitles }
@@ -103,7 +103,7 @@ const websiteSchema = {
   {latestPost && (
     <section class="mt-5">
       <Link
-        href={`/blog/en/${latestPost.id}`}
+        href={`/blog/${DEFAULT_LANG}/${latestPost.id}`}
         class="group block rounded-lg border border-border/60 px-5 py-4 hover:border-primary/40 hover:bg-muted/20 transition-all duration-200"
       >
         <span class="text-[10px] font-semibold text-primary uppercase tracking-widest">Latest</span>
@@ -141,7 +141,7 @@ const websiteSchema = {
             <div class="space-y-1.5">
               {cat.posts.map(({ post, title }) => (
                 <Link
-                  href={`/blog/en/${post.id}`}
+                  href={`/blog/${DEFAULT_LANG}/${post.id}`}
                   class="block text-sm hover:text-primary transition-colors leading-snug py-0.5"
                 >
                   {title}
