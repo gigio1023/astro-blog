@@ -8,31 +8,31 @@ lang: it
 translationOf: "blog-migration-hugo-ghost-astro"
 ---
 
-- Hugo, Jekyll, Ghost funzionano tutti come blog, ma nel mio caso la registrazione sitemap su GSC ha funzionato solo a partire da Ghost.
+- Hugo, Jekyll, Ghost funzionano tutti come blog, ma nel mio caso la registrazione sitemap su Google Search Console ha funzionato solo a partire da Ghost.
 - Claude Code conosceva solo Astro 3/4, così ho creato un Agent Skill separato.
-- Routing trilingue, immagini OG dinamiche, ricerca full-text e JSON-LD — tutto costruito con agenti AI.
+- Routing trilingue, immagini OG dinamiche, ricerca full-text e JSON-LD, tutto costruito con agenti AI.
 
 ---
 
-Ho creato un blog con Hugo intorno al 2024. Lo hostavo su GitHub Pages, scrivevo qualche post, tutto funzionava — tranne che Google Search Console non accettava la sitemap. `Sitemap: couldn't fetch`. Quell'errore è rimasto per mesi.
+Ho creato un blog con Hugo intorno al 2024. Lo hostavo su GitHub Pages, scrivevo qualche post, tutto funzionava, tranne che Google Search Console non accettava la sitemap. `Sitemap: couldn't fetch`. Quell'errore è rimasto per mesi.
 
-All'inizio pensavo fosse un problema di configurazione Hugo. Ho verificato `enableRobotsTXT = true`, passato la sitemap attraverso validatori XML. Passava, ma il contenuto aveva `favicon.ico` come URL e data URI SVG inline. Ho corretto tutto. Sono sceso più in profondità — la risposta HTTP per sitemap.xml tornava `304 Not Modified` senza header `Content-Type`. Ho aggiunto `.nojekyll` per bloccare l'elaborazione Jekyll di GitHub Pages. Non ha funzionato.
+All'inizio pensavo fosse un problema di configurazione Hugo. Ho verificato `enableRobotsTXT = true`, passato la sitemap attraverso validatori XML. Passava, ma il contenuto aveva `favicon.ico` come URL e data URI SVG inline. Ho corretto tutto. Scendendo più in profondità, la risposta HTTP per sitemap.xml tornava `304 Not Modified` senza header `Content-Type`. Ho aggiunto `.nojekyll` per bloccare l'elaborazione Jekyll di GitHub Pages. Non ha funzionato.
 
-Mi sono spostato su Cloudflare Pages. Il deploy andava bene, la registrazione sitemap continuava a fallire. Ho fatto un esperimento di controllo con Jekyll — configurare Ruby su macOS è stata un'avventura a sé (`Gem::FilePermissionError`, `eval "$(rbenv init - zsh)"` dimenticato nel `.zshrc`) — ma l'ho deployato nelle stesse condizioni. Stesso fallimento. Confermato: non era il framework.
+Mi sono spostato su Cloudflare Pages. Il deploy andava bene, la registrazione sitemap continuava a fallire. Ho fatto un esperimento di controllo con Jekyll. Un po' di problemi con la configurazione Ruby su macOS, ma l'ho deployato nelle stesse condizioni. Stesso fallimento. Confermato: non era il framework.
 
-## Il dominio non ha risolto
+## Dominio personalizzato
 
 Sospettando che il problema fossero i sottodomini gratuiti (`.github.io`, `.pages.dev`), ho comprato `sungho-gigio.com` da Cloudflare Registrar. $10.46/anno, prezzo at-cost, WHOIS redaction inclusa.
 
-Ho collegato il dominio, registrato come Domain property su GSC. Hugo + dominio personalizzato non funzionava comunque. Neanche Jekyll + dominio personalizzato. A quel punto non sapevo davvero cosa non andasse.
+Ho collegato il dominio, registrato come Domain property su Google Search Console. Hugo + dominio personalizzato non funzionava comunque. Neanche Jekyll + dominio personalizzato. A quel punto non sapevo davvero cosa non andasse.
 
-Altre persone potrebbero aver avuto zero problemi con Hugo o Jekyll + dominio personalizzato. Potrebbe esserci stata una configurazione che mi sfuggiva, o un problema di tempistica lato GSC. Nel mio setup, semplicemente non funzionava.
+Altre persone potrebbero aver avuto zero problemi con Hugo o Jekyll + dominio personalizzato. Potrebbe esserci stata una configurazione che mi sfuggiva, o un problema di tempistica lato Google Search Console. Nel mio setup, semplicemente non funzionava.
 
-## Ghost ha risolto
+## Ghost e la sitemap
 
-Il problema sitemap si è risolto quando sono passato a Ghost. Ghost ha sitemap, meta tag e structured data integrati — nessuna configurazione necessaria. Dominio personalizzato + Ghost + GSC Domain property ha funzionato subito.
+Il problema sitemap si è risolto quando sono passato a Ghost. Ghost ha sitemap, meta tag e structured data integrati, nessuna configurazione necessaria. Dominio personalizzato + Ghost + Google Search Console Domain property ha funzionato subito.
 
-Perché non funzionava con Hugo/Jekyll ma con Ghost sì, non saprei dirlo con precisione. Forse Ghost gestisce meglio gli aspetti SEO internamente, o forse qualcosa è cambiato lato GSC nel frattempo. L'unica certezza è che il problema è sparito con Ghost.
+Perché non funzionava con Hugo/Jekyll ma con Ghost sì, non saprei dirlo con precisione. Forse Ghost gestisce meglio gli aspetti SEO internamente, o forse qualcosa è cambiato lato Google Search Console nel frattempo. L'unica certezza è che il problema è sparito con Ghost.
 
 Ghost mi attirava anche per altri motivi. L'editor WYSIWYG con anteprima istantanea per card Markdown, immagini e formule. E avevo già un'istanza ARM64 gratuita su Oracle Cloud (4 OCPU, 24GB RAM), quindi il self-hosting era essenzialmente gratis.
 
@@ -49,13 +49,13 @@ flowchart LR
   E --> F[MySQL 8]
 ```
 
-Una cosa che ho confermato: il tier gratuito di Cloudflare è generoso. Tunnel, Zero Trust (50 utenti), DNS, Access, SSL, Email Routing — tutto gratis.
+Una cosa che ho confermato: il tier gratuito di Cloudflare è generoso. Tunnel, Zero Trust (50 utenti), DNS, Access, SSL, Email Routing. Tutto gratis.
 
 ## Perché Astro
 
 Dalla fine del 2025, passavo sempre più tempo con strumenti come Claude Code. L'editor WYSIWYG di Ghost è ottimo quando un umano scrive nel browser, ma non si adatta a un flusso dove gli agent devono leggere e scrivere file Markdown direttamente. L'Admin API di Ghost esiste ma è limitata.
 
-Avevo scelto Ghost per l'"esperienza di scrittura", ma chi scriveva era passato da me all'AI, e quel criterio aveva smesso di contare. Sono tornato ad Astro — quello che mi avevano consigliato all'inizio. Basato su file Markdown, gli agent ci lavorano liberamente. Sito statico, niente k8s. Deploy su Cloudflare Workers & Pages e basta.
+Avevo scelto Ghost per l'"esperienza di scrittura", ma chi scriveva era passato da me all'AI, e quel criterio aveva smesso di contare. Sono tornato ad Astro, quello che mi avevano consigliato all'inizio. Basato su file Markdown, gli agent ci lavorano liberamente. Sito statico, niente k8s. Deploy su Cloudflare Workers & Pages e basta.
 
 ## Cosa ho costruito con gli agent
 
@@ -67,13 +67,13 @@ Immagini OG dinamiche generate a build time con satori + resvg-js. Pretendard pe
 
 Ricerca full-text con FlexSearch, indice JSON prerenderizzato, fuzzy matching, navigazione da tastiera, cronologia ricerche e cache localStorage.
 
-Dati strutturati JSON-LD — schema BlogPosting, BreadcrumbList, WebSite e Person applicati per tipo di pagina. Più un sistema serie/subpost, diagrammi Mermaid e rendering matematico KaTeX.
+Dati strutturati JSON-LD (schema BlogPosting, BreadcrumbList, WebSite, Person) applicati per tipo di pagina. Più un sistema serie/subpost, diagrammi Mermaid e rendering matematico KaTeX.
 
 ## Astro 6 e l'Agent Skill
 
-Un problema è emerso durante tutto questo. Claude Code genera pattern Astro 3/4/5 — `post.render()` invece del `render(post)` standalone, collection senza il `loader` ora obbligatorio, import Zod 3 invece di Zod 4. L'Astro Docs MCP non aiuta perché gli agent non chiedono quando pensano di avere ragione.
+Un problema è emerso durante tutto questo. Claude Code genera pattern Astro 3/4/5. `post.render()` invece del `render(post)` standalone, collection senza il `loader` ora obbligatorio, import Zod 3 invece di Zod 4. L'Astro Docs MCP non aiuta perché gli agent non chiedono quando pensano di avere ragione.
 
-Così ho costruito un Agent Skill separato — un insieme di guardrail che l'agente consulta prima di generare codice.
+Così ho costruito un Agent Skill separato, un insieme di guardrail che l'agente consulta prima di generare codice.
 
 ```bash
 npx skills add gigio1023/astro-dev-skill

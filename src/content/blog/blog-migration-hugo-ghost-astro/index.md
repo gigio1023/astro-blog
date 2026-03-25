@@ -7,7 +7,7 @@ draft: false
 lang: ko
 ---
 
-- Hugo, Jekyll, Ghost 모두 블로그로서 동작하지만, 내 환경에서 GSC sitemap 등록이 성공한 건 Ghost부터였다.
+- Hugo, Jekyll, Ghost 모두 블로그로서 동작하지만, 내 환경에서 Google Search Console sitemap 등록이 성공한 건 Ghost부터였다.
 - Claude Code가 Astro 3/4만 알고 있어서 Agent Skill을 따로 만들었다.
 - 3개 국어 라우팅, 동적 OG 이미지, 전문 검색, JSON-LD까지 에이전트와 함께 구현했다.
 
@@ -17,21 +17,21 @@ Hugo로 블로그를 만든 건 2024년쯤이다. GitHub Pages에 올려서 글�
 
 처음엔 Hugo 설정 문제인 줄 알았다. `enableRobotsTXT = true` 확인하고, sitemap.xml을 XML 밸리데이터에 돌려봤다. 통과는 하는데 내용을 뜯어보니 `favicon.ico`가 URL로 들어가 있거나, inline SVG data URI가 끼어 있거나 했다. 하나씩 고쳤다. 네트워크 레벨로 내려가서 HTTP 응답도 확인했는데, sitemap.xml 요청에 `304 Not Modified`가 오고 `Content-Type` 헤더가 아예 없었다. GitHub Pages의 Jekyll 처리 간섭인가 싶어서 `.nojekyll` 파일도 추가해봤다. 안 됐다.
 
-Cloudflare Pages로 플랫폼을 옮겼다. 배포는 잘 됐는데 GSC sitemap 등록은 여전히 실패. Jekyll로 대조 실험도 했다. macOS에서 Ruby 환경 세팅하는 것부터가 일이었는데 — `gem install jekyll bundler` 하면 시스템 Ruby 권한 문제로 `Gem::FilePermissionError`가 뜨고, rbenv를 설치해도 `.zshrc`에 init을 빼먹어서 시스템 Ruby를 계속 보고 — 어쨌든 동일 조건으로 배포했더니 역시 같은 실패. 프레임워크 문제는 아니라는 건 여기서 확정됐다.
+Cloudflare Pages로 플랫폼을 옮겼다. 배포는 잘 됐는데 Google Search Console sitemap 등록은 여전히 실패. Jekyll로 대조 실험도 했다. macOS Ruby 환경 세팅에서 좀 삽질을 했지만 어쨌든 동일 조건으로 배포했더니 역시 같은 실패. 프레임워크 문제는 아니라는 건 여기서 확정됐다.
 
-## 도메인을 사도 안 됐다
+## 커스텀 도메인
 
 무료 서브도메인(`.github.io`, `.pages.dev`)이 원인인가 싶어서 커스텀 도메인을 샀다. Cloudflare Registrar에서 `sungho-gigio.com`, $10.46/년. at-cost 가격이라 갱신비도 동일하고 WHOIS redaction도 기본 제공이라 괜찮았다.
 
-도메인을 연결하고 GSC에서 Domain property로 등록해봤다. Hugo + 커스텀 도메인 조합에서도 sitemap 등록이 안 됐다. Jekyll + 커스텀 도메인도 마찬가지. 솔직히 이 시점에서 뭐가 문제인지 감을 못 잡고 있었다.
+도메인을 연결하고 Google Search Console에서 Domain property로 등록해봤다. Hugo + 커스텀 도메인 조합에서도 sitemap 등록이 안 됐다. Jekyll + 커스텀 도메인도 마찬가지. 솔직히 이 시점에서 뭐가 문제인지 감을 못 잡고 있었다.
 
-다른 사람들은 Hugo나 Jekyll + 커스텀 도메인 조합에서 아무 이슈 없이 sitemap이 잘 됐을 수도 있다. 내가 파악하지 못한 세팅이 빠져 있었을 가능성도 있고, GSC 쪽의 타이밍 문제였을 수도 있다. 어쨌든 내 환경에서는 안 됐다.
+다른 사람들은 Hugo나 Jekyll + 커스텀 도메인 조합에서 아무 이슈 없이 sitemap이 잘 됐을 수도 있다. 내가 파악하지 못한 세팅이 빠져 있었을 가능성도 있고, Google Search Console 쪽의 타이밍 문제였을 수도 있다. 어쨌든 내 환경에서는 안 됐다.
 
-## Ghost에서 해결됐다
+## Ghost와 sitemap
 
-결국 프레임워크를 Ghost로 바꾸면서 sitemap 문제가 해결됐다. Ghost는 sitemap, meta tags, structured data 같은 SEO 기능이 전부 내장이라 별도 설정이 필요 없었다. 커스텀 도메인 + Ghost + GSC Domain property 조합에서 sitemap 등록이 바로 성공했다.
+결국 프레임워크를 Ghost로 바꾸면서 sitemap 문제가 해결됐다. Ghost는 sitemap, meta tags, structured data 같은 SEO 기능이 전부 내장이라 별도 설정이 필요 없었다. 커스텀 도메인 + Ghost + Google Search Console Domain property 조합에서 sitemap 등록이 바로 성공했다.
 
-Hugo나 Jekyll에서 안 됐던 게 Ghost에서 된 이유를 정확히 짚기는 어렵다. Ghost가 SEO를 내부적으로 더 잘 처리하는 건지, 아니면 그 사이에 GSC 쪽에서 뭔가 바뀐 건지. 확실한 건 Ghost로 옮긴 시점에 문제가 사라졌다는 것뿐이다.
+Hugo나 Jekyll에서 안 됐던 게 Ghost에서 된 이유를 정확히 짚기는 어렵다. Ghost가 SEO를 내부적으로 더 잘 처리하는 건지, 아니면 그 사이에 Google Search Console 쪽에서 뭔가 바뀐 건지. 확실한 건 Ghost로 옮긴 시점에 문제가 사라졌다는 것뿐이다.
 
 Ghost를 고른 이유는 sitemap만은 아니었다. WYSIWYG 에디터에서 Markdown 카드, 이미지, 수식을 바로 미리보기하면서 쓸 수 있다는 게 좋았고, Oracle Cloud의 무료 ARM64 인스턴스(4 OCPU, 24GB RAM)를 이미 갖고 있어서 self-hosted로 돌릴 수 있었다.
 
