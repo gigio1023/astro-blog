@@ -1,34 +1,19 @@
 ---
-import Breadcrumbs from '@/components/breadcrumbs.astro'
-import Disqus from '@/components/disqus.astro'
-import LanguageSwitcher from '@/components/language-switcher.astro'
-import PostHead from '@/components/post-head.astro'
-import PostNavigation from '@/components/post-navigation.astro'
-import SubpostsHeader from '@/components/subposts-header.astro'
-import SubpostsSidebar from '@/components/subposts-sidebar.astro'
-import TOCHeader from '@/components/toc-header.astro'
-import TOCSidebar from '@/components/toc-sidebar.astro'
-import Layout from '@/layouts/layout.astro'
-import { SITE } from '@/consts'
+import BlogPostLayout from '@/layouts/blog-post-layout.astro'
 import {
   getAdjacentPosts,
   getAvailableTranslations,
   getCombinedReadingTime,
   getEnglishTitle,
-  getParentId,
   getParentPost,
   getPostReadingTime,
   getSubpostCount,
   getTOCSections,
   hasSubposts,
   isSubpost,
+  parseAuthors,
 } from '@/lib/data-utils'
-import { formatDate, getTagVariant } from '@/lib/utils'
-import { Icon } from 'astro-icon/components'
-import { Image } from 'astro:assets'
 import { getCollection, render } from 'astro:content'
-import { badgeVariants } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 
 export async function getStaticPaths() {
   const allPosts = await getCollection('blog')
@@ -46,6 +31,11 @@ const { Content, headings } = await render(post)
 const postReadingTime = await getPostReadingTime(slug)
 const translations = await getAvailableTranslations(slug)
 const navigation = await getAdjacentPosts(slug)
+
+let authors: Awaited<ReturnType<typeof parseAuthors>> = []
+try {
+  authors = await parseAuthors(post.data.authors ?? [])
+} catch (_) {}
 
 const isCurrentSubpost = isSubpost(currentPostId)
 let parentPost: Awaited<ReturnType<typeof getParentPost>> = null
@@ -67,7 +57,6 @@ try {
   console.error('Error fetching post metadata:', error)
 }
 
-// Resolve English titles for navigation posts
 if (navigation.newer) {
   const enTitle = await getEnglishTitle(navigation.newer)
   navigation.newer = { ...navigation.newer, data: { ...navigation.newer.data, title: enTitle } }
@@ -82,293 +71,19 @@ if (navigation.parent) {
 }
 ---
 
-<Layout hideFloatingSidebar={hasChildPosts || isCurrentSubpost} lang="it" skipMeta>
-  <PostHead slot="head" post={post} translations={translations} />
-  {
-    (hasChildPosts || isCurrentSubpost) && (
-      <SubpostsHeader
-        slot="subposts-navigation"
-        parentId={isCurrentSubpost ? getParentId(currentPostId) : currentPostId}
-        lang="it"
-      />
-    )
-  }
-  {headings?.length > 0 &&
-    !(
-      isCurrentSubpost &&
-      headings.length === 1 &&
-      headings[0].text === post.data.title
-    ) && (
-      <TOCHeader slot="table-of-contents" headings={headings} />
-    )}
-
-  <section class="grid grid-cols-[minmax(0px,1fr)_min(calc(var(--breakpoint-md)-2rem),100%)_minmax(0px,1fr)] gap-y-6">
-    <div class="col-start-2">
-      <Breadcrumbs
-        items={[
-          { href: '/blog', label: 'Blog', icon: 'lucide:library-big' },
-          ...(isCurrentSubpost && parentPost
-            ? [
-                {
-                  href: `/blog/it/${parentPost.id}`,
-                  label: parentPost.data.title,
-                  icon: 'lucide:book-open',
-                },
-                {
-                  href: `/blog/it/${currentPostId}`,
-                  label: post.data.title,
-                  icon: 'lucide:file-text',
-                },
-              ]
-            : [
-                {
-                  href: `/blog/it/${currentPostId}`,
-                  label: post.data.title,
-                  icon: 'lucide:book-open-text',
-                },
-              ]),
-        ]}
-      />
-    </div>
-
-    {post.data.image && (
-      <Image
-        src={post.data.image}
-        alt={post.data.title}
-        width={1200}
-        height={630}
-        class="col-span-full mx-auto w-full max-w-5xl object-cover"
-      />
-    )}
-
-    <section class="col-start-2 flex flex-col gap-y-6 text-center">
-      <div class="flex flex-col">
-        <h1 class="mb-2 scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl" id="post-title">
-          {post.data.title}
-        </h1>
-
-        <div class="mb-4 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap sm:gap-0">
-          <div class="text-muted-foreground divide-border flex items-center divide-x text-xs sm:text-sm">
-            <div class="flex items-center gap-2 px-2 first:pl-0 last:pr-0">
-              <span>{formatDate(post.data.date)}</span>
-            </div>
-            <div class="flex items-center gap-2 px-2 first:pl-0 last:pr-0">
-              <span>
-                {postReadingTime}
-                {
-                  combinedReadingTime &&
-                    combinedReadingTime !== postReadingTime && (
-                      <span class="text-muted-foreground">
-                        {' '}
-                        ({combinedReadingTime} total)
-                      </span>
-                    )
-                }
-              </span>
-            </div>
-            {
-              subpostCount > 0 && (
-                <div class="flex items-center gap-1 px-2 first:pl-0 last:pr-0">
-                  <Icon name="lucide:file-text" class="size-3" />
-                  {subpostCount} subpost{subpostCount === 1 ? '' : 's'}
-                </div>
-              )
-            }
-          </div>
-
-          {post.data.tags && post.data.tags.length > 0 && (
-            <div class="flex flex-wrap items-center justify-center gap-1.5 sm:ml-3">
-              {post.data.tags.map((tag) => {
-                const { variant, className } = getTagVariant(tag)
-                return (
-                  <a
-                    href={`/tags/${tag}`}
-                    class={`${badgeVariants({ variant })} ${className || ''}`}
-                  >
-                    <Icon name="lucide:hash" class="size-3" />
-                    {tag}
-                  </a>
-                )
-              })}
-            </div>
-          )}
-
-          <div class="sm:ml-4 sm:border-l sm:border-border sm:pl-4">
-            <LanguageSwitcher translations={translations} currentLang="it" />
-          </div>
-        </div>
-      </div>
-
-      <PostNavigation
-        newerPost={navigation.newer}
-        olderPost={navigation.older}
-        parentPost={isCurrentSubpost ? navigation.parent : undefined}
-        lang="it"
-      />
-    </section>
-
-    {
-      tocSections.length > 0 ? (
-        <TOCSidebar
-          sections={tocSections}
-          currentPostId={currentPostId}
-        />
-      ) : headings.length > 0 && (
-        <TOCSidebar
-          sections={[{
-            type: 'parent' as const,
-            title: 'Overview',
-            headings: headings.map(h => ({ slug: h.slug, text: h.text, depth: h.depth })),
-          }]}
-          currentPostId={currentPostId}
-        />
-      )
-    }
-
-    <article class="prose col-start-2 max-w-none">
-      <Content />
-    </article>
-
-    {
-      (hasChildPosts || isCurrentSubpost) && (
-        <SubpostsSidebar
-          parentId={
-            isCurrentSubpost ? getParentId(currentPostId) : currentPostId
-          }
-          className="w-64"
-          lang="it"
-        />
-      )
-    }
-
-    <PostNavigation
-      newerPost={navigation.newer}
-      olderPost={navigation.older}
-      parentPost={isCurrentSubpost ? navigation.parent : undefined}
-      lang="it"
-    />
-
-    {
-      /* Only show Disqus on main posts, not subposts */
-      !isCurrentSubpost && (
-        <div class="col-start-2 mt-12">
-          <Disqus
-            identifier={`blog-${currentPostId}`}
-            title={post.data.title}
-            url={new URL(`/blog/${currentPostId}`, SITE.href).href}
-          />
-        </div>
-      )
-    }
-  </section>
-
-  <Button
-    variant="outline"
-    size="icon"
-    className="group fixed right-8 bottom-8 z-50 hidden"
-    id="scroll-to-top"
-    title="Scroll to top"
-    aria-label="Scroll to top"
-  >
-    <Icon name="lucide:arrow-up" class="mx-auto size-4 transition-all group-hover:-translate-y-0.5" />
-  </Button>
-
-  <script>
-    // Event delegation — survives DOM swaps (guardrail #18)
-    document.addEventListener('click', (e) => {
-      if ((e.target as HTMLElement).closest('#scroll-to-top')) {
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-      }
-    })
-
-    // Bare window listener — script is deduplicated (guardrail #11),
-    // window persists across navigations, handler re-queries DOM each time
-    window.addEventListener('scroll', () => {
-      const btn = document.getElementById('scroll-to-top')
-      const footer = document.querySelector('footer')
-      if (!btn || !footer) return
-      const isFooterVisible = footer.getBoundingClientRect().top <= window.innerHeight
-      btn.classList.toggle('hidden', window.scrollY <= 300 || isFooterVisible)
-    }, { passive: true })
-  </script>
-</Layout>
-
-<script>
-  function loadKatexCss() {
-    if (document.querySelector('.katex') && !document.querySelector('link[href*="katex.min.css"]')) {
-      const link = document.createElement('link')
-      link.rel = 'stylesheet'
-      link.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css'
-      document.head.appendChild(link)
-    }
-  }
-  document.addEventListener('astro:page-load', loadKatexCss)
-</script>
-
-<script>
-  async function renderMermaid() {
-    const blocks = document.querySelectorAll<HTMLPreElement>('pre.mermaid')
-    if (blocks.length === 0) return
-
-    const cdn = 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'
-    const { default: mermaid } = await import(/* @vite-ignore */ cdn)
-
-    const dark = document.documentElement.getAttribute('data-theme') === 'dark'
-    mermaid.initialize({
-      startOnLoad: false,
-      theme: dark ? 'dark' : 'neutral',
-    })
-
-    for (const pre of blocks) {
-      const source = pre.textContent?.trim()
-      if (!source) continue
-      try {
-        const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`
-        const { svg } = await mermaid.render(id, source)
-        const div = document.createElement('div')
-        div.className = 'mermaid-diagram flex justify-center my-4'
-        div.innerHTML = svg
-
-        // Override ALL mermaid colors universally
-        const svgEl = div.querySelector('svg')
-        if (svgEl) {
-          const p = `#${svgEl.id}`
-          const s = svgEl.querySelector('style')
-          if (s && svgEl.id) {
-            s.textContent += dark ? `
-              ${p} { background-color: transparent !important; }
-              ${p} .node rect, ${p} .node circle, ${p} .node ellipse, ${p} .node polygon, ${p} .node path { fill: #2d333b !important; stroke: #555 !important; }
-              ${p} .label, ${p} .label text, ${p} span, ${p} p { fill: #e0e0e0 !important; color: #e0e0e0 !important; }
-              ${p} .edgeLabel, ${p} .edgeLabel p, ${p} .labelBkg, ${p} span.edgeLabel { background-color: #2d333b !important; color: #e0e0e0 !important; }
-              ${p} .edgeLabel rect { opacity: 1 !important; fill: #2d333b !important; }
-              ${p} .cluster rect { fill: #22272e !important; stroke: #555 !important; }
-              ${p} .cluster text, ${p} .cluster span { fill: #e0e0e0 !important; color: #e0e0e0 !important; }
-              ${p} .flowchart-link { stroke: #888 !important; }
-              ${p} .edgePath .path { stroke: #888 !important; }
-              ${p} .marker, ${p} .arrowheadPath { fill: #888 !important; stroke: #888 !important; }
-              ${p} .flowchartTitleText { fill: #e0e0e0 !important; }
-            ` : `
-              ${p} { background-color: transparent !important; }
-              ${p} .node rect, ${p} .node circle, ${p} .node ellipse, ${p} .node polygon, ${p} .node path { fill: #e8eaed !important; stroke: #aaa !important; }
-              ${p} .label, ${p} .label text, ${p} span, ${p} p { fill: #1e293b !important; color: #1e293b !important; }
-              ${p} .edgeLabel, ${p} .edgeLabel p, ${p} .labelBkg, ${p} span.edgeLabel { background-color: #e8eaed !important; color: #1e293b !important; }
-              ${p} .edgeLabel rect { opacity: 1 !important; fill: #e8eaed !important; }
-              ${p} .cluster rect { fill: #f1f3f5 !important; stroke: #aaa !important; }
-              ${p} .cluster text, ${p} .cluster span { fill: #1e293b !important; color: #1e293b !important; }
-              ${p} .flowchart-link { stroke: #666 !important; }
-              ${p} .edgePath .path { stroke: #666 !important; }
-              ${p} .marker, ${p} .arrowheadPath { fill: #666 !important; stroke: #666 !important; }
-              ${p} .flowchartTitleText { fill: #1e293b !important; }
-            `
-          }
-        }
-
-        pre.replaceWith(div)
-      } catch (e) {
-        console.error('Mermaid render error:', e)
-      }
-    }
-  }
-
-  document.addEventListener('astro:page-load', renderMermaid)
-</script>
+<BlogPostLayout
+  post={post}
+  lang="it"
+  Content={Content}
+  headings={headings}
+  translations={translations}
+  navigation={navigation}
+  postReadingTime={postReadingTime}
+  combinedReadingTime={combinedReadingTime}
+  authors={authors}
+  currentPostId={currentPostId}
+  parentPost={parentPost}
+  hasChildPosts={hasChildPosts}
+  subpostCount={subpostCount}
+  tocSections={tocSections}
+/>
