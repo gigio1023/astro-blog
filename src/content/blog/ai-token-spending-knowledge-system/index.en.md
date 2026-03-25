@@ -8,9 +8,9 @@ lang: en
 translationOf: "ai-token-spending-knowledge-system"
 ---
 
-- 21.4 billion tokens over 12 weeks on personal subscriptions. Pay-as-you-go equivalent: $7,994. Actual spend is just the subscription fees.
-- For me, more time went into building the environment where agents can operate than into writing code.
-- Once that environment existed, both work and personal projects ran on top of it.
+- 21.4 billion tokens over 12 weeks on personal subscriptions. Most went not into writing code, but into building structured knowledge and running research and decision-making on top of it through agent harnesses.
+- Interfaces can change, but well-organized knowledge and guidebooks work on any tool.
+- Even as models improve, the role of scoping direction and boundaries probably won't go away.
 
 ---
 
@@ -27,7 +27,7 @@ January 1 to March 25, 2026. About 12 weeks. Aggregated from `bunx ccusage --jso
 
 ## Building the environment
 
-Personal dev work was limited to some Unity projects and this blog. The bulk of the tokens went toward building and consolidating a personal knowledge base: 3,200 Markdown files, 370,000 lines. Things like technical research notes, financial planning, comparative immigration policy research, and todo list management live here. There are many more topics in practice, but too much personal information to enumerate.
+Personal dev work was limited to some Unity projects and this blog. The bulk of the tokens went toward building a personal knowledge base — 3,200 Markdown files, 370,000 lines — and shaping it into a system where agents can research and make decisions on top of it. Things like technical research notes, financial planning, comparative immigration policy research, and todo list management live here. There are many more topics in practice, but too much personal information to enumerate.
 
 OpenAI has a concept they call harness engineering: "anytime you find an agent makes a mistake, you take the time to engineer a solution such that the agent never makes that mistake again." I've been applying the same principle to my personal knowledge system. When an agent references bad information, I fix the INDEX chain. When literature is missing, I collect and add it. When a task repeats, I turn it into an agent skill. There are 19 skills running on this repo. A vault-health skill detects broken links and unreferenced files, and a weekly review skill summarizes changes and prioritizes the next week.
 
@@ -81,7 +81,7 @@ A trained professional is better in every way, legally and practically. I don't 
 
 You might wonder why this isn't an OpenClaw-centric story. You could build the same system on top of OpenClaw. Honestly, I don't think OpenClaw itself is that important. Clone the knowledge repo, tell it "work only from this repo," and it does. As long as you back up the memory files, OpenClaw is a very accessible Discord-based remote interface, but it's not the core.
 
-The core is the knowledge system underneath and the agent skills that run on top. Interfaces can change, but well-organized knowledge and guidebooks work on any tool. Even now, skills set direction on unfamiliar topics and maintain quality on repetitive tasks. As models improve, skills might need less detail, but the role of scoping direction and boundaries probably won't go away.
+The core is the knowledge system underneath and the agent skills that run research and decision-making on top. Interfaces can change, but well-organized knowledge and guidebooks work on any tool. Even now, skills set direction on unfamiliar topics and maintain quality on repetitive tasks. As models improve, skills might need less detail, but the role of scoping direction and boundaries probably won't go away.
 
 I don't think this system is finished. Dumping personal information into a private repo is a risk in itself, and I'm still not sure Obsidian is a necessary layer. But in the time it took to accumulate 3,200 files, I never once thought "I should scrap this and go back to Notion." Everyone uses these tools their own way, and this is just one of them.
 
