@@ -1,49 +1,43 @@
 ---
-title: "sitemap 하나 등록하려고 k8s까지 갔다 온 이야기"
-description: "6개월의 삽질 기록."
+title: "Hugo → Ghost → Astro: 블로그 프레임워크를 세 번 바꾼 기록"
+description: "sitemap 등록부터 AI 에이전트 기반 블로그 운영까지."
 date: "2026-03-24T18:00:00+09:00"
 tags: ["rabbit-hole", "dev-tools"]
 draft: false
 lang: ko
 ---
 
-- sitemap 등록 하나에 6개월을 쓴 끝에, 원인이 무료 서브도메인이었다는 걸 알았다.
-- 블로그 하나 운영하겠다고 k8s 클러스터를 구축했다.
-- Astro를 처음부터 추천받았는데, Ghost를 거쳐 1년 반 만에 돌아왔다.
+- Hugo, Jekyll, Ghost 모두 블로그로서 동작하지만, 내 환경에서 GSC sitemap 등록이 성공한 건 Ghost부터였다.
+- Claude Code가 Astro 3/4만 알고 있어서 Agent Skill을 따로 만들었다.
+- 3개 국어 라우팅, 동적 OG 이미지, 전문 검색, JSON-LD까지 에이전트와 함께 구현했다.
 
 ---
 
 Hugo로 블로그를 만든 건 2024년쯤이다. GitHub Pages에 올려서 글도 쓰고 했는데, 하나가 안 됐다. Google Search Console에 sitemap 등록. `Sitemap: couldn't fetch`라는 에러만 계속 나왔다.
 
-처음엔 Hugo 설정 문제인 줄 알았다. `enableRobotsTXT = true` 확인하고, sitemap.xml을 XML 밸리데이터에 돌려봤다. 통과는 하는데 내용을 뜯어보니 `favicon.ico`가 URL로 들어가 있거나, inline SVG data URI가 끼어 있거나, 이상한 게 좀 있었다. 하나씩 고쳤다.
+처음엔 Hugo 설정 문제인 줄 알았다. `enableRobotsTXT = true` 확인하고, sitemap.xml을 XML 밸리데이터에 돌려봤다. 통과는 하는데 내용을 뜯어보니 `favicon.ico`가 URL로 들어가 있거나, inline SVG data URI가 끼어 있거나 했다. 하나씩 고쳤다. 네트워크 레벨로 내려가서 HTTP 응답도 확인했는데, sitemap.xml 요청에 `304 Not Modified`가 오고 `Content-Type` 헤더가 아예 없었다. GitHub Pages의 Jekyll 처리 간섭인가 싶어서 `.nojekyll` 파일도 추가해봤다. 안 됐다.
 
-네트워크 레벨로 내려가서 HTTP 응답도 확인했다. sitemap.xml 요청에 `304 Not Modified`가 오고 있었다. 200이 와야 정상인데. `Content-Type` 헤더도 `application/xml`이어야 하는데 아예 없었다. GitHub Pages가 내부적으로 Jekyll 처리를 하면서 뭔가 건드리는 것 같아서 `.nojekyll` 파일도 추가해봤다. 안 됐다.
+Cloudflare Pages로 플랫폼을 옮겼다. 배포는 잘 됐는데 GSC sitemap 등록은 여전히 실패. Jekyll로 대조 실험도 했다. macOS에서 Ruby 환경 세팅하는 것부터가 일이었는데 — `gem install jekyll bundler` 하면 시스템 Ruby 권한 문제로 `Gem::FilePermissionError`가 뜨고, rbenv를 설치해도 `.zshrc`에 init을 빼먹어서 시스템 Ruby를 계속 보고 — 어쨌든 동일 조건으로 배포했더니 역시 같은 실패. 프레임워크 문제는 아니라는 건 여기서 확정됐다.
 
-Cloudflare Pages로 플랫폼을 옮겨봤다. `sungho-park-gigio.pages.dev`로 배포는 잘 됐는데, GSC sitemap 등록은 여전히 실패. 이쯤 되면 Hugo가 문제인 건지, 호스팅이 문제인 건지 구분이 안 됐다.
+## 도메인을 사도 안 됐다
 
-대조 실험을 하기로 했다. Jekyll로 동일 조건을 만들어서 확인하는 거다. macOS에서 Ruby 환경 세팅하는 것부터가 일이었다. `gem install jekyll bundler` 하면 시스템 Ruby 권한 문제로 `Gem::FilePermissionError`가 뜬다. rbenv를 설치했는데 여전히 시스템 Ruby를 보길래, `.zshrc`에 `eval "$(rbenv init - zsh)"`를 빼먹은 거였다. 이런 걸로도 시간을 쓴다.
+무료 서브도메인(`.github.io`, `.pages.dev`)이 원인인가 싶어서 커스텀 도메인을 샀다. Cloudflare Registrar에서 `sungho-gigio.com`, $10.46/년. at-cost 가격이라 갱신비도 동일하고 WHOIS redaction도 기본 제공이라 괜찮았다.
 
-어쨌든 Jekyll 블로그를 Cloudflare Pages에 배포하고 GSC에 등록했다. 결과는 똑같았다. Jekyll에서도 sitemap fetch 실패. 프레임워크가 문제가 아니라는 건 여기서 확정됐다. 무료 서브도메인(`.github.io`, `.pages.dev`) 자체의 문제였을 가능성이 높다는 결론.
+도메인을 연결하고 GSC에서 Domain property로 등록해봤다. Hugo + 커스텀 도메인 조합에서도 sitemap 등록이 안 됐다. Jekyll + 커스텀 도메인도 마찬가지. 솔직히 이 시점에서 뭐가 문제인지 감을 못 잡고 있었다.
 
-## $10짜리 도메인
+다른 사람들은 Hugo나 Jekyll + 커스텀 도메인 조합에서 아무 이슈 없이 sitemap이 잘 됐을 수도 있다. 내가 파악하지 못한 세팅이 빠져 있었을 가능성도 있고, GSC 쪽의 타이밍 문제였을 수도 있다. 어쨌든 내 환경에서는 안 됐다.
 
-커스텀 도메인을 사기로 했다. 레지스트라를 좀 비교해봤는데, Cloudflare Registrar가 at-cost 가격이라 마진이 0이다. `.com`이 $10.46/년이고 갱신비도 동일. WHOIS 처리도 레지스트리 레벨에서 삭제(redaction)를 해주는 방식이라 별도 proxy 서비스가 필요 없다. DNS가 Cloudflare에 묶이는 건 단점이라면 단점인데, 어차피 Cloudflare Pages를 쓰고 있으니 상관없었다.
+## Ghost에서 해결됐다
 
-`sungho-gigio.com`을 사고 연결했는데 처음에는 또 안 됐다. GSC에서 "URL Prefix" property로 등록했기 때문이다. "Domain" property로 바꾸고 Cloudflare DNS TXT 레코드로 소유권 인증을 하니까 바로 됐다. 6개월 동안 sitemap XML 포맷을 의심하고, HTTP 헤더를 뜯고, 프레임워크를 바꿔본 건 전부 헛수고였다. Domain property 하나 바꾸는 걸로 끝.
+결국 프레임워크를 Ghost로 바꾸면서 sitemap 문제가 해결됐다. Ghost는 sitemap, meta tags, structured data 같은 SEO 기능이 전부 내장이라 별도 설정이 필요 없었다. 커스텀 도메인 + Ghost + GSC Domain property 조합에서 sitemap 등록이 바로 성공했다.
 
-## Ghost를 고른 이유
+Hugo나 Jekyll에서 안 됐던 게 Ghost에서 된 이유를 정확히 짚기는 어렵다. Ghost가 SEO를 내부적으로 더 잘 처리하는 건지, 아니면 그 사이에 GSC 쪽에서 뭔가 바뀐 건지. 확실한 건 Ghost로 옮긴 시점에 문제가 사라졌다는 것뿐이다.
 
-sitemap은 해결됐는데, Hugo 블로그 디자인이 좀 허전해서 프레임워크를 바꾸고 싶어졌다. ChatGPT한테 비교를 시켰는데 1순위 추천이 Astro였다. 0KB JS 기본, Islands Architecture, Content Collections. 블로그에 딱 맞는 도구.
+Ghost를 고른 이유는 sitemap만은 아니었다. WYSIWYG 에디터에서 Markdown 카드, 이미지, 수식을 바로 미리보기하면서 쓸 수 있다는 게 좋았고, Oracle Cloud의 무료 ARM64 인스턴스(4 OCPU, 24GB RAM)를 이미 갖고 있어서 self-hosted로 돌릴 수 있었다.
 
-그런데 나는 Ghost를 골랐다. 이유가 좀 있었다. WYSIWYG 에디터에서 Markdown 카드, 이미지, 수식을 바로 미리보기하면서 쓸 수 있다는 게 좋았다. sitemap이나 meta tags 같은 SEO가 전부 내장이라 빌드 설정을 만질 필요가 없었다. 그리고 Oracle Cloud의 무료 ARM64 인스턴스(4 OCPU, 24GB RAM)를 이미 갖고 있었다. 서버가 있으니 써보자는 생각이었다.
+## k8s 위의 블로그
 
-## 블로그 하나에 k8s를
-
-Ghost를 self-hosted로 돌리겠다고 하면서 일이 커졌다.
-
-Oracle Cloud ARM64 인스턴스에 k3s를 올리고, Argo CD로 GitOps를 구성했다. App-of-Apps 패턴에 Kustomize 오버레이로 staging/prod를 나눴다. 시크릿은 HashiCorp Vault에 넣고 VSO(Vault Secrets Operator)로 K8s에 주입했는데, 초기 시크릿 부트스트랩은 SOPS(age 암호화)로 처리하고 Argo CD repo-server에 ksops 사이드카를 붙여서 자동 복호화가 되게 했다.
-
-Cloudflare Tunnel을 replica 2로 돌려서 외부 노출하고, Zero Trust Access로 `/ghost/*` 어드민 경로를 보호했다. 모니터링은 Prometheus + Grafana + Loki + Blackbox Exporter. Uptime Kuma도 붙였다.
+Ghost를 self-hosted로 돌리면서 인프라가 커졌다. Oracle Cloud ARM64에 k3s를 올리고, Argo CD + Kustomize로 GitOps를 구성하고, Vault + SOPS로 시크릿을 관리하고, Cloudflare Tunnel로 외부 노출, Zero Trust로 어드민 보호, Prometheus + Grafana + Loki로 모니터링까지. 블로그 하나에 이걸 다 세팅한 거다. 인프라 학습에는 좋았는데 글 쓰는 것과는 점점 거리가 멀어졌다.
 
 ```mermaid
 flowchart LR
@@ -54,25 +48,45 @@ flowchart LR
   E --> F[MySQL 8]
 ```
 
-Ghost + Ingress-NGINX 조합에서 `X-Forwarded-Proto: https` 헤더를 넣지 않으면 redirect loop에 빠진다는 것도 이때 알았다. Cloudflare Tunnel이 HTTPS 종단을 하면서 백엔드에는 HTTP로 넘기는데, Ghost가 이걸 HTTP 접속으로 인식하고 HTTPS로 리다이렉트를 걸어서 무한루프가 도는 거다.
+이때 확인한 건데, Cloudflare 무료 티어가 꽤 관대하다. Tunnel, Zero Trust(50유저), DNS, Access, SSL, Email Routing이 전부 무료.
 
-운영하면서도 이슈가 계속 나왔다. Ghost 컨테이너에서 `bcryptjs` MODULE_NOT_FOUND가 뜨는데, Node의 eval 컨텍스트에서 모듈 경로를 못 찾는 문제였다. npm이 `ENOTEMPTY` 에러를 내는 건 이전에 중단된 설치의 임시 디렉터리가 남아 있어서였다. Ghost에 disposable email 도메인으로 스팸 회원가입이 쏟아지는 건 `config.production.json`에 차단 도메인 리스트를 넣어서 막았다.
+## Astro로 돌아온 이유
 
-블로그 하나 운영하려고 이걸 다 세팅한 거다. 학습 가치는 있었다고 생각하는데, 글 쓰는 것과는 점점 거리가 멀어지고 있었다. 이때 확인한 건데, Cloudflare 무료 티어가 꽤 관대하다. Tunnel, Zero Trust(50유저), DNS, Access(Google/GitHub IdP 연동), Universal SSL, Email Routing이 전부 무료다.
+2025년 말부터 Claude Code 같은 도구로 작업하는 비중이 늘면서 상황이 달라졌다. Ghost의 WYSIWYG 에디터는 사람이 브라우저에서 직접 쓸 때 좋은 거고, 에이전트가 Markdown 파일을 직접 읽고 쓰는 워크플로우와는 안 맞았다. Ghost Admin API가 있긴 하지만 제한적이다.
 
-## 글 쓰는 주체가 바뀌었다
+처음에 "글쓰기 경험" 때문에 Ghost를 골랐는데, 글을 쓰는 주체가 사람에서 AI로 바뀌면서 그 기준이 무효화됐다. 결국 처음에 추천받았던 Astro로 돌아왔다. Markdown 파일 기반이라 에이전트가 자유롭게 작업할 수 있고, 정적 사이트라 k8s가 필요 없다. Cloudflare Workers & Pages에 올리면 끝이다.
 
-Ghost의 WYSIWYG 에디터는 사람이 브라우저에서 직접 글을 쓰는 데 최적화돼 있다. 2025년 말부터 Claude Code 같은 도구로 작업하는 비중이 늘면서 상황이 달라졌다. 에이전트가 Markdown 파일을 직접 읽고 쓸 수 있어야 하는데, Ghost Admin API로는 이게 제한적이다. 프로그래밍적으로 글을 관리하는 워크플로우와 근본적으로 안 맞는다.
+## 에이전트와 함께 구현한 것들
 
-처음에 "글쓰기 경험" 때문에 Ghost를 골랐는데, 글을 쓰는 주체가 사람에서 AI로 바뀌면서 그 기준이 무효화됐다. WYSIWYG이 좋다는 건 사람이 직접 타이핑할 때의 이야기다.
+Astro로 돌아온 뒤에 Claude Code와 Codex로 꽤 많은 걸 구현했다. astro-erudite 테마를 포크해서 시작했는데, 그 위에 올린 것들이 결과적으로 많다.
 
-결국 처음에 추천받았던 Astro로 돌아왔다. Markdown 파일 기반이라 에이전트가 자유롭게 작업할 수 있고, 정적 사이트라 k8s가 필요 없다. Hugo 시절에는 Cloudflare Pages(정적 사이트 전용)에 올렸었는데, 그 사이에 Cloudflare가 Pages와 Workers를 통합해서 Cloudflare Workers & Pages가 됐다. 지금은 여기에 올려서 운영하고 있다.
+3개 국어 i18n을 붙였다. `/blog/ko/`, `/blog/en/`, `/blog/it/`으로 언어별 라우팅이 되고, `translationOf` frontmatter로 번역 관계를 연결한다. 포스트마다 언어 스위처가 붙고, hreflang 태그로 검색엔진에 다국어 구조를 알려준다. RSS 피드는 영문 기준으로 나간다.
 
-| 삽질 | 얻은 것 |
-|------|---------|
-| sitemap 6개월 | GSC Domain vs URL Prefix property, HTTP 헤더 분석, 대조 실험으로 원인 격리 |
-| 도메인 구매 | 레지스트라 생태계, at-cost 가격 구조, WHOIS redaction vs proxy |
-| Ghost k8s 구축 | k3s, Argo CD, Kustomize, Vault + SOPS, Cloudflare Tunnel, 모니터링 스택 |
-| Ghost → Astro | "도구의 사용자가 누구인가"라는 질문 |
+OG 이미지는 satori + resvg-js로 빌드 타임에 생성한다. Pretendard(한국어)와 Geist(영문) 폰트를 쓰고, 제목 길이에 따라 폰트 크기를 자동 조절한다. 언어별로 별도 이미지가 나온다.
 
-처음부터 $10짜리 도메인을 사고 Astro를 썼으면 이 모든 과정이 없었을 것이다. 다만 그랬으면 이 글도 없었을 거다.
+FlexSearch 기반 전문 검색도 만들었다. 빌드 시 JSON 인덱스를 생성해서 클라이언트에서 퍼지 매칭으로 검색한다. 키보드 탐색, 검색 히스토리, localStorage 캐싱이 된다.
+
+JSON-LD 구조화 데이터도 넣었다. BlogPosting, BreadcrumbList, WebSite, Person 스키마가 페이지 타입에 따라 들어간다. 시리즈/서브포스트 시스템, Mermaid 다이어그램, KaTeX 수식 렌더링도 구현했다.
+
+## Astro 6과 Agent Skill
+
+이 과정에서 하나 문제가 있었다. Claude Code가 Astro 코드를 생성할 때 Astro 3/4/5 시절 패턴을 쓴다는 거다. Astro 6에서 `render()`가 standalone 함수로 바뀌었고, Content Collections에 `loader`가 필수가 됐고, Zod 4로 import 경로가 달라졌는데, 에이전트는 이런 breaking change를 모른다. Astro Docs MCP를 붙여도 에이전트가 자기가 틀린 줄 모르니까 MCP에 질문을 안 한다.
+
+그래서 Agent Skill을 따로 만들었다. 에이전트가 코드를 생성하기 전에 참조하는 가드레일 모음이다.
+
+```bash
+npx skills add gigio1023/astro-dev-skill
+```
+
+GitHub: [gigio1023/astro-dev-skill](https://github.com/gigio1023/astro-dev-skill) / 관련 포스트: [Astro Blog를 위한 Agent Skill](/blog/ko/astro-agent-skill)
+
+## 각 프레임워크에서 배운 것
+
+| 프레임워크 | 배운 것 |
+|-----------|---------|
+| Hugo | sitemap 디버깅, HTTP 헤더 분석, 대조 실험으로 원인 격리 |
+| Jekyll | Ruby 환경 세팅의 고통, 프레임워크 원인 배제 확인 |
+| Ghost (k8s) | k3s, Argo CD, Vault + SOPS, Cloudflare Tunnel/Zero Trust, 모니터링 |
+| Astro | AI 에이전트 기반 개발, i18n, OG 이미지 생성, 구조화 데이터 |
+
+돌아보면 ChatGPT가 처음부터 Astro를 추천했는데 Ghost를 골랐고, 1년 반 뒤에 결국 Astro로 돌아왔다. 다만 그 사이에 Cloudflare 생태계와 k8s를 실전으로 경험한 건 나쁘지 않았다고 생각한다.

@@ -1,6 +1,6 @@
 ---
-title: "Volevo solo registrare una sitemap e ho finito per costruire un cluster k8s"
-description: "Sei mesi di debug, un acquisto di dominio."
+title: "Hugo → Ghost → Astro: tre cambi di framework per un blog"
+description: "Dal debug della sitemap al blogging con agenti AI."
 date: "2026-03-24T18:00:00+09:00"
 tags: ["rabbit-hole", "dev-tools"]
 draft: false
@@ -8,43 +8,37 @@ lang: it
 translationOf: "blog-migration-hugo-ghost-astro"
 ---
 
-- Ho passato sei mesi a fare debug della registrazione sitemap. La causa era il sottodominio gratuito.
-- Ho costruito un cluster k8s per gestire un singolo blog.
-- Mi avevano consigliato Astro fin dall'inizio, ho scelto Ghost, e ci sono tornato un anno e mezzo dopo.
+- Hugo, Jekyll, Ghost funzionano tutti come blog, ma nel mio caso la registrazione sitemap su GSC ha funzionato solo a partire da Ghost.
+- Claude Code conosceva solo Astro 3/4, così ho creato un Agent Skill separato.
+- Routing trilingue, immagini OG dinamiche, ricerca full-text e JSON-LD — tutto costruito con agenti AI.
 
 ---
 
-Ho creato un blog con Hugo intorno al 2024. Lo hostavo su GitHub Pages, scrivevo qualche post, tutto funzionava — tranne una cosa. Google Search Console non accettava la sitemap. `Sitemap: couldn't fetch`. Quell'errore è rimasto per sei mesi.
+Ho creato un blog con Hugo intorno al 2024. Lo hostavo su GitHub Pages, scrivevo qualche post, tutto funzionava — tranne che Google Search Console non accettava la sitemap. `Sitemap: couldn't fetch`. Quell'errore è rimasto per mesi.
 
-All'inizio pensavo fosse un problema di configurazione Hugo. Ho verificato `enableRobotsTXT = true`, ho passato la sitemap attraverso validatori XML. Passava, ma guardando il contenuto ho trovato `favicon.ico` come URL, data URI SVG inline che si infilavano dentro. Ho corretto tutto uno alla volta.
+All'inizio pensavo fosse un problema di configurazione Hugo. Ho verificato `enableRobotsTXT = true`, passato la sitemap attraverso validatori XML. Passava, ma il contenuto aveva `favicon.ico` come URL e data URI SVG inline. Ho corretto tutto. Sono sceso più in profondità — la risposta HTTP per sitemap.xml tornava `304 Not Modified` senza header `Content-Type`. Ho aggiunto `.nojekyll` per bloccare l'elaborazione Jekyll di GitHub Pages. Non ha funzionato.
 
-Sono sceso al livello di rete. La risposta HTTP per sitemap.xml tornava `304 Not Modified` — doveva essere 200. L'header `Content-Type` mancava del tutto, quando avrebbe dovuto essere `application/xml`. GitHub Pages fa un'elaborazione Jekyll interna che poteva interferire, così ho aggiunto un file `.nojekyll`. Non ha funzionato.
+Mi sono spostato su Cloudflare Pages. Il deploy andava bene, la registrazione sitemap continuava a fallire. Ho fatto un esperimento di controllo con Jekyll — configurare Ruby su macOS è stata un'avventura a sé (`Gem::FilePermissionError`, `eval "$(rbenv init - zsh)"` dimenticato nel `.zshrc`) — ma l'ho deployato nelle stesse condizioni. Stesso fallimento. Confermato: non era il framework.
 
-Mi sono spostato su Cloudflare Pages. Il deploy su `sungho-park-gigio.pages.dev` è andato bene, ma la registrazione sitemap su GSC continuava a fallire. A quel punto non capivo se il problema era Hugo o l'hosting.
+## Il dominio non ha risolto
 
-Ho deciso di fare un esperimento di controllo. Ho creato un blog Jekyll nelle stesse condizioni. Configurare l'ambiente Ruby su macOS è stata un'avventura a sé — `gem install jekyll bundler` lancia `Gem::FilePermissionError` per via dei permessi del Ruby di sistema. Ho installato rbenv, ma continuava a puntare al Ruby di sistema. Avevo dimenticato `eval "$(rbenv init - zsh)"` nel `.zshrc`. Queste cose mangiano tempo.
+Sospettando che il problema fossero i sottodomini gratuiti (`.github.io`, `.pages.dev`), ho comprato `sungho-gigio.com` da Cloudflare Registrar. $10.46/anno, prezzo at-cost, WHOIS redaction inclusa.
 
-Ho deployato il blog Jekyll su Cloudflare Pages e registrato su GSC. Stesso fallimento. Confermato: non era il framework. Il problema era probabilmente il sottodominio gratuito (`.github.io`, `.pages.dev`).
+Ho collegato il dominio, registrato come Domain property su GSC. Hugo + dominio personalizzato non funzionava comunque. Neanche Jekyll + dominio personalizzato. A quel punto non sapevo davvero cosa non andasse.
 
-## Un dominio da $10
+Altre persone potrebbero aver avuto zero problemi con Hugo o Jekyll + dominio personalizzato. Potrebbe esserci stata una configurazione che mi sfuggiva, o un problema di tempistica lato GSC. Nel mio setup, semplicemente non funzionava.
 
-Ho deciso di comprare un dominio personalizzato. Ho confrontato qualche registrar — Cloudflare Registrar ha prezzi at-cost, zero margine. `.com` a $10.46/anno con lo stesso prezzo al rinnovo. Il WHOIS è gestito con redaction a livello di registro, nessun servizio proxy separato. Lo svantaggio è il DNS bloccato su Cloudflare, ma stavo già usando Cloudflare Pages quindi non importava.
+## Ghost ha risolto
 
-Ho comprato `sungho-gigio.com` e l'ho collegato. Non ha funzionato subito neanche così. Avevo registrato il sito come "URL Prefix" property in GSC. Ho cambiato in "Domain" property, verificato la proprietà con un record TXT nel DNS di Cloudflare, e ha funzionato immediatamente. Sei mesi a sospettare del formato XML della sitemap, ispezionare header HTTP, cambiare framework — tutto inutile. Bastava cambiare un tipo di property.
+Il problema sitemap si è risolto quando sono passato a Ghost. Ghost ha sitemap, meta tag e structured data integrati — nessuna configurazione necessaria. Dominio personalizzato + Ghost + GSC Domain property ha funzionato subito.
 
-## Perché ho scelto Ghost
+Perché non funzionava con Hugo/Jekyll ma con Ghost sì, non saprei dirlo con precisione. Forse Ghost gestisce meglio gli aspetti SEO internamente, o forse qualcosa è cambiato lato GSC nel frattempo. L'unica certezza è che il problema è sparito con Ghost.
 
-Con la sitemap risolta, il design del blog Hugo mi sembrava scarno, così ho iniziato a valutare alternative. Ho chiesto un confronto a ChatGPT — Astro è uscito primo. Zero JS di default, Islands Architecture, Content Collections. Lo strumento giusto.
+Ghost mi attirava anche per altri motivi. L'editor WYSIWYG con anteprima istantanea per card Markdown, immagini e formule. E avevo già un'istanza ARM64 gratuita su Oracle Cloud (4 OCPU, 24GB RAM), quindi il self-hosting era essenzialmente gratis.
 
-Ho scelto Ghost. L'editor WYSIWYG mi attirava — card Markdown, immagini, formule con anteprima istantanea. Il SEO era completamente integrato, nessuna configurazione di build da gestire. E avevo già un'istanza ARM64 gratuita su Oracle Cloud (4 OCPU, 24GB RAM) inutilizzata. Avevo un server, tanto valeva usarlo.
+## Un blog su k8s
 
-## k8s per un blog
-
-Decidere di self-hostare Ghost ha fatto escalare le cose.
-
-Ho installato k3s sull'istanza ARM64 di Oracle Cloud, configurato GitOps con Argo CD usando il pattern App-of-Apps e overlay Kustomize per staging/prod. I secret in HashiCorp Vault con VSO per l'iniezione in K8s, i secret di bootstrap criptati con SOPS (crittografia age), decriptati automaticamente da un sidecar ksops sul repo-server di Argo CD.
-
-Esposto tutto con Cloudflare Tunnel (replica 2), protetto l'admin Ghost su `/ghost/*` con Zero Trust Access. Monitoraggio con Prometheus + Grafana + Loki + Blackbox Exporter, più Uptime Kuma.
+Self-hostare Ghost ha fatto crescere l'infrastruttura. k3s su Oracle Cloud ARM64, GitOps con Argo CD + Kustomize, secret in Vault + SOPS, Cloudflare Tunnel per l'esposizione, Zero Trust per la protezione admin, Prometheus + Grafana + Loki per il monitoraggio. Tutto per un blog. Ottimo per imparare l'infrastruttura, ma mi stavo allontanando dallo scrivere.
 
 ```mermaid
 flowchart LR
@@ -55,25 +49,45 @@ flowchart LR
   E --> F[MySQL 8]
 ```
 
-Ho scoperto a mie spese che Ghost dietro Ingress-NGINX ha bisogno dell'header `X-Forwarded-Proto: https`, altrimenti si entra in un loop di redirect infinito. Cloudflare Tunnel termina HTTPS e inoltra HTTP al backend — Ghost vede una connessione HTTP e redirige verso HTTPS, e il ciclo ricomincia.
+Una cosa che ho confermato: il tier gratuito di Cloudflare è generoso. Tunnel, Zero Trust (50 utenti), DNS, Access, SSL, Email Routing — tutto gratis.
 
-I problemi continuavano durante l'operatività. Il container Ghost che lancia `bcryptjs` MODULE_NOT_FOUND perché il contesto eval di Node non trovava il percorso del modulo. npm che fallisce con `ENOTEMPTY` per directory temporanee rimaste da installazioni interrotte. Registrazioni spam da email usa e getta, che ho bloccato con una lista di domini in `config.production.json`.
+## Perché Astro
 
-Tutto questo per gestire un blog. L'esperienza formativa è stata utile, ma mi stavo allontanando sempre di più dallo scrivere. Una cosa che ho confermato: il tier gratuito di Cloudflare è generoso. Tunnel, Zero Trust (50 utenti), DNS, Access (IdP Google/GitHub), Universal SSL, Email Routing — tutto gratis.
+Dalla fine del 2025, passavo sempre più tempo con strumenti come Claude Code. L'editor WYSIWYG di Ghost è ottimo quando un umano scrive nel browser, ma non si adatta a un flusso dove gli agent devono leggere e scrivere file Markdown direttamente. L'Admin API di Ghost esiste ma è limitata.
 
-## L'autore è cambiato
+Avevo scelto Ghost per l'"esperienza di scrittura", ma chi scriveva era passato da me all'AI, e quel criterio aveva smesso di contare. Sono tornato ad Astro — quello che mi avevano consigliato all'inizio. Basato su file Markdown, gli agent ci lavorano liberamente. Sito statico, niente k8s. Deploy su Cloudflare Workers & Pages e basta.
 
-L'editor WYSIWYG di Ghost è pensato per persone che scrivono nel browser. Dalla fine del 2025, passavo sempre più tempo con strumenti come Claude Code, e il flusso di lavoro è cambiato — gli agent dovevano poter leggere e scrivere file Markdown direttamente. L'Admin API di Ghost non lo supporta davvero.
+## Cosa ho costruito con gli agent
 
-Avevo scelto Ghost per l'"esperienza di scrittura", ma chi scriveva era passato da me all'AI, e quel criterio aveva smesso di contare. Il WYSIWYG è ottimo quando è un umano a digitare.
+Dopo il passaggio ad Astro, ho costruito parecchio con Claude Code e Codex sopra un fork del tema astro-erudite.
 
-Sono tornato ad Astro — quello che mi avevano consigliato all'inizio. Basato su file Markdown, gli agent ci lavorano liberamente. Sito statico, niente k8s. Ai tempi di Hugo deployavo su Cloudflare Pages (hosting statico puro), ma nel frattempo Cloudflare ha unificato Pages e Workers in Cloudflare Workers & Pages. Ora gira lì.
+i18n trilingue con route per lingua (`/blog/ko/`, `/blog/en/`, `/blog/it/`), linking `translationOf` nel frontmatter, language switcher su ogni post, tag hreflang e feed RSS in inglese.
 
-| Deviazione | Cosa ho imparato |
-|------------|-----------------|
-| 6 mesi di debug sitemap | GSC Domain vs URL Prefix property, analisi header HTTP, isolare le cause con esperimenti di controllo |
-| Ricerca dominio | Ecosistema registrar, pricing at-cost, WHOIS redaction vs proxy |
-| Ghost su k8s | Esperienza pratica con k3s, Argo CD, Kustomize, Vault + SOPS, Cloudflare Tunnel, stack di monitoraggio |
-| Ghost → Astro | "Chi è l'utente dello strumento?" |
+Immagini OG dinamiche generate a build time con satori + resvg-js. Pretendard per il coreano, Geist per l'inglese, dimensionamento adattivo del titolo. Un'immagine per variante linguistica per post.
 
-Se avessi comprato un dominio da $10 e usato Astro dall'inizio, niente di tutto questo sarebbe successo. D'altra parte, neanche questo post esisterebbe.
+Ricerca full-text con FlexSearch, indice JSON prerenderizzato, fuzzy matching, navigazione da tastiera, cronologia ricerche e cache localStorage.
+
+Dati strutturati JSON-LD — schema BlogPosting, BreadcrumbList, WebSite e Person applicati per tipo di pagina. Più un sistema serie/subpost, diagrammi Mermaid e rendering matematico KaTeX.
+
+## Astro 6 e l'Agent Skill
+
+Un problema è emerso durante tutto questo. Claude Code genera pattern Astro 3/4/5 — `post.render()` invece del `render(post)` standalone, collection senza il `loader` ora obbligatorio, import Zod 3 invece di Zod 4. L'Astro Docs MCP non aiuta perché gli agent non chiedono quando pensano di avere ragione.
+
+Così ho costruito un Agent Skill separato — un insieme di guardrail che l'agente consulta prima di generare codice.
+
+```bash
+npx skills add gigio1023/astro-dev-skill
+```
+
+GitHub: [gigio1023/astro-dev-skill](https://github.com/gigio1023/astro-dev-skill) / Post correlato: [Ho creato un Agent Skill per il mio blog Astro](/blog/it/astro-agent-skill)
+
+## Cosa ho imparato da ogni framework
+
+| Framework | Cosa ho imparato |
+|-----------|-----------------|
+| Hugo | Debug sitemap, analisi header HTTP, isolare cause con esperimenti di controllo |
+| Jekyll | Il dolore della configurazione Ruby, conferma che il framework non era la causa |
+| Ghost (k8s) | k3s, Argo CD, Vault + SOPS, Cloudflare Tunnel/Zero Trust, monitoraggio |
+| Astro | Sviluppo guidato da agenti AI, i18n, generazione immagini OG, dati strutturati |
+
+Guardando indietro, ChatGPT aveva consigliato Astro fin dall'inizio e io avevo scelto Ghost. Ci sono tornato un anno e mezzo dopo. L'esperienza con l'ecosistema Cloudflare e k8s che ho accumulato lungo la strada non è andata sprecata, comunque.
