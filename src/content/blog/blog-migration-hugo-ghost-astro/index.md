@@ -15,7 +15,7 @@ lang: ko
 
 블로그는 중학생 때부터 해왔다. Blogger.com으로 시작해서 고등학생 때 Tistory, 그 다음 GitHub Pages 기반의 Jekyll을 거쳤다. Hugo로 넘어간 건 2024년쯤인데, GitHub Pages에 올려서 글도 쓰고 했는데 하나가 안 됐다. Google Search Console에 sitemap 등록. `Sitemap: couldn't fetch`라는 에러만 계속 나왔다.
 
-처음엔 Hugo 설정 문제인 줄 알았다. `enableRobotsTXT = true` 확인하고, sitemap.xml을 XML 밸리데이터에 돌려봤다. 통과는 하는데 내용을 뜯어보니 `favicon.ico`가 URL로 들어가 있거나, inline SVG data URI가 끼어 있거나 했다. 하나씩 고쳤다. 네트워크 레벨로 내려가서 HTTP 응답도 확인했는데, sitemap.xml 요청에 `304 Not Modified`가 오고 `Content-Type` 헤더가 아예 없었다. GitHub Pages의 Jekyll 처리 간섭인가 싶어서 `.nojekyll` 파일도 추가해봤다. 안 됐다.
+처음엔 Hugo 설정 문제인 줄 알았다. `enableRobotsTXT = true` 확인하고, sitemap.xml을 XML 밸리데이터에 돌려봤다. 통과는 하는데 내용을 뜯어보니 `favicon.ico`가 URL로 들어가 있거나, inline SVG data URI가 끼어 있거나 했다. 하나씩 고쳤다. sitemap의 `<priority>` 값도 바꿔봤는데 Google이 공식적으로 무시 가능한 힌트라고 하더라. 네트워크 레벨로 내려가서 HTTP 응답도 확인했는데, sitemap.xml 요청에 `304 Not Modified`가 오고 `Content-Type` 헤더가 아예 없었다. GitHub Pages의 Jekyll 처리 간섭인가 싶어서 `.nojekyll` 파일도 추가해봤다. 안 됐다.
 
 Cloudflare Pages로 플랫폼을 옮겼다. 배포는 잘 됐는데 Google Search Console sitemap 등록은 여전히 실패. Jekyll로 대조 실험도 했다. macOS Ruby 환경 세팅에서 좀 삽질을 했지만 어쨌든 동일 조건으로 배포했더니 역시 같은 실패. 프레임워크 문제는 아니라는 건 여기서 확정됐다.
 
@@ -23,7 +23,7 @@ Cloudflare Pages로 플랫폼을 옮겼다. 배포는 잘 됐는데 Google Searc
 
 무료 서브도메인(`.github.io`, `.pages.dev`)이 원인인가 싶어서 커스텀 도메인을 샀다. Cloudflare Registrar에서 `sungho-gigio.com`, $10.46/년. at-cost 가격이라 갱신비도 동일하고 WHOIS redaction도 기본 제공이라 괜찮았다.
 
-도메인을 연결하고 Google Search Console에서 Domain property로 등록해봤다. Hugo + 커스텀 도메인 조합에서도 sitemap 등록이 안 됐다. Jekyll + 커스텀 도메인도 마찬가지. 솔직히 이 시점에서 뭐가 문제인지 감을 못 잡고 있었다.
+도메인을 연결하고 Google Search Console에서 Domain property로 등록해봤다. Hugo + 커스텀 도메인 + Cloudflare Pages 조합에서도 sitemap 등록이 안 됐다. 개인 서버에 Hugo를 self-hosted로 올리고 Cloudflare Tunnel로 외부 노출하는 구성도 시도해봤는데 마찬가지였다. Jekyll + 커스텀 도메인도 안 됐다. 솔직히 이 시점에서 뭐가 문제인지 감을 못 잡고 있었다.
 
 다른 사람들은 Hugo나 Jekyll + 커스텀 도메인 조합에서 아무 이슈 없이 sitemap이 잘 됐을 수도 있다. 내가 파악하지 못한 세팅이 빠져 있었을 가능성도 있고, Google Search Console 쪽의 타이밍 문제였을 수도 있다. 어쨌든 내 환경에서는 안 됐다.
 
@@ -31,7 +31,7 @@ Cloudflare Pages로 플랫폼을 옮겼다. 배포는 잘 됐는데 Google Searc
 
 결국 프레임워크를 Ghost로 바꾸면서 sitemap 문제가 해결됐다. Ghost는 sitemap, meta tags, structured data 같은 SEO 기능이 전부 내장이라 별도 설정이 필요 없었다. 커스텀 도메인 + Ghost + Google Search Console Domain property 조합에서 sitemap 등록이 바로 성공했다.
 
-Hugo나 Jekyll에서 안 됐던 게 Ghost에서 된 이유를 정확히 짚기는 어렵다. Ghost가 SEO를 내부적으로 더 잘 처리하는 건지, 아니면 그 사이에 Google Search Console 쪽에서 뭔가 바뀐 건지. 확실한 건 Ghost로 옮긴 시점에 문제가 사라졌다는 것뿐이다.
+왜 됐는지는 아직도 모른다. Google Search Console을 리버스 엔지니어링할 수 있는 것도 아니고. Ghost가 SEO를 내부적으로 더 잘 처리하는 건지, 그 사이에 Google Search Console 쪽에서 뭔가 바뀐 건지 확인할 방법이 없다. 확실한 건 Ghost로 옮긴 시점에 문제가 사라졌다는 것뿐이다.
 
 Ghost를 고른 이유는 sitemap만은 아니었다. WYSIWYG 에디터에서 Markdown 카드, 이미지, 수식을 바로 미리보기하면서 쓸 수 있다는 게 좋았고, Oracle Cloud의 무료 ARM64 인스턴스(4 OCPU, 24GB RAM)를 이미 갖고 있어서 self-hosted로 돌릴 수 있었다.
 
@@ -58,7 +58,7 @@ flowchart LR
 
 ## 에이전트와 함께 구현한 것들
 
-Astro로 돌아온 뒤에 Claude Code와 Codex로 꽤 많은 걸 구현했다. astro-erudite 테마를 포크해서 시작했는데, 그 위에 올린 것들이 결과적으로 많다.
+예전에는 Hugo나 Jekyll 테마 제작자의 업데이트를 기다리거나, 프레임워크를 공부한 뒤 TOC UI 한두 가지를 겨우 수정하는 게 최선이었다. Astro로 돌아온 뒤에 Claude Code와 Codex로 작업하면서 눈에 보이거나 떠오른 거의 모든 요구사항을 구현하고 배포할 수 있게 됐다. astro-erudite 테마를 포크해서 시작했는데, 그 위에 올린 것들이 결과적으로 많다.
 
 3개 국어 i18n을 붙였다. `/blog/ko/`, `/blog/en/`, `/blog/it/`으로 언어별 라우팅이 되고, `translationOf` frontmatter로 번역 관계를 연결한다. 포스트마다 언어 스위처가 붙고, hreflang 태그로 검색엔진에 다국어 구조를 알려준다. RSS 피드는 영문 기준으로 나간다.
 
@@ -68,11 +68,13 @@ FlexSearch 기반 전문 검색도 만들었다. 빌드 시 JSON 인덱스를 �
 
 JSON-LD 구조화 데이터도 넣었다. BlogPosting, BreadcrumbList, WebSite, Person 스키마가 페이지 타입에 따라 들어간다. 시리즈/서브포스트 시스템, Mermaid 다이어그램, KaTeX 수식 렌더링도 구현했다.
 
+그 사이에 Cloudflare Pages가 Cloudflare Workers & Pages로 개편되면서 wrangler 기반 빌드가 필수가 되는 등 플랫폼 쪽 변화도 있었는데, 이런 것도 몇 번의 시행착오로 해소됐다. Blogger.com으로 블로깅하던 시절에는 태산 같은 트러블슈팅 숙제가 되었을 문제들이다.
+
 ## Astro 6과 Agent Skill
 
 이 과정에서 하나 문제가 있었다. Claude Code가 Astro 코드를 생성할 때 Astro 3/4/5 시절 패턴을 쓴다는 거다. Astro 6에서 `render()`가 standalone 함수로 바뀌었고, Content Collections에 `loader`가 필수가 됐고, Zod 4로 import 경로가 달라졌는데, 에이전트는 이런 breaking change를 모른다. Astro Docs MCP를 붙여도 에이전트가 자기가 틀린 줄 모르니까 MCP에 질문을 안 한다.
 
-그래서 Agent Skill을 따로 만들었다. 에이전트가 코드를 생성하기 전에 참조하는 가드레일 모음이다.
+그래서 Agent Skill을 따로 만들었다. 에이전트가 코드를 생성하기 전에 참조하는 가드레일 모음이다. 시행착오에서 나온 레슨런이 가이드로 쌓이니까 같은 실수가 반복되지 않는다.
 
 ```bash
 npx skills add gigio1023/astro-dev-skill
@@ -85,7 +87,7 @@ GitHub: [gigio1023/astro-dev-skill](https://github.com/gigio1023/astro-dev-skill
 | 프레임워크 | 배운 것 |
 |-----------|---------|
 | Hugo | sitemap 디버깅, HTTP 헤더 분석, 대조 실험으로 원인 격리 |
-| Jekyll | Ruby 환경 세팅의 고통, 프레임워크 원인 배제 확인 |
+| Jekyll | macOS Ruby 환경의 고통, 프레임워크 원인 배제 확인 |
 | Ghost (k8s) | k3s, Argo CD, Vault + SOPS, Cloudflare Tunnel/Zero Trust, 모니터링 |
 | Astro | AI 에이전트 기반 개발, i18n, OG 이미지 생성, 구조화 데이터 |
 

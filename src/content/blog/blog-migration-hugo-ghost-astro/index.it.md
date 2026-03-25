@@ -16,7 +16,7 @@ translationOf: "blog-migration-hugo-ghost-astro"
 
 Scrivo blog dalle medie. Ho iniziato con Blogger.com, poi Tistory al liceo, poi un sito Jekyll su GitHub Pages. Hugo e arrivato intorno al 2024. Lo hostavo su GitHub Pages, scrivevo qualche post, tutto funzionava, tranne che Google Search Console non accettava la sitemap. `Sitemap: couldn't fetch`. Quell'errore e rimasto per mesi.
 
-All'inizio pensavo fosse un problema di configurazione Hugo. Ho verificato `enableRobotsTXT = true`, passato la sitemap attraverso validatori XML. Passava, ma il contenuto aveva `favicon.ico` come URL e data URI SVG inline. Ho corretto tutto. Scendendo più in profondità, la risposta HTTP per sitemap.xml tornava `304 Not Modified` senza header `Content-Type`. Ho aggiunto `.nojekyll` per bloccare l'elaborazione Jekyll di GitHub Pages. Non ha funzionato.
+All'inizio pensavo fosse un problema di configurazione Hugo. Ho verificato `enableRobotsTXT = true`, passato la sitemap attraverso validatori XML. Passava, ma il contenuto aveva `favicon.ico` come URL e data URI SVG inline. Ho corretto tutto. Ho provato anche a cambiare i valori `<priority>` nella sitemap, ma Google li tratta ufficialmente come suggerimenti ignorabili. Scendendo più in profondità, la risposta HTTP per sitemap.xml tornava `304 Not Modified` senza header `Content-Type`. Ho aggiunto `.nojekyll` per bloccare l'elaborazione Jekyll di GitHub Pages. Non ha funzionato.
 
 Mi sono spostato su Cloudflare Pages. Il deploy andava bene, la registrazione sitemap continuava a fallire. Ho fatto un esperimento di controllo con Jekyll. Un po' di problemi con la configurazione Ruby su macOS, ma l'ho deployato nelle stesse condizioni. Stesso fallimento. Confermato: non era il framework.
 
@@ -24,7 +24,7 @@ Mi sono spostato su Cloudflare Pages. Il deploy andava bene, la registrazione si
 
 Sospettando che il problema fossero i sottodomini gratuiti (`.github.io`, `.pages.dev`), ho comprato `sungho-gigio.com` da Cloudflare Registrar. $10.46/anno, prezzo at-cost, WHOIS redaction inclusa.
 
-Ho collegato il dominio, registrato come Domain property su Google Search Console. Hugo + dominio personalizzato non funzionava comunque. Neanche Jekyll + dominio personalizzato. A quel punto non sapevo davvero cosa non andasse.
+Ho collegato il dominio, registrato come Domain property su Google Search Console. Hugo + dominio personalizzato + Cloudflare Pages non funzionava comunque. Ho provato anche a self-hostare Hugo su un server personale con Cloudflare Tunnel per l'accesso esterno. Stesso risultato. Neanche Jekyll + dominio personalizzato. A quel punto non sapevo davvero cosa non andasse.
 
 Altre persone potrebbero aver avuto zero problemi con Hugo o Jekyll + dominio personalizzato. Potrebbe esserci stata una configurazione che mi sfuggiva, o un problema di tempistica lato Google Search Console. Nel mio setup, semplicemente non funzionava.
 
@@ -32,7 +32,7 @@ Altre persone potrebbero aver avuto zero problemi con Hugo o Jekyll + dominio pe
 
 Il problema sitemap si è risolto quando sono passato a Ghost. Ghost ha sitemap, meta tag e structured data integrati, nessuna configurazione necessaria. Dominio personalizzato + Ghost + Google Search Console Domain property ha funzionato subito.
 
-Perché non funzionava con Hugo/Jekyll ma con Ghost sì, non saprei dirlo con precisione. Forse Ghost gestisce meglio gli aspetti SEO internamente, o forse qualcosa è cambiato lato Google Search Console nel frattempo. L'unica certezza è che il problema è sparito con Ghost.
+Perché ha funzionato, ancora non lo so. Non si può fare reverse engineering di Google Search Console. Forse Ghost gestisce meglio gli aspetti SEO internamente, o forse qualcosa è cambiato lato Google nel frattempo. L'unica certezza è che il problema è sparito con Ghost.
 
 Ghost mi attirava anche per altri motivi. L'editor WYSIWYG con anteprima istantanea per card Markdown, immagini e formule. E avevo già un'istanza ARM64 gratuita su Oracle Cloud (4 OCPU, 24GB RAM), quindi il self-hosting era essenzialmente gratis.
 
@@ -59,7 +59,7 @@ Avevo scelto Ghost per l'"esperienza di scrittura", ma chi scriveva era passato 
 
 ## Cosa ho costruito con gli agent
 
-Dopo il passaggio ad Astro, ho costruito parecchio con Claude Code e Codex sopra un fork del tema astro-erudite.
+Prima, il massimo che potevo fare era aspettare che gli autori dei temi Hugo o Jekyll pubblicassero aggiornamenti, o studiare il framework e riuscire a malapena a modificare una TOC UI. Dopo il passaggio ad Astro, lavorando con Claude Code e Codex, sono riuscito a implementare e deployare quasi ogni requisito che notavo o che mi veniva in mente. Sono partito da un fork del tema astro-erudite, e alla fine ci ho costruito parecchio sopra.
 
 i18n trilingue con route per lingua (`/blog/ko/`, `/blog/en/`, `/blog/it/`), linking `translationOf` nel frontmatter, language switcher su ogni post, tag hreflang e feed RSS in inglese.
 
@@ -69,11 +69,13 @@ Ricerca full-text con FlexSearch, indice JSON prerenderizzato, fuzzy matching, n
 
 Dati strutturati JSON-LD (schema BlogPosting, BreadcrumbList, WebSite, Person) applicati per tipo di pagina. Più un sistema serie/subpost, diagrammi Mermaid e rendering matematico KaTeX.
 
+Nel frattempo, Cloudflare Pages è stato riorganizzato in Cloudflare Workers & Pages, rendendo obbligatori i build basati su wrangler. Problemi come questi si sono risolti in poche iterazioni. Quando facevo blogging su Blogger.com, sarebbero stati compiti di troubleshooting insormontabili.
+
 ## Astro 6 e l'Agent Skill
 
 Un problema è emerso durante tutto questo. Claude Code genera pattern Astro 3/4/5. `post.render()` invece del `render(post)` standalone, collection senza il `loader` ora obbligatorio, import Zod 3 invece di Zod 4. L'Astro Docs MCP non aiuta perché gli agent non chiedono quando pensano di avere ragione.
 
-Così ho costruito un Agent Skill separato, un insieme di guardrail che l'agente consulta prima di generare codice.
+Così ho costruito un Agent Skill separato, un insieme di guardrail che l'agente consulta prima di generare codice. Le lezioni apprese dagli errori si accumulano come guide, così gli stessi sbagli non si ripetono.
 
 ```bash
 npx skills add gigio1023/astro-dev-skill
@@ -86,7 +88,7 @@ GitHub: [gigio1023/astro-dev-skill](https://github.com/gigio1023/astro-dev-skill
 | Framework | Cosa ho imparato |
 |-----------|-----------------|
 | Hugo | Debug sitemap, analisi header HTTP, isolare cause con esperimenti di controllo |
-| Jekyll | Il dolore della configurazione Ruby, conferma che il framework non era la causa |
+| Jekyll | Il dolore della configurazione Ruby su macOS, conferma che il framework non era la causa |
 | Ghost (k8s) | k3s, Argo CD, Vault + SOPS, Cloudflare Tunnel/Zero Trust, monitoraggio |
 | Astro | Sviluppo guidato da agenti AI, i18n, generazione immagini OG, dati strutturati |
 
