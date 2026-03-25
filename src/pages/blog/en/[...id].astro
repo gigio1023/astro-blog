@@ -43,7 +43,7 @@ const post = Astro.props
 const slug = post.data.translationOf || post.id
 const currentPostId = slug
 const { Content, headings } = await render(post)
-const postReadingTime = await getPostReadingTime(post.id)
+const postReadingTime = await getPostReadingTime(slug)
 const translations = await getAvailableTranslations(slug)
 const navigation = await getAdjacentPosts(slug)
 
