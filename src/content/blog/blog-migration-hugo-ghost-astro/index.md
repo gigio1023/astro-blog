@@ -13,7 +13,7 @@ lang: ko
 
 ---
 
-Hugo로 블로그를 만든 건 2024년쯤이다. GitHub Pages에 올려서 글도 쓰고 했는데, 하나가 안 됐다. Google Search Console에 sitemap 등록. `Sitemap: couldn't fetch`라는 에러만 계속 나왔다.
+블로그는 중학생 때부터 해왔다. Blogger.com으로 시작해서 고등학생 때 Tistory, 그 다음 GitHub Pages 기반의 Jekyll을 거쳤다. Hugo로 넘어간 건 2024년쯤인데, GitHub Pages에 올려서 글도 쓰고 했는데 하나가 안 됐다. Google Search Console에 sitemap 등록. `Sitemap: couldn't fetch`라는 에러만 계속 나왔다.
 
 처음엔 Hugo 설정 문제인 줄 알았다. `enableRobotsTXT = true` 확인하고, sitemap.xml을 XML 밸리데이터에 돌려봤다. 통과는 하는데 내용을 뜯어보니 `favicon.ico`가 URL로 들어가 있거나, inline SVG data URI가 끼어 있거나 했다. 하나씩 고쳤다. 네트워크 레벨로 내려가서 HTTP 응답도 확인했는데, sitemap.xml 요청에 `304 Not Modified`가 오고 `Content-Type` 헤더가 아예 없었다. GitHub Pages의 Jekyll 처리 간섭인가 싶어서 `.nojekyll` 파일도 추가해봤다. 안 됐다.
 

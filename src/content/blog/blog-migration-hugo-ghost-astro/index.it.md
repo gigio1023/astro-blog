@@ -14,7 +14,7 @@ translationOf: "blog-migration-hugo-ghost-astro"
 
 ---
 
-Ho creato un blog con Hugo intorno al 2024. Lo hostavo su GitHub Pages, scrivevo qualche post, tutto funzionava, tranne che Google Search Console non accettava la sitemap. `Sitemap: couldn't fetch`. Quell'errore è rimasto per mesi.
+Scrivo blog dalle medie. Ho iniziato con Blogger.com, poi Tistory al liceo, poi un sito Jekyll su GitHub Pages. Hugo e arrivato intorno al 2024. Lo hostavo su GitHub Pages, scrivevo qualche post, tutto funzionava, tranne che Google Search Console non accettava la sitemap. `Sitemap: couldn't fetch`. Quell'errore e rimasto per mesi.
 
 All'inizio pensavo fosse un problema di configurazione Hugo. Ho verificato `enableRobotsTXT = true`, passato la sitemap attraverso validatori XML. Passava, ma il contenuto aveva `favicon.ico` come URL e data URI SVG inline. Ho corretto tutto. Scendendo più in profondità, la risposta HTTP per sitemap.xml tornava `304 Not Modified` senza header `Content-Type`. Ho aggiunto `.nojekyll` per bloccare l'elaborazione Jekyll di GitHub Pages. Non ha funzionato.
 
