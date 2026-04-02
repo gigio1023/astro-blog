@@ -146,10 +146,10 @@ translationOf: "slug"               # 한국어 포스트의 slug
 
 ---
 
-## Anti-Patterns
+## Reference Files
 
-글 작성 후 반드시 `references/anti-patterns.md`를 읽고 검토한다. AI스러운 패턴이 있으면 수정한다.
-
-## Templates
-
-`templates/` 디렉토리에 포스트 템플릿이 있다. frontmatter 형식 참고용.
+| File | When to read | What's in it |
+|------|-------------|--------------|
+| `references/anti-patterns.md` | After drafting all 3 languages | AI-sounding patterns to search-and-destroy (Korean + English sections) |
+| `references/english-voice-guide.md` | When writing/reviewing English version | Concrete patterns from reference bloggers (Willison, Boykis, Husain) with good/bad examples |
+| `templates/` | When checking frontmatter format | Post templates for ko/en/it |
