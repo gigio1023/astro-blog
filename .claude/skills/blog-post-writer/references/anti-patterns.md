@@ -53,3 +53,37 @@
 **AI filler 전환 문장.** "이 체계가 만들어지고 나니 꽤 넓은 범위의 작업이 가능해졌다" 같은 빈 전환. 삭제하고 바로 내용으로 들어간다.
 
 **벽 문단.** 10줄 이상 한 덩어리 텍스트. 논리 단위로 쪼갠다.
+
+---
+
+## English Anti-Patterns
+
+For English versions, check these after drafting. See `references/english-voice-guide.md` for full patterns with examples.
+
+### Filler phrases (delete on sight)
+- "It's worth noting that" / "At its core" / "In today's landscape"
+- "Having said that" / "With that being said"
+- "Let's dive in" / "In this post, we'll explore"
+- "It's important to understand that"
+- "When it comes to..."
+
+### Inflated verbs (use simpler words)
+- "leverage" → "use"
+- "utilize" → "use"
+- "facilitate" → "help" / "enable"
+- "demonstrate" → "show"
+- "necessitate" → "need"
+- "encompasses" → "includes"
+
+### Structural giveaways
+- Every paragraph starting with However / Moreover / Furthermore / Additionally
+- "First... Second... Third..." enumeration in prose
+- Restating the question before answering it
+- Ending paragraphs with "This is important because..."
+- Opening with topic definition instead of personal stake
+
+### Hedging that sounds corporate
+- "may or may not" → pick one
+- "it should be noted" → just say it
+- "one could argue" → "I think" or just argue
+- "there is a growing consensus" → name it or skip
