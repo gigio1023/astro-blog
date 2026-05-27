@@ -8,6 +8,9 @@ lang: en
 translationOf: "minecraft-social-simulation-rebuild"
 ---
 
+- [Repository](https://github.com/gigio1023/minecraft-llm-agent-community)
+- [Documentation](https://naem1023.github.io/minecraft-llm-agent-community/)
+
 - I remembered starting this around 2023, but the git history says the first commit was May 22, 2024.
 - The old project treated Voyager as the main baseline. The current one still learns from Voyager, but tries hard not to become a Voyager clone.
 - I came back in 2026 partly because model runs are cheaper, but mostly because I now want a structure where a model with more context and authority is checked by execution records.
