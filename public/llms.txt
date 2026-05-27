@@ -1,0 +1,50 @@
+# Sungho Park
+
+> Personal technical blog by Sungho Park, an applied machine learning engineer.
+
+This site publishes technical writing about machine learning, natural language processing, agentic developer tools, Astro, Unity, MLOps, coding problem solving, and engineering retrospectives. Blog posts are available in Korean, English, and Italian.
+
+Important notes:
+
+- The default site language is English.
+- Blog post URLs use `/blog/{lang}/{slug}`.
+- Korean source posts use `index.md`; English and Italian translations use `index.en.md` and `index.it.md`.
+- Translated posts share the same canonical slug through `translationOf`.
+- Draft posts are not intended for public indexing.
+
+Main topic areas:
+
+- Agentic development workflows and agent skills.
+- Machine learning, natural language processing, model compression, retrieval, and paper reviews.
+- MLOps, Kubernetes, Airflow, server operations, and developer tooling.
+- Astro blog development and static-site engineering.
+- Unity, MCP, and AI-assisted game development experiments.
+- Python, PyTorch, pandas, NumPy, algorithms, and coding test notes.
+
+## Core Pages
+
+- [Home](https://sunghogigio.com/): Site homepage and profile summary.
+- [About](https://sunghogigio.com/about): Profile, background, and links for Sungho Park.
+- [Blog index](https://sunghogigio.com/blog): Paginated list of public blog posts.
+- [Tags](https://sunghogigio.com/tags): Public tag index for browsing posts by topic.
+- [Authors](https://sunghogigio.com/authors): Author profile index.
+
+## Machine Readable Resources
+
+- [RSS feed](https://sunghogigio.com/rss.xml): Feed for recent public posts.
+- [Sitemap index](https://sunghogigio.com/sitemap-index.xml): Sitemap entry point for crawlers.
+- [Search index](https://sunghogigio.com/api/search-index.json): JSON search index with public post metadata.
+
+## Representative English Posts
+
+- [21.4 billion tokens outside of code](https://sunghogigio.com/blog/en/ai-token-spending-knowledge-system): Notes on personal AI tool usage, token spending, and knowledge-system workflows.
+- [Agent Skill for Astro Blog](https://sunghogigio.com/blog/en/astro-agent-skill): Why and how this Astro blog uses agent skills to avoid outdated Astro patterns.
+- [Agent Library Review with MCP](https://sunghogigio.com/blog/en/agent-library-review-with-mcp): Review of agent libraries with Model Context Protocol context.
+- [OpenAI Agents SDK Review](https://sunghogigio.com/blog/en/openai-agents-sdk-review): Notes and evaluation of the OpenAI Agents SDK.
+- [Rethinking agents and tools](https://sunghogigio.com/blog/en/rethinking-agent-and-tools): Reflection on agent workflows and tool boundaries.
+- [I Tried Unity's Official MCP and It Didn't Work](https://sunghogigio.com/blog/en/unity-official-mcp-broken-analysis): Unity MCP troubleshooting and failure analysis.
+
+## Optional
+
+- [Privacy Policy](https://sunghogigio.com/privacy): Privacy policy.
+- [Terms](https://sunghogigio.com/terms): Terms page.
