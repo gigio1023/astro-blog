@@ -1,7 +1,9 @@
 import type { APIRoute, GetStaticPaths } from 'astro'
 import satori from 'satori'
 import { Resvg } from '@resvg/resvg-js'
+import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { getCollection } from 'astro:content'
 
@@ -20,9 +22,37 @@ const fonts = [
   { name: 'Pretendard', data: pretendardRegular, weight: 400 as const, style: 'normal' as const },
 ]
 
+const ogCacheVersion = 1
+const ogCacheDir = join(process.cwd(), '.astro/og-cache')
+const shouldPrerenderOgImages = process.env.OG_IMAGE_PRERENDER === '1'
+
 // Paw print SVG as data URL for satori background-image
 const pawSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300"><ellipse cx="150" cy="190" rx="55" ry="48" fill="white"/><ellipse cx="90" cy="115" rx="28" ry="32" transform="rotate(-10 90 115)" fill="white"/><ellipse cx="145" cy="95" rx="25" ry="30" fill="white"/><ellipse cx="200" cy="100" rx="26" ry="30" transform="rotate(8 200 100)" fill="white"/><ellipse cx="240" cy="140" rx="24" ry="28" transform="rotate(25 240 140)" fill="white"/></svg>`
 const pawDataUrl = `data:image/svg+xml,${encodeURIComponent(pawSvg)}`
+
+function cachePathForOgImage(title: string, description: string) {
+  const hash = createHash('sha256')
+    .update(JSON.stringify({ version: ogCacheVersion, title, description }))
+    .digest('hex')
+  return join(ogCacheDir, `${hash}.png`)
+}
+
+async function readCachedOgImage(title: string, description: string) {
+  if (process.env.OG_IMAGE_CACHE === '0') return null
+
+  try {
+    return await readFile(cachePathForOgImage(title, description))
+  } catch {
+    return null
+  }
+}
+
+async function writeCachedOgImage(title: string, description: string, png: Uint8Array) {
+  if (process.env.OG_IMAGE_CACHE === '0') return
+
+  await mkdir(ogCacheDir, { recursive: true })
+  await writeFile(cachePathForOgImage(title, description), png)
+}
 
 function buildOgImage(title: string, description: string) {
   // satori uses React-like element objects
@@ -171,6 +201,8 @@ function buildOgImage(title: string, description: string) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  if (!shouldPrerenderOgImages) return []
+
   const posts = await getCollection('blog')
   const paths: { params: { route: string }; props: { title: string; description: string } }[] = []
 
@@ -195,6 +227,16 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const GET: APIRoute = async ({ props }) => {
   const { title, description } = props as { title: string; description: string }
 
+  const cached = await readCachedOgImage(title, description)
+  if (cached) {
+    return new Response(new Uint8Array(cached), {
+      headers: {
+        'Content-Type': 'image/png',
+        'Cache-Control': 'public, max-age=31536000, immutable',
+      },
+    })
+  }
+
   const element = buildOgImage(title, description)
 
   const svg = await satori(element as any, {
@@ -207,6 +249,7 @@ export const GET: APIRoute = async ({ props }) => {
     fitTo: { mode: 'width', value: 1200 },
   })
   const png = resvg.render().asPng()
+  await writeCachedOgImage(title, description, png)
 
   return new Response(new Uint8Array(png), {
     headers: {
