@@ -18,10 +18,9 @@ const author =
     : SITE.author
 
 const postUrl = new URL(Astro.url.pathname, Astro.site).href
-const cleanPathname = Astro.url.pathname.replace(/\/$/, '')
 const postImage = post?.data?.image?.src
   ? `${SITE.href}${post.data.image.src}`
-  : new URL(`/og${cleanPathname}.png`, Astro.site).href
+  : new URL('/og-default.png', Astro.site).href
 const publishedTime = post.data.date?.toISOString() || new Date().toISOString()
 // Use published time as modified time if no updatedDate field exists
 const modifiedTime = publishedTime
