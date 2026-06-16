@@ -8,7 +8,6 @@ lang: ko
 ---
 
 - [Repository](https://github.com/gigio1023/minecraft-llm-agent-community)
-- [Documentation](https://naem1023.github.io/minecraft-llm-agent-community/)
 
 - 기억으로는 2023년쯤 시작한 것 같았는데, git 기록으로는 2024년 5월 22일에 첫 커밋이 남아 있었다.
 - 그때의 프로젝트는 Voyager를 거의 기준점으로 삼았고, 지금의 프로젝트는 Voyager를 참고하되 그대로 되살리지 않는 쪽에 가깝다.
