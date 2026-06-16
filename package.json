@@ -44,7 +44,7 @@
     "@tailwindcss/vite": "^4.1.17",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
-    "astro": "^6.0.8",
+    "astro": "^6.3.8",
     "astro-icon": "^1.1.5",
     "astro-og-canvas": "^0.10.1",
     "class-variance-authority": "^0.7.1",
