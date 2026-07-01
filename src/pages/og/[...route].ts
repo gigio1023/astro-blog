@@ -24,7 +24,6 @@ const fonts = [
 
 const ogCacheVersion = 1
 const ogCacheDir = join(process.cwd(), '.astro/og-cache')
-const shouldPrerenderOgImages = process.env.OG_IMAGE_PRERENDER === '1'
 
 // Paw print SVG as data URL for satori background-image
 const pawSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300"><ellipse cx="150" cy="190" rx="55" ry="48" fill="white"/><ellipse cx="90" cy="115" rx="28" ry="32" transform="rotate(-10 90 115)" fill="white"/><ellipse cx="145" cy="95" rx="25" ry="30" fill="white"/><ellipse cx="200" cy="100" rx="26" ry="30" transform="rotate(8 200 100)" fill="white"/><ellipse cx="240" cy="140" rx="24" ry="28" transform="rotate(25 240 140)" fill="white"/></svg>`
@@ -201,8 +200,6 @@ function buildOgImage(title: string, description: string) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  if (!shouldPrerenderOgImages) return []
-
   const posts = await getCollection('blog')
   const paths: { params: { route: string }; props: { title: string; description: string } }[] = []
 

@@ -6,8 +6,7 @@ interface Props {
 }
 
 const { identifier, title, url } = Astro.props
-// Get shortname from build-time env var, with fallback for client-side check
-const disqusShortname = import.meta.env.PUBLIC_DISQUS_SHORTNAME || 'merox'
+const disqusShortname = import.meta.env.PUBLIC_DISQUS_SHORTNAME || ''
 
 // Sanitize inputs to prevent XSS
 const sanitize = (str: string) => {
@@ -61,10 +60,12 @@ const pageUrl = url || Astro.url.href
   (function() {
     'use strict'
 
-    // Get shortname - check env var first, then fallback
-    const shortname = disqusShortname || 'merox'
+    const disqusContainer = document.getElementById('disqus_thread')
+    const loadingIndicator = document.getElementById('disqus-loading')
+
+    const shortname = disqusShortname
     
-    if (!shortname || shortname === '') {
+    if (!shortname) {
       console.warn('Disqus shortname not configured')
       if (loadingIndicator) {
         loadingIndicator.innerHTML = '<span class="text-muted-foreground">Comments not configured.</span>'
@@ -75,9 +76,6 @@ const pageUrl = url || Astro.url.href
     let isLoaded = false
     let isLoading = false
 
-    const disqusContainer = document.getElementById('disqus_thread')
-    const loadingIndicator = document.getElementById('disqus-loading')
-    
     if (!disqusContainer) return
 
     // Hide loading indicator once Disqus loads

@@ -1,6 +1,9 @@
 {
-  "name": "merox.dev",
-  "short_name": "merox",
+  "name": "Sungho Park",
+  "short_name": "Sungho",
+  "description": "Technical writing by Sungho Park.",
+  "start_url": "/",
+  "scope": "/",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -15,7 +18,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#ffffff",
+  "theme_color": "#2563eb",
   "background_color": "#ffffff",
   "display": "standalone"
 }
