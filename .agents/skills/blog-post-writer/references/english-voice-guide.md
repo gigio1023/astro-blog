@@ -1,14 +1,16 @@
 # English Voice Guide
 
-Reference bloggers and their techniques for natural, non-AI English technical writing.
+Use this when writing or reviewing English variants. The goal is plain technical prose that still feels like the author did the work.
 
-## Reference Bloggers
+## Reference Writers
 
 | Blogger | URL | Best at |
 |---------|-----|---------|
 | Simon Willison | simonwillison.net | Hedging, personal narrative framing, dry humor |
 | Vicki Boykis | vickiboykis.com | Deadpan tone, metaphor-as-bridge, anti-hype |
 | Hamel Husain | hamel.dev | Experience-driven authority, concrete-before-abstract |
+
+Do not imitate their surface style. Use them as reminders: start from lived context, keep claims bounded, and let concrete examples do the work.
 
 ## Patterns to Follow
 
@@ -22,6 +24,16 @@ Good (Husain): "I started working with language models five years ago."
 
 Bad (AI): "In this post, we'll explore the challenges of building agents."
 Bad (AI): "Agent development has become increasingly important in the AI landscape."
+
+### Evidence: concrete noun before abstract label
+
+Name the thing that happened before naming the concept.
+
+Good: "The relay returned an empty `tools/list`, so Claude had no tools to call."
+Good: "The generated HTML pointed at `/og/blog/en/...png`; the old `merox.dev` image disappeared."
+
+Bad: "This exposed a diagnosable failure in the toolchain."
+Bad: "The workflow achieved better social preview consistency."
 
 ### Hedging: earned uncertainty, not weasel words
 
@@ -45,6 +57,16 @@ Good: "Machine learning is more like alchemy than even software engineering."
 Bad: "It is essential to recognize that tool design is the key challenge."
 Bad: "The importance of evaluation cannot be overstated."
 
+### Friction: keep the inconvenient parts
+
+AI drafts often smooth away setup failures and awkward details. Keep the parts that explain why the result was not obvious.
+
+Good: "The official package looked cleaner, but the relay was a closed 75MB Bun bundle."
+Good: "The build passed, but the preview cache still needed a manual re-scrape."
+
+Bad: "The integration process was seamless."
+Bad: "This approach provides a robust solution."
+
 ### Sentence rhythm: short declarations + longer explanations
 
 Alternate between punchy statements and unfolding thoughts. Monotone sentence length is a giveaway.
@@ -66,6 +88,13 @@ Good: "To ground this post in a real-world situation, I'll walk through a case s
 Bad: "It's worth noting that..."
 Bad: "Having established the above, we can now turn to..."
 Bad: "With this foundation in place, let's explore..."
+
+### Contrast: use sparingly
+
+Avoid the default AI reframe: "not just X, but Y." It can work once in a real argument, but repeated contrast makes the prose sound generated.
+
+Bad: "This is not just a writing workflow, but a durable knowledge system."
+Better: "The workflow matters because it changes what the agent reads before it writes."
 
 ### Closing: no summary, no call-to-action
 
@@ -91,6 +120,11 @@ Words and phrases that make English text sound AI-generated. Search-and-destroy 
 - "With that being said"
 - "Let's dive in / dive into"
 - "In this post, we'll explore"
+- "This is not just X, but Y"
+- "More than just"
+- "seamless"
+- "robust solution"
+- "game-changing"
 
 ### Inflated verbs (replace with simpler words)
 - "leverage" → "use"
@@ -113,3 +147,5 @@ Words and phrases that make English text sound AI-generated. Search-and-destroy 
 - Restating the question before answering it
 - Ending paragraphs with "This is important because..." or "This matters because..."
 - Starting with "When it comes to..."
+- Flattening every tradeoff into a balanced both-sides paragraph
+- Removing all annoyance, uncertainty, or failed attempts from a debugging story

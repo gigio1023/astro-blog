@@ -1,99 +1,85 @@
 # AI Anti-Patterns
 
-글 작성 후 이 목록으로 검토한다. 해당하는 패턴이 있으면 수정.
+Use this as a final search-and-destroy checklist after drafting. The goal is not to fool detectors. The goal is to respect the reader's time.
 
-## 구조적 패턴
+## Structural Patterns
 
-**기계적 대칭.** 모든 섹션이 동일한 구조로 반복되면 AI스럽다. 중요한 것은 길게, 덜 중요한 것은 짧게. 비대칭이 자연스럽다.
+**Forced template symmetry.** Every section has the same length, same cadence, or same internal structure. Let important parts take more space and minor parts stay short.
 
-**번호 매긴 나열.** "1. 20개 가드레일", "2. 9개 블로그 레시피", "3. 4개 의사결정 프레임워크" 같은 기계적 분류. 줄글로 풀어서 쓴다.
+**Mandatory summary blocks.** A TL;DR is useful for long debugging posts, but noisy for short notes. Delete it when it repeats the first paragraph.
 
-**테이블 남용.** 비교할 때만 테이블을 쓴다. 모든 정보를 테이블에 넣으면 제품 문서처럼 보인다.
+**Number theater.** "3 lessons", "5 takeaways", "14/14 matrix" without explaining what was measured. Explain the actual evidence before the count.
 
-**ASCII 다이어그램.** 블로그 포스트에 ASCII art 다이어그램은 AI가 생성한 티가 난다.
+**Product-doc posture.** "Quick start", "How to use", "Best practices" when the post is really a personal investigation or opinion. A blog post is not a README.
 
-## 톤 패턴
+**Generic explainer opening.** Starting with definitions the target reader already knows. Open with the specific problem, failure, or decision.
 
-**단정적 선언.** "확정적 참사", "반드시 ~해야 한다", "에이전트를 활용한 개발 경험이 많이 나아질 것이다" 같은 표현. 헤징을 섞는다.
+**Forced closure.** "In conclusion", "마무리", "정리하면" after the post has already ended. Stop at the last useful sentence.
 
-**감정 과잉.** "짜증난다", "화가 난다" 같은 직접적 감정 표현. 이 저자는 감정을 절제해서 표현한다.
+## Evidence Problems
 
-**홍보성 마무리.** "오픈소스로 공개했으니 기여 환영합니다", "프레임워크마다 이런 스킬이 있다면 개발 경험이 나아질 것이다". 글은 정보 전달로 끝내거나, 열린 톤으로 짧게 닫는다.
+**Source laundering.** Turning "I saw this in one log" into a general claim. Keep scope honest.
 
-**코칭 톤.** "이렇게 하면 됩니다", "이것만 기억하세요" 같은 교육자/코치 스타일. 이 저자는 자기 경험을 서술할 뿐 독자를 가르치려 하지 않는다.
+**Unnamed authority.** "Many studies show", "experts agree", "업계에서는" without naming the source. Name it or delete it.
 
-## 문장 패턴
+**Missing real-world mess.** Presenting a tool or workflow as clean when the actual experience involved setup friction, flaky behavior, exceptions, or ambiguous evidence.
 
-**AI filler.** "핵심 문제는", "정리하면:", "핵심 구성요소" 같은 전환 표현. 자연스러운 문장 흐름으로 대체한다.
+**Abstract label over concrete behavior.** "사회적 압력", "visible reason", "diagnosable failure", "current-run evidence" without first saying what happened.
 
-**em-dash 제목.** "X — Y로 해결한 이야기" 패턴. 제목은 간결하게.
+## Tone Problems
 
-**"마무리" 선언.** "마무리"라는 헤더나 "이상으로 ~를 정리해봤다" 같은 닫기. 그냥 마지막 내용을 쓰고 끝낸다.
+**Relentless optimism.** "powerful", "seamless", "game-changing", "revolutionary", "robust" without a concrete reason. Prefer the plain result.
 
-**동일 메시지 반복.** 도입부에서 말한 걸 마무리에서 다시 말하기. 한 번만 말한다.
+**Press-release voice.** Sentences written to impress rather than inform: "unlock", "empower", "leverage", "transform", "pave the way".
 
-**"~를 통해" 남발.** "영어 연습을 통해 준비한다" → "영어 연습으로 준비한다". 조사로 충분하면 "~를 통해"를 쓰지 않는다.
+**Coaching voice.** "이것만 기억하세요", "you should", "the key is to". This blog describes experience; it does not lecture.
 
-**사용자 지적 slop.** 실제 사용자 피드백으로 지적된 표현은 같은 계열까지 피한다.
-- "보금자리 압력", "집짓기 압력", "사회적 압력"처럼 평범한 소재에 추상 명사를 붙여 그럴듯하게 만드는 라벨. 구체적으로 "집을 짓는 목표", "shared chest를 쓰는 상황"처럼 쓴다.
-- "가장 표면적인 이유는", "눈에 보이는 이유는", "visible reason"처럼 글의 설명 구조를 독자에게 노출하는 문장. 바로 사실로 시작한다. 예: "2026년에 다시 잡은 데에는 모델 비용도 있다."
-- "이 slice는 여러 능력을 연결한다"처럼 영어 기획 문서 느낌의 비유. "이 목표를 잡으면 나무 캐기, 제작, 저장, 대화가 한 번에 걸린다"처럼 행동을 직접 쓴다.
-- "diagnosable failure" 같은 내부 평가 용어를 글의 감정선 없이 던지는 표현. 필요하면 "어디서 멈췄는지 확인할 수 있는 실패"처럼 풀어쓴다.
-- "14/14 live matrix", "current-run evidence", "stress run", "seed action skill"처럼 내부 QA/로그 표현을 설명 없이 넣는 것. 숫자나 이름보다 먼저 무엇을 검증했는지 쓴다. 예: "집짓기에 필요한 작은 행동 14개를 각각 실행해 보고, 14개 모두에서 inventory나 block 상태가 예상대로 바뀌는지 확인했다."
+**Superiority.** "Most people don't understand", "the real value is". Use the author's concrete use case instead.
 
-## 구조적 판단
+**Over-polished neutrality.** No stance, no tradeoff, no annoyance, no uncertainty. Add the actual judgment or delete the section.
 
-**당연한 것을 설명.** 독자가 이미 아는 개념을 길게 설명하지 않는다. "Agent Skill이란 무엇인가" 같은 섹션은 이 블로그 독자에게 불필요하다.
+## Sentence Patterns
 
-**이전 글 억지 연결.** "이전 글에서 ~에 대해 이야기했었다" 같은 패턴. 자연스러운 맥락이 아니면 연결하지 않는다.
+**Contrastive reframe.** "It's not just X, it's Y", "X isn't just evolving, it's accelerating", "단순히 X가 아니라 Y다". Use only if the contrast is genuinely the point.
 
-**제품 문서 스타일.** "Quick Router", "사용법", "설치 방법" 같은 섹션 헤더. 블로그 포스트는 제품 README가 아니다.
+**Throat-clearing transitions.** "It's worth noting", "At its core", "In today's landscape", "With that being said", "이 맥락에서 중요한 것은". Usually delete.
 
-**일기형 나열.** "이거 했다, 저거 했다, 그다음 이거 했다" 시간순 나열. 글에 주장이 없으면 "그래서 어쩌라고?"가 된다. 유저 입력 순서를 그대로 따르지 않는다.
+**Repeated transition starters.** Paragraph after paragraph beginning with "However", "Moreover", "Furthermore", "Additionally".
 
-**선민의식.** "이 도구의 진짜 쓰임새를 아는 사람은 별로 없다", "이 이름이 실제 가치를 좁게 만든다" 같은 표현. 독자가 이미 잘 쓰고 있을 수 있다. "나는 이렇게 썼다"로 충분하다.
+**Decorative em dash.** Especially in English titles or dramatic mid-sentence turns. Use punctuation only when it changes meaning.
 
-**불릿 중복.** 상단 불릿 요약에서 같은 말을 다른 표현으로 반복하는 것. 각 불릿은 다른 정보를 전달해야 한다.
+**Same point twice.** The intro, top bullets, and closing all say the same thing. Keep the strongest version.
 
-**닫는 섹션에서 thesis 반복.** 본문에서 3번 말한 핵심 주장을 "나가며"에서 또 말하기. 한 번이면 충분하다.
+**Wall paragraphs.** More than 8-10 lines without a break. Split by claim, evidence, and consequence.
 
-**AI filler 전환 문장.** "이 체계가 만들어지고 나니 꽤 넓은 범위의 작업이 가능해졌다" 같은 빈 전환. 삭제하고 바로 내용으로 들어간다.
+## Korean-Specific Checks
 
-**벽 문단.** 10줄 이상 한 덩어리 텍스트. 논리 단위로 쪼갠다.
+- Avoid "~를 통해" when a simpler particle works.
+- Avoid "핵심은", "중요한 것은", "결국" as filler transitions.
+- Avoid abstract nouns attached to ordinary actions: "보금자리 압력", "집짓기 압력", "사회적 압력".
+- Avoid unexplained internal labels: `14/14 live matrix`, `stress run`, `seed action skill`.
+- Prefer "무엇을 했고 무엇이 바뀌었는지" over a named evaluation frame.
 
----
+## English-Specific Checks
 
-## English Anti-Patterns
+Delete or rewrite:
 
-For English versions, check these after drafting. See `references/english-voice-guide.md` for full patterns with examples.
+- "It's worth noting that"
+- "At its core"
+- "In today's landscape"
+- "Let's dive in"
+- "In this post, we'll explore"
+- "This is important because"
+- "When it comes to"
+- "may or may not"
+- "one could argue"
+- "there is a growing consensus"
 
-### Filler phrases (delete on sight)
-- "It's worth noting that" / "At its core" / "In today's landscape"
-- "Having said that" / "With that being said"
-- "Let's dive in" / "In this post, we'll explore"
-- "It's important to understand that"
-- "When it comes to..."
-- "The visible reason is" / "The surface reason is"
-- "X pressure" as a vague abstraction for a concrete goal, unless pressure is a real domain term in the source
-- "14/14 live matrix", "current-run evidence", "stress run", or "seed action skill" without a plain explanation of what was tested and what counted as evidence
+Replace inflated verbs:
 
-### Inflated verbs (use simpler words)
-- "leverage" → "use"
-- "utilize" → "use"
-- "facilitate" → "help" / "enable"
-- "demonstrate" → "show"
-- "necessitate" → "need"
-- "encompasses" → "includes"
-
-### Structural giveaways
-- Every paragraph starting with However / Moreover / Furthermore / Additionally
-- "First... Second... Third..." enumeration in prose
-- Restating the question before answering it
-- Ending paragraphs with "This is important because..."
-- Opening with topic definition instead of personal stake
-
-### Hedging that sounds corporate
-- "may or may not" → pick one
-- "it should be noted" → just say it
-- "one could argue" → "I think" or just argue
-- "there is a growing consensus" → name it or skip
+- "leverage" -> "use"
+- "utilize" -> "use"
+- "facilitate" -> "help" or "enable"
+- "demonstrate" -> "show"
+- "necessitate" -> "need"
+- "encompasses" -> "includes"
