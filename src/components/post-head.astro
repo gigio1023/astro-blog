@@ -1,5 +1,5 @@
 ---
-import { SITE, DEFAULT_LANG } from '@/consts'
+import { DEFAULT_LANG, SITE } from '@/consts'
 import type { CollectionEntry } from 'astro:content'
 
 interface Props {
@@ -27,35 +27,36 @@ const modifiedTime = publishedTime
 
 // Article Schema for better SEO and AI/GEO optimization
 const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": title,
-  "description": description,
-  "image": postImage,
-  "datePublished": publishedTime,
-  "dateModified": modifiedTime,
-  "author": {
-    "@type": "Person",
-    "name": author,
-    "url": SITE.href
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description: description,
+  image: postImage,
+  datePublished: publishedTime,
+  dateModified: modifiedTime,
+  author: {
+    '@type': 'Person',
+    name: author,
+    url: SITE.href,
   },
-  "publisher": {
-    "@type": "Organization",
-    "name": SITE.title,
-    "url": SITE.href,
-    "logo": {
-      "@type": "ImageObject",
-      "url": new URL('/static/logo.png', Astro.site).href
-    }
+  publisher: {
+    '@type': 'Organization',
+    name: SITE.title,
+    url: SITE.href,
+    logo: {
+      '@type': 'ImageObject',
+      url: new URL('/static/logo.png', Astro.site).href,
+    },
   },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": postUrl
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': postUrl,
   },
-  "url": postUrl,
-  ...(post.data.tags && post.data.tags.length > 0 && {
-    "keywords": post.data.tags.join(", ")
-  })
+  url: postUrl,
+  ...(post.data.tags &&
+    post.data.tags.length > 0 && {
+      keywords: post.data.tags.join(', '),
+    }),
 }
 ---
 
@@ -72,12 +73,26 @@ const articleSchema = {
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content={title} />
 <meta property="og:type" content="article" />
-<meta property="og:locale" content={post.data.lang === 'en' ? 'en_US' : post.data.lang === 'it' ? 'it_IT' : 'ko_KR'} />
+<meta
+  property="og:locale"
+  content={post.data.lang === 'en'
+    ? 'en_US'
+    : post.data.lang === 'it'
+      ? 'it_IT'
+      : 'ko_KR'}
+/>
 <meta property="og:site_name" content={SITE.title} />
 <meta property="og:url" content={postUrl} />
-{translations.filter(t => t.lang !== post.data.lang).map(({ lang }) => (
-  <meta property="og:locale:alternate" content={lang === 'en' ? 'en_US' : lang === 'it' ? 'it_IT' : 'ko_KR'} />
-))}
+{
+  translations
+    .filter((t) => t.lang !== post.data.lang)
+    .map(({ lang }) => (
+      <meta
+        property="og:locale:alternate"
+        content={lang === 'en' ? 'en_US' : lang === 'it' ? 'it_IT' : 'ko_KR'}
+      />
+    ))
+}
 <meta property="article:published_time" content={publishedTime} />
 <meta property="article:modified_time" content={modifiedTime} />
 <meta property="article:author" content={author} />
@@ -98,12 +113,33 @@ const articleSchema = {
 <meta name="twitter:creator" content={author} />
 
 <!-- Article Schema Markup for AI/GEO and Rich Snippets -->
-<script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify(articleSchema)}
+/>
 
-{translations.length > 0 && translations.map(({ lang, url }) => (
-  <link rel="alternate" hreflang={lang} href={new URL(url, SITE.href).href} />
-))}
-{translations.length > 0 && (() => {
-  const defaultTranslation = translations.find(t => t.lang === DEFAULT_LANG) || translations[0]
-  return <link rel="alternate" hreflang="x-default" href={new URL(defaultTranslation.url, SITE.href).href} />
-})()}
+{
+  translations.length > 0 &&
+    translations.map(({ lang, url }) => (
+      <link
+        rel="alternate"
+        hreflang={lang}
+        href={new URL(url, SITE.href).href}
+      />
+    ))
+}
+{
+  translations.length > 0 &&
+    (() => {
+      const defaultTranslation =
+        translations.find((t) => t.lang === DEFAULT_LANG) || translations[0]
+      return (
+        <link
+          rel="alternate"
+          hreflang="x-default"
+          href={new URL(defaultTranslation.url, SITE.href).href}
+        />
+      )
+    })()
+}
