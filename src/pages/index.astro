@@ -2,23 +2,25 @@
 import BlogCard from '@/components/blog-card.astro'
 import Link from '@/components/link.astro'
 import PageHead from '@/components/page-head.astro'
+import { DEFAULT_LANG, ICON_MAP, SITE, SOCIAL_LINKS } from '@/consts'
 import Layout from '@/layouts/layout.astro'
-import { Icon } from 'astro-icon/components'
-import { getAllPosts, getLocalizedTitle, getLocalizedDescription } from '@/lib/data-utils'
-import { SOCIAL_LINKS, ICON_MAP, SITE, DEFAULT_LANG } from '@/consts'
-import type { SocialLink } from '@/types'
+import {
+  getAllPosts,
+  getLocalizedDescription,
+  getLocalizedTitle,
+} from '@/lib/data-utils'
 import { formatDate } from '@/lib/utils'
+import type { SocialLink } from '@/types'
+import { Icon } from 'astro-icon/components'
 
 const allPosts = await getAllPosts()
 const latestPost = allPosts[0]
-const latestTitle = latestPost ? await getLocalizedTitle(latestPost, DEFAULT_LANG) : ''
-const latestDesc = latestPost ? await getLocalizedDescription(latestPost, DEFAULT_LANG) : ''
-
-// Featured: paper-review and agent tagged posts (max 6)
-const featuredTags = ['paper-review', 'agent']
-const featuredPosts = allPosts
-  .filter(p => p.data.tags?.some(t => featuredTags.includes(t)))
-  .slice(0, 6)
+const latestTitle = latestPost
+  ? await getLocalizedTitle(latestPost, DEFAULT_LANG)
+  : ''
+const latestDesc = latestPost
+  ? await getLocalizedDescription(latestPost, DEFAULT_LANG)
+  : ''
 
 // Category grouping for featured
 const categories = [
@@ -27,152 +29,174 @@ const categories = [
   { label: 'Troubleshooting', tag: 'rabbit-hole', icon: 'lucide:bug' },
 ]
 
-// Resolve titles in default language for featured posts
-const featuredWithTitles = await Promise.all(
-  featuredPosts.map(async (post) => ({
-    post,
-    title: await getLocalizedTitle(post, DEFAULT_LANG),
-  }))
-)
-
 // Resolve category posts with localized titles
 const categoryData = await Promise.all(
   categories.map(async (cat) => {
     const posts = allPosts
-      .filter(p => p.data.tags?.includes(cat.tag))
+      .filter((p) => p.data.tags?.includes(cat.tag))
       .slice(0, 4)
     const withTitles = await Promise.all(
       posts.map(async (post) => ({
         post,
         title: await getLocalizedTitle(post, DEFAULT_LANG),
-      }))
+      })),
     )
     return { ...cat, posts: withTitles }
-  })
+  }),
 )
 
 // Recent posts (excluding the latest which is shown as hero)
 const recentPosts = allPosts.slice(1, 7)
 
 const personSchema = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": SITE.title,
-  "url": SITE.href,
-  "description": SITE.description
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.title,
+  url: SITE.href,
+  description: SITE.description,
 }
 
 const websiteSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": SITE.title,
-  "url": SITE.href,
-  "description": SITE.description,
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE.title,
+  url: SITE.href,
+  description: SITE.description,
 }
 ---
+
 <Layout class="max-w-3xl">
   <PageHead slot="head" title={SITE.title} fullTitle={true} />
-  <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
-  <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify(personSchema)}
+  />
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify(websiteSchema)}
+  />
 
   <!-- Compact Header -->
   <section class="flex items-center justify-between">
     <div>
       <h1 class="text-2xl font-bold tracking-tight">{SITE.title}</h1>
-      <p class="text-sm text-muted-foreground">Applied ML Engineer</p>
+      <p class="text-muted-foreground text-sm">Applied ML Engineer</p>
     </div>
     <div class="flex items-center gap-1.5">
-      {SOCIAL_LINKS.filter(l => l.label !== 'RSS').map(({ href, label }: SocialLink) => (
-        <Link
-          href={href}
-          aria-label={label}
-          title={label}
-          class="inline-flex items-center justify-center size-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-          external={href.startsWith('http') || href.startsWith('mailto:')}
-        >
-          <Icon
-            name={ICON_MAP[label as keyof typeof ICON_MAP] || 'lucide:link'}
-            class="size-4"
-          />
-        </Link>
-      ))}
+      {
+        SOCIAL_LINKS.filter((l) => l.label !== 'RSS').map(
+          ({ href, label }: SocialLink) => (
+            <Link
+              href={href}
+              aria-label={label}
+              title={label}
+              class="text-muted-foreground hover:text-foreground hover:bg-muted inline-flex size-8 items-center justify-center rounded-md transition-colors"
+              external={href.startsWith('http') || href.startsWith('mailto:')}
+            >
+              <Icon
+                name={ICON_MAP[label as keyof typeof ICON_MAP] || 'lucide:link'}
+                class="size-4"
+              />
+            </Link>
+          ),
+        )
+      }
     </div>
   </section>
 
   <!-- Latest Post (Hero) -->
-  {latestPost && (
-    <section class="mt-5">
-      <Link
-        href={`/blog/${DEFAULT_LANG}/${latestPost.id}`}
-        class="group block rounded-lg border border-border/60 px-5 py-4 hover:border-primary/40 hover:bg-muted/20 transition-all duration-200"
-      >
-        <span class="text-[10px] font-semibold text-primary uppercase tracking-widest">Latest</span>
-        <h2 class="mt-1 text-lg sm:text-xl font-semibold leading-snug group-hover:text-primary transition-colors">
-          {latestTitle}
-        </h2>
-        <p class="mt-1 text-sm text-muted-foreground line-clamp-1">
-          {latestDesc}
-        </p>
-        <div class="mt-2 flex items-center gap-2 text-xs text-muted-foreground/60">
-          <span>{formatDate(latestPost.data.date)}</span>
-          {latestPost.data.tags && latestPost.data.tags.length > 0 && (
-            <>
-              <span>·</span>
-              {latestPost.data.tags.slice(0, 3).map(tag => (
-                <span>#{tag}</span>
-              ))}
-            </>
-          )}
-        </div>
-      </Link>
-    </section>
-  )}
+  {
+    latestPost && (
+      <section class="mt-5">
+        <Link
+          href={`/blog/${DEFAULT_LANG}/${latestPost.id}`}
+          class="group border-border/60 hover:border-primary/40 hover:bg-muted/20 block rounded-lg border px-5 py-4 transition-all duration-200"
+        >
+          <span class="text-primary text-[10px] font-semibold tracking-widest uppercase">
+            Latest
+          </span>
+          <h2 class="group-hover:text-primary mt-1 text-lg leading-snug font-semibold transition-colors sm:text-xl">
+            {latestTitle}
+          </h2>
+          <p class="text-muted-foreground mt-1 line-clamp-1 text-sm">
+            {latestDesc}
+          </p>
+          <div class="text-muted-foreground/60 mt-2 flex items-center gap-2 text-xs">
+            <span>{formatDate(latestPost.data.date)}</span>
+            {latestPost.data.tags && latestPost.data.tags.length > 0 && (
+              <>
+                <span>·</span>
+                {latestPost.data.tags.slice(0, 3).map((tag) => (
+                  <span>#{tag}</span>
+                ))}
+              </>
+            )}
+          </div>
+        </Link>
+      </section>
+    )
+  }
 
   <!-- Categories -->
-  {categoryData.some(c => c.posts.length > 0) && (
-    <section class="mt-6">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {categoryData.map((cat) => cat.posts.length > 0 && (
-          <div>
-            <div class="flex items-center gap-1.5 mb-2">
-              <Icon name={cat.icon} class="size-3.5 text-muted-foreground/70" />
-              <h3 class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{cat.label}</h3>
-            </div>
-            <div class="space-y-1.5">
-              {cat.posts.map(({ post, title }) => (
-                <Link
-                  href={`/blog/${DEFAULT_LANG}/${post.id}`}
-                  class="block text-sm hover:text-primary transition-colors leading-snug py-0.5"
-                >
-                  {title}
-                </Link>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  )}
+  {
+    categoryData.some((c) => c.posts.length > 0) && (
+      <section class="mt-6">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {categoryData.map(
+            (cat) =>
+              cat.posts.length > 0 && (
+                <div>
+                  <div class="mb-2 flex items-center gap-1.5">
+                    <Icon
+                      name={cat.icon}
+                      class="text-muted-foreground/70 size-3.5"
+                    />
+                    <h3 class="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
+                      {cat.label}
+                    </h3>
+                  </div>
+                  <div class="space-y-1.5">
+                    {cat.posts.map(({ post, title }) => (
+                      <Link
+                        href={`/blog/${DEFAULT_LANG}/${post.id}`}
+                        class="hover:text-primary block py-0.5 text-sm leading-snug transition-colors"
+                      >
+                        {title}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ),
+          )}
+        </div>
+      </section>
+    )
+  }
 
   <!-- Recent Posts -->
-  {recentPosts.length > 0 && (
-    <section class="mt-6">
-      <div class="flex items-center justify-between mb-2">
-        <h2 class="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Recent</h2>
-        <Link
-          href="/blog"
-          class="text-xs text-muted-foreground/60 hover:text-primary transition-colors flex items-center gap-1"
-        >
-          All posts
-          <Icon name="lucide:arrow-right" class="size-3" />
-        </Link>
-      </div>
-      <div class="divide-y divide-border/40">
-        {recentPosts.map((post) => (
-          <BlogCard entry={post} />
-        ))}
-      </div>
-    </section>
-  )}
-
+  {
+    recentPosts.length > 0 && (
+      <section class="mt-6">
+        <div class="mb-2 flex items-center justify-between">
+          <h2 class="text-muted-foreground text-sm font-semibold tracking-wider uppercase">
+            Recent
+          </h2>
+          <Link
+            href="/blog"
+            class="text-muted-foreground/60 hover:text-primary flex items-center gap-1 text-xs transition-colors"
+          >
+            All posts
+            <Icon name="lucide:arrow-right" class="size-3" />
+          </Link>
+        </div>
+        <div class="divide-border/40 divide-y">
+          {recentPosts.map((post) => (
+            <BlogCard entry={post} />
+          ))}
+        </div>
+      </section>
+    )
+  }
 </Layout>
