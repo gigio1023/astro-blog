@@ -22,7 +22,6 @@ import {
   SiGit,
   SiFlux,
   SiRancher,
-  SiOracle,
   SiCloudflare,
   SiCilium,
   SiPortainer,
@@ -44,6 +43,7 @@ import {
   Terminal,
   CloudCog,
   Box,
+  Database,
 } from 'lucide-react'
 
 // Icon mapping - using direct imports for better tree-shaking
@@ -73,7 +73,7 @@ export const iconMap: { [key: string]: IconType } = {
   'simple-icons:flux': SiFlux,
   'simple-icons:rancher': SiRancher,
   'lucide:cloud': Cloud,
-  'simple-icons:oracle': SiOracle,
+  'simple-icons:oracle': Database,
   'simple-icons:cloudflare': SiCloudflare,
   'lucide:server': Server,
   'lucide:cloud-cog': CloudCog,
@@ -91,4 +91,3 @@ export const iconMap: { [key: string]: IconType } = {
 export function getIcon(logo: string): IconType {
   return iconMap[logo] || FaQuestionCircle
 }
-
