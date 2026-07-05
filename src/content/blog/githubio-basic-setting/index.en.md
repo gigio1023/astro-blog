@@ -95,7 +95,7 @@ og_image    : "path"
 og_description  : ""
 og_title    : ""
 ```
-[What is Open Graph Protocol]({{site.url}}{{site.baseurl}}/blog-building/Open-Graph-Protocol/)
+[What is Open Graph Protocol](/blog/en/open-graph-protocol/)
 
 ## Site Author
 Information displayed in the left sidebar. Note that URLs should be written without quotes.

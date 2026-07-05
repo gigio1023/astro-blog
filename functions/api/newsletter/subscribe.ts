@@ -8,37 +8,43 @@ interface Env {
   SITE_URL?: string
 }
 
-export const onRequestPost = async ({ request, env }: { request: Request; env: Env }) => {
+export const onRequestPost = async ({
+  request,
+  env,
+}: {
+  request: Request
+  env: Env
+}) => {
   try {
     const { email } = await request.json()
 
     // Validate email
     if (!email || typeof email !== 'string') {
-      return new Response(
-        JSON.stringify({ error: 'Email is required' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      )
+      return new Response(JSON.stringify({ error: 'Email is required' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid email format' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      )
+      return new Response(JSON.stringify({ error: 'Invalid email format' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Get configuration from environment variables
     const brevoApiKey = env.BREVO_API_KEY as string
     const brevoListId = env.BREVO_LIST_ID as string
     const brevoTemplateId = env.BREVO_TEMPLATE_ID || '5'
-    const siteUrl = env.SITE_URL || 'https://yourdomain.com'
+    const siteUrl = env.SITE_URL || new URL(request.url).origin
 
     if (!brevoApiKey) {
       console.error('BREVO_API_KEY is not configured')
       return new Response(
         JSON.stringify({ error: 'Newsletter service is not configured' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
+        { status: 500, headers: { 'Content-Type': 'application/json' } },
       )
     }
 
@@ -48,14 +54,14 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
     if (isNaN(templateId)) {
       return new Response(
         JSON.stringify({ error: 'Template ID is required for double opt-in' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
       )
     }
 
     if (!listId || isNaN(listId)) {
       return new Response(
         JSON.stringify({ error: 'List ID is required for double opt-in' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
       )
     }
 
@@ -64,33 +70,36 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
       email: email.trim().toLowerCase(),
       includeListIds: [listId],
       templateId: templateId,
-      redirectionUrl: `${siteUrl}/newsletter/confirmed`,
+      redirectionUrl: `${siteUrl.replace(/\/$/, '')}/newsletter/confirmed/`,
       updateEnabled: true,
     }
 
     // Call Brevo double opt-in confirmation endpoint
-    const brevoResponse = await fetch('https://api.brevo.com/v3/contacts/doubleOptinConfirmation', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'api-key': brevoApiKey,
+    const brevoResponse = await fetch(
+      'https://api.brevo.com/v3/contacts/doubleOptinConfirmation',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': brevoApiKey,
+        },
+        body: JSON.stringify(contactData),
       },
-      body: JSON.stringify(contactData),
-    })
+    )
 
     // Handle responses
     if (!brevoResponse.ok) {
       // Contact already exists - already subscribed
       if (brevoResponse.status === 409) {
         return new Response(
-          JSON.stringify({ 
+          JSON.stringify({
             message: 'You are already subscribed to the newsletter',
-            success: true 
+            success: true,
           }),
-          { 
-            status: 200, 
-            headers: { 'Content-Type': 'application/json' } 
-          }
+          {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+          },
         )
       }
 
@@ -108,43 +117,45 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
         }
       }
 
-      const errorMessage = brevoData?.message || 'Failed to subscribe to newsletter'
+      const errorMessage =
+        brevoData?.message || 'Failed to subscribe to newsletter'
       console.error('Brevo API error:', {
         status: brevoResponse.status,
         statusText: brevoResponse.statusText,
-        data: brevoData
+        data: brevoData,
       })
-      
-      return new Response(
-        JSON.stringify({ error: errorMessage }),
-        { 
-          status: brevoResponse.status || 500, 
-          headers: { 'Content-Type': 'application/json' } 
-        }
-      )
+
+      return new Response(JSON.stringify({ error: errorMessage }), {
+        status: brevoResponse.status || 500,
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Success - Contact added and confirmation email sent
     return new Response(
-      JSON.stringify({ 
-        message: 'Successfully subscribed! Please check your email to confirm your subscription.',
-        success: true 
+      JSON.stringify({
+        message:
+          'Successfully subscribed! Please check your email to confirm your subscription.',
+        success: true,
       }),
-      { 
-        status: 200, 
-        headers: { 'Content-Type': 'application/json' } 
-      }
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      },
     )
   } catch (error) {
     console.error('Newsletter subscription error:', error)
     return new Response(
-      JSON.stringify({ 
-        error: error instanceof Error ? error.message : 'An unexpected error occurred' 
+      JSON.stringify({
+        error:
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred',
       }),
-      { 
-        status: 500, 
-        headers: { 'Content-Type': 'application/json' } 
-      }
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      },
     )
   }
 }

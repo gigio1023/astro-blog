@@ -19,11 +19,28 @@ import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 
 import { remarkDemoteHeadings } from './src/plugins/remark-demote-headings'
 import { remarkMermaid } from './src/plugins/remark-mermaid'
+import { rehypeNormalizeInternalLinks } from './src/plugins/rehype-normalize-internal-links'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   site: 'https://sunghogigio.com',
-  integrations: [mdx(), react(), sitemap(), icon()],
+  trailingSlash: 'always',
+  integrations: [
+    mdx(),
+    react(),
+    sitemap({
+      filter: (page) => {
+        const pathname = new URL(page).pathname
+
+        return !(
+          /^\/tags\/[^/]+\/$/.test(pathname) ||
+          /^\/authors\/[^/]+\/$/.test(pathname) ||
+          pathname === '/newsletter/confirmed/'
+        )
+      },
+    }),
+    icon(),
+  ],
   vite: {
     plugins: [tailwindcss() as any],
     optimizeDeps: {
@@ -40,6 +57,7 @@ export default defineConfig({
   markdown: {
     processor: unified({
       rehypePlugins: [
+        rehypeNormalizeInternalLinks,
         [
           rehypeExternalLinks,
           {

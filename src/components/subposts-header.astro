@@ -9,6 +9,7 @@ import {
   getSubpostsForParent,
   isSubpost,
 } from '@/lib/data-utils'
+import { postPath } from '@/lib/urls'
 import { Icon } from 'astro-icon/components'
 
 const { parentId, lang = 'en' } = Astro.props
@@ -114,7 +115,7 @@ const currentSubpostDetails = isCurrentSubpost
                     </div>
                   ) : (
                     <a
-                      href={`/blog/${lang}/${activePost.id}`}
+                      href={postPath(lang, activePost.id)}
                       class="mobile-subposts-link hover:text-foreground text-muted-foreground hover:bg-muted/50 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
                     >
                       <Icon
@@ -164,7 +165,7 @@ const currentSubpostDetails = isCurrentSubpost
                       </div>
                     ) : (
                       <a
-                        href={`/blog/${lang}/${subpost.id}`}
+                        href={postPath(lang, subpost.id)}
                         class="mobile-subposts-link hover:text-foreground text-muted-foreground hover:bg-muted/50 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
                       >
                         <Icon
@@ -304,5 +305,7 @@ const currentSubpostDetails = isCurrentSubpost
   }
 
   document.addEventListener('astro:page-load', () => SubpostsController.init())
-  document.addEventListener('astro:before-swap', () => SubpostsController.cleanup())
+  document.addEventListener('astro:before-swap', () =>
+    SubpostsController.cleanup(),
+  )
 </script>

@@ -7,8 +7,7 @@ export const DEFAULT_LANG: SupportedLang = 'en'
 
 export const SITE: Site = {
   title: 'Sungho Park',
-  description:
-    'AI Engineer',
+  description: 'AI Engineer',
   href: 'https://sunghogigio.com',
   author: 'Sungho Park',
   locale: 'en-US',
@@ -52,11 +51,11 @@ export const NAV_LINKS: SocialLink[] = [
     label: 'Home',
   },
   {
-    href: '/blog',
+    href: '/blog/',
     label: 'Posts',
   },
   {
-    href: '/about',
+    href: '/about/',
     label: 'Profile',
   },
 ]
@@ -92,6 +91,6 @@ export const ICON_MAP: IconMap = {
 // Newsletter consent text (centralized for GDPR compliance)
 export const NEWSLETTER_CONSENT_TEXT = {
   text: 'I agree to receive newsletter emails.',
-  privacyLink: '/privacy',
+  privacyLink: '/privacy/',
   privacyText: 'Privacy Policy',
 }

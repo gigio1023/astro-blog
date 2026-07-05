@@ -6,6 +6,7 @@ import {
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
+import { normalizeInternalHref } from '@/lib/urls'
 import { Button, buttonVariants } from '@/components/ui/button'
 
 function Pagination({ className, ...props }: React.ComponentProps<'nav'>) {
@@ -48,10 +49,12 @@ function PaginationLink({
   isActive,
   isDisabled,
   size = 'icon',
+  href,
   ...props
 }: PaginationLinkProps) {
   return (
     <a
+      href={href ? normalizeInternalHref(href) : undefined}
       aria-current={isActive ? 'page' : undefined}
       data-slot="pagination-link"
       data-active={isActive}
@@ -133,7 +136,7 @@ const PaginationComponent: React.FC<PaginationProps> = ({
 
   const getPageUrl = (page: number) => {
     if (page === 1) return baseUrl
-    return `${baseUrl}${page}`
+    return `${baseUrl}${page}/`
   }
 
   return (

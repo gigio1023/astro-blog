@@ -9,6 +9,7 @@ import {
   getLocalizedDescription,
   getLocalizedTitle,
 } from '@/lib/data-utils'
+import { postPath } from '@/lib/urls'
 import { formatDate } from '@/lib/utils'
 import type { SocialLink } from '@/types'
 import { Icon } from 'astro-icon/components'
@@ -111,7 +112,7 @@ const websiteSchema = {
     latestPost && (
       <section class="mt-5">
         <Link
-          href={`/blog/${DEFAULT_LANG}/${latestPost.id}`}
+          href={postPath(DEFAULT_LANG, latestPost.id)}
           class="group border-border/60 hover:border-primary/40 hover:bg-muted/20 block rounded-lg border px-5 py-4 transition-all duration-200"
         >
           <span class="text-primary text-[10px] font-semibold tracking-widest uppercase">
@@ -160,7 +161,7 @@ const websiteSchema = {
                   <div class="space-y-1.5">
                     {cat.posts.map(({ post, title }) => (
                       <Link
-                        href={`/blog/${DEFAULT_LANG}/${post.id}`}
+                        href={postPath(DEFAULT_LANG, post.id)}
                         class="hover:text-primary block py-0.5 text-sm leading-snug transition-colors"
                       >
                         {title}
@@ -184,7 +185,7 @@ const websiteSchema = {
             Recent
           </h2>
           <Link
-            href="/blog"
+            href="/blog/"
             class="text-muted-foreground/60 hover:text-primary flex items-center gap-1 text-xs transition-colors"
           >
             All posts

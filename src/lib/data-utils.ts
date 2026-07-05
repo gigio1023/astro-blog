@@ -1,6 +1,7 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content'
 import { readingTime, calculateWordCountFromHtml } from '@/lib/utils'
 import type { SupportedLang } from '@/consts'
+import { postPath } from '@/lib/urls'
 
 export async function getAllAuthors(): Promise<CollectionEntry<'authors'>[]> {
   return await getCollection('authors')
@@ -22,7 +23,10 @@ export async function getTranslation(
   const posts = await getCollection('blog')
   return (
     posts.find(
-      (p) => p.data.translationOf === postId && !p.data.draft && (lang ? p.data.lang === lang : true),
+      (p) =>
+        p.data.translationOf === postId &&
+        !p.data.draft &&
+        (lang ? p.data.lang === lang : true),
     ) || null
   )
 }
@@ -37,9 +41,12 @@ async function findPostBySlugAndLang(
   const basePost = posts.find((p) => p.id === slug && !p.data.draft)
   if (basePost && basePost.data.lang === lang) return basePost
   // Check translations
-  return posts.find(
-    (p) => p.data.translationOf === slug && !p.data.draft && p.data.lang === lang,
-  ) || null
+  return (
+    posts.find(
+      (p) =>
+        p.data.translationOf === slug && !p.data.draft && p.data.lang === lang,
+    ) || null
+  )
 }
 
 /** Get the title of a post in a specific language, falling back to the post's own title. */
@@ -72,12 +79,10 @@ export async function getAvailableTranslations(
   const result: { lang: string; url: string }[] = []
 
   // Base post (id matches slug)
-  const basePost = posts.find(
-    (p) => p.id === slug && !p.data.draft,
-  )
+  const basePost = posts.find((p) => p.id === slug && !p.data.draft)
   if (basePost) {
     const lang = basePost.data.lang || 'ko'
-    result.push({ lang, url: `/blog/${lang}/${slug}` })
+    result.push({ lang, url: postPath(lang, slug) })
   }
 
   // All translations pointing to this slug
@@ -85,7 +90,7 @@ export async function getAvailableTranslations(
     (p) => p.data.translationOf === slug && !p.data.draft,
   )
   for (const t of translations) {
-    result.push({ lang: t.data.lang, url: `/blog/${t.data.lang}/${slug}` })
+    result.push({ lang: t.data.lang, url: postPath(t.data.lang, slug) })
   }
 
   return result
@@ -94,7 +99,9 @@ export async function getAvailableTranslations(
 export async function getAllPosts(): Promise<CollectionEntry<'blog'>[]> {
   const posts = await getCollection('blog')
   return posts
-    .filter((post) => !post.data.draft && !isSubpost(post.id) && !isTranslation(post))
+    .filter(
+      (post) => !post.data.draft && !isSubpost(post.id) && !isTranslation(post),
+    )
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 }
 
@@ -349,7 +356,10 @@ export type TOCSection = {
   subpostId?: string
 }
 
-export async function getTOCSections(postId: string, lang?: string): Promise<TOCSection[]> {
+export async function getTOCSections(
+  postId: string,
+  lang?: string,
+): Promise<TOCSection[]> {
   const post = await getPostById(postId)
   if (!post) return []
 
@@ -361,7 +371,9 @@ export async function getTOCSections(postId: string, lang?: string): Promise<TOC
   const sections: TOCSection[] = []
 
   // Use translated version if lang is specified, fall back to base post
-  const parentToRender = lang ? (await getTranslation(parentId, lang) ?? parentPost) : parentPost
+  const parentToRender = lang
+    ? ((await getTranslation(parentId, lang)) ?? parentPost)
+    : parentPost
   const { headings: parentHeadings } = await render(parentToRender)
   if (parentHeadings.length > 0) {
     sections.push({
@@ -377,7 +389,9 @@ export async function getTOCSections(postId: string, lang?: string): Promise<TOC
 
   const subposts = await getSubpostsForParent(parentId)
   for (const subpost of subposts) {
-    const subpostToRender = lang ? (await getTranslation(subpost.id, lang) ?? subpost) : subpost
+    const subpostToRender = lang
+      ? ((await getTranslation(subpost.id, lang)) ?? subpost)
+      : subpost
     const { headings: subpostHeadings } = await render(subpostToRender)
     if (subpostHeadings.length > 0) {
       sections.push({
