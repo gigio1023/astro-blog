@@ -95,7 +95,7 @@ og_image    : "path"
 og_description  : ""
 og_title    : ""
 ```
-[Cos'è l'Open Graph Protocol]({{site.url}}{{site.baseurl}}/blog-building/Open-Graph-Protocol/)
+[Cos'è l'Open Graph Protocol](/blog/it/open-graph-protocol/)
 
 ## Site Author
 Informazioni visualizzate nella sidebar sinistra. Attenzione: gli URL vanno scritti senza virgolette.

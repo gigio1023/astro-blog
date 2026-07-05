@@ -1,12 +1,12 @@
 ---
 import Link from '@/components/link.astro'
 import { buttonVariants } from '@/components/ui/button'
+import { postPath } from '@/lib/urls'
 import { cn } from '@/lib/utils'
 import { Icon } from 'astro-icon/components'
 
 const { newerPost, olderPost, parentPost, lang = 'en' } = Astro.props
 const isSubpost = !!parentPost
-const basePath = `/blog/${lang}`
 ---
 
 <nav
@@ -16,7 +16,7 @@ const basePath = `/blog/${lang}`
   )}
 >
   <Link
-    href={olderPost ? `${basePath}/${olderPost.id}` : '#'}
+    href={olderPost ? postPath(lang, olderPost.id) : '#'}
     class={cn(
       buttonVariants({ variant: 'outline' }),
       'rounded-lg group flex items-center justify-start size-full',
@@ -44,7 +44,7 @@ const basePath = `/blog/${lang}`
   {
     isSubpost && (
       <Link
-        href={parentPost ? `${basePath}/${parentPost.id}` : '#'}
+        href={parentPost ? postPath(lang, parentPost.id) : '#'}
         class={cn(
           buttonVariants({ variant: 'outline' }),
           'group flex size-full items-center justify-center rounded-lg',
@@ -68,7 +68,7 @@ const basePath = `/blog/${lang}`
   }
 
   <Link
-    href={newerPost ? `${basePath}/${newerPost.id}` : '#'}
+    href={newerPost ? postPath(lang, newerPost.id) : '#'}
     class={cn(
       buttonVariants({ variant: 'outline' }),
       'rounded-lg group flex items-center justify-end size-full',

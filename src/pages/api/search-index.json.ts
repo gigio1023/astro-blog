@@ -1,6 +1,12 @@
 import type { APIRoute } from 'astro'
-import { getAllPosts, getLocalizedTitle, getLocalizedDescription, getTranslation } from '@/lib/data-utils'
+import {
+  getAllPosts,
+  getLocalizedTitle,
+  getLocalizedDescription,
+  getTranslation,
+} from '@/lib/data-utils'
 import { DEFAULT_LANG } from '@/consts'
+import { postPath } from '@/lib/urls'
 
 export const prerender = true
 
@@ -29,7 +35,7 @@ export const GET: APIRoute = async () => {
           date: post.data.date?.toISOString() || new Date().toISOString(),
           tags: post.data.tags || [],
           authors: post.data.authors || [],
-          url: `/blog/${DEFAULT_LANG}/${post.id}`,
+          url: postPath(DEFAULT_LANG, post.id),
           content: textContent,
         }
       }),

@@ -2,6 +2,7 @@
 import { Icon } from 'astro-icon/components'
 import Link from '@/components/link.astro'
 import { getSortedTags } from '@/lib/data-utils'
+import { tagPath } from '@/lib/urls'
 
 const sortedTags = await getSortedTags()
 const popularTags = sortedTags.slice(0, 6) // Top 6 tags
@@ -66,7 +67,7 @@ const position: Position = 'right-fixed' as Position // Change this to test diff
             <div class="flex flex-wrap gap-1.5">
               {popularTags.map(({ tag }) => (
                 <Link
-                  href={`/tags/${tag}`}
+                  href={tagPath(tag)}
                   class="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-medium bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
                 >
                   <Icon name="lucide:hash" class="w-3 h-3" />
@@ -144,7 +145,7 @@ const position: Position = 'right-fixed' as Position // Change this to test diff
               <div class="flex flex-wrap gap-1">
                 {popularTags.slice(0, 4).map(({ tag }) => (
                   <Link
-                    href={`/tags/${tag}`}
+                    href={tagPath(tag)}
                     class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
                   >
                     <Icon name="lucide:hash" class="w-2.5 h-2.5" />
@@ -221,7 +222,7 @@ const position: Position = 'right-fixed' as Position // Change this to test diff
             <div class="flex flex-wrap gap-1">
               {popularTags.map(({ tag }) => (
                 <Link
-                  href={`/tags/${tag}`}
+                  href={tagPath(tag)}
                   class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
                 >
                   <Icon name="lucide:hash" class="w-2.5 h-2.5" />
@@ -367,4 +368,3 @@ const position: Position = 'right-fixed' as Position // Change this to test diff
     setTimeout(updateSidebarPosition, 100)
   })
 </script>
-

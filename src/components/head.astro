@@ -2,6 +2,7 @@
 import { SITE, ANALYTICS, UMAMI } from '@/consts'
 import { ClientRouter } from 'astro:transitions'
 import Favicons from './favicons.astro'
+import { toAbsoluteUrl } from '@/lib/urls'
 
 interface Props {
   title?: string
@@ -17,7 +18,7 @@ const {
   skipMeta = false,
 } = Astro.props
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site).href
+const canonicalURL = toAbsoluteUrl(Astro.url.pathname, Astro.site ?? SITE.href)
 const ogImage = image || new URL('/og-default.png', Astro.site).href
 ---
 

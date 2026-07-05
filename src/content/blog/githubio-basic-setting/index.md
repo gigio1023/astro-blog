@@ -92,7 +92,7 @@ og_image    : "path"
 og_description  : ""
 og_title    : ""
 ```
-[Open Graph Protocol란]({{site.url}}{{site.baseurl}}/blog-building/Open-Graph-Protocol/)
+[Open Graph Protocol란](/blog/ko/open-graph-protocol/)
 
 ## Site Author
 site 좌측 사이드바에 표시되는 정보들이다. 유의할점은 url을 적을 때 쌍따옴표 없이 써야한다.

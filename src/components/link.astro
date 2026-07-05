@@ -1,5 +1,6 @@
 ---
 // src/components/Link.astro
+import { normalizeInternalHref } from '@/lib/urls'
 import { cn } from '@/lib/utils'
 
 interface Props {
@@ -23,17 +24,18 @@ interface Props {
 const { href, external, class: className, underline, ...rest } = Astro.props
 
 const isExternal = external || href.startsWith('http')
+const normalizedHref = normalizeInternalHref(href)
 ---
 
 <a
-  href={href}
+  href={normalizedHref}
   target={isExternal ? '_blank' : '_self'}
   rel={isExternal ? 'noopener noreferrer' : undefined}
   class={cn(
     'inline-block transition-colors duration-300 ease-in-out',
     underline &&
       'underline decoration-muted-foreground underline-offset-[3px] hover:decoration-foreground',
-    className
+    className,
   )}
   {...rest}
   data-astro-reload={Astro.props['data-astro-reload'] ? '' : undefined}

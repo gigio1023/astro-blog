@@ -10,6 +10,7 @@ import {
   getSubpostsForParent,
   isSubpost,
 } from '@/lib/data-utils'
+import { postPath } from '@/lib/urls'
 import { Icon } from 'astro-icon/components'
 
 const { parentId, lang = 'en' } = Astro.props
@@ -81,7 +82,7 @@ const subpostsWithReadingTime = await Promise.all(
                 </div>
               ) : (
                 <Link
-                  href={`/blog/${lang}/${activePost.id}#post-title`}
+                  href={`${postPath(lang, activePost.id)}#post-title`}
                   class="hover:text-foreground text-muted-foreground hover:bg-muted/50 subposts-sidebar-link flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-pretty transition-colors"
                 >
                   <Icon
@@ -135,7 +136,7 @@ const subpostsWithReadingTime = await Promise.all(
                   </div>
                 ) : (
                   <Link
-                    href={`/blog/${lang}/${subpost.id}`}
+                    href={postPath(lang, subpost.id)}
                     class="hover:text-foreground text-muted-foreground hover:bg-muted/50 subposts-sidebar-link flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-pretty transition-colors"
                   >
                     <Icon
@@ -257,5 +258,7 @@ const subpostsWithReadingTime = await Promise.all(
   }
 
   document.addEventListener('astro:page-load', () => SidebarController.init())
-  document.addEventListener('astro:before-swap', () => SidebarController.cleanup())
+  document.addEventListener('astro:before-swap', () =>
+    SidebarController.cleanup(),
+  )
 </script>

@@ -1,5 +1,6 @@
 ---
 import { DEFAULT_LANG, SITE } from '@/consts'
+import { toAbsoluteUrl } from '@/lib/urls'
 import type { CollectionEntry } from 'astro:content'
 
 interface Props {
@@ -17,7 +18,7 @@ const author =
     ? post.data.authors.join(', ')
     : SITE.author
 
-const postUrl = new URL(Astro.url.pathname, Astro.site).href
+const postUrl = toAbsoluteUrl(Astro.url.pathname, Astro.site ?? SITE.href)
 const postSlug = post.data.translationOf || post.id
 const generatedPostImage = new URL(
   `/og/blog/${post.data.lang}/${postSlug}.png`,
@@ -130,7 +131,7 @@ const articleSchema = {
       <link
         rel="alternate"
         hreflang={lang}
-        href={new URL(url, SITE.href).href}
+        href={toAbsoluteUrl(url, SITE.href)}
       />
     ))
 }
@@ -143,7 +144,7 @@ const articleSchema = {
         <link
           rel="alternate"
           hreflang="x-default"
-          href={new URL(defaultTranslation.url, SITE.href).href}
+          href={toAbsoluteUrl(defaultTranslation.url, SITE.href)}
         />
       )
     })()

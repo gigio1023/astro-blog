@@ -1,7 +1,12 @@
 import { SITE, DEFAULT_LANG } from '@/consts'
 import rss from '@astrojs/rss'
 import type { APIContext } from 'astro'
-import { getAllPosts, getLocalizedTitle, getLocalizedDescription } from '@/lib/data-utils'
+import {
+  getAllPosts,
+  getLocalizedTitle,
+  getLocalizedDescription,
+} from '@/lib/data-utils'
+import { postPath } from '@/lib/urls'
 
 export async function GET(context: APIContext) {
   try {
@@ -16,7 +21,7 @@ export async function GET(context: APIContext) {
           title,
           description,
           pubDate: post.data.date,
-          link: `/blog/${DEFAULT_LANG}/${post.id}/`,
+          link: postPath(DEFAULT_LANG, post.id),
         }
       }),
     )
