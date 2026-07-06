@@ -6,12 +6,27 @@ const redirectsPath = join(distDir, '_redirects')
 const sitemapPath = join(distDir, 'sitemap-0.xml')
 const siteOrigin = 'https://sunghogigio.com'
 const failures = []
-const requiredRedirectRules = [
-  '/blog/:lang/:slug/:timestamp /blog/:lang/:slug/ 301',
-  '/blog/:slug/:timestamp /blog/en/:slug/ 301',
-  '/blog/:lang/:slug /blog/:lang/:slug/ 301',
-  '/blog/:slug /blog/en/:slug/ 301',
+const redirectExpectations = [
+  ['/blog/ko/example-post', '/blog/ko/example-post/'],
+  ['/blog/en/example-post', '/blog/en/example-post/'],
+  ['/blog/it/example-post', '/blog/it/example-post/'],
+  ['/blog/ko/example-post/1700000000000', '/blog/ko/example-post/'],
+  ['/blog/en/example-post/1700000000000', '/blog/en/example-post/'],
+  ['/blog/it/example-post/1700000000000', '/blog/it/example-post/'],
+  ['/blog/example-post/1700000000000', '/blog/en/example-post/'],
+  ['/blog/programmers-lifeboat', '/blog/en/programmers-lifeboat/'],
+  ['/blog/programmers-lifeboat/', '/blog/en/programmers-lifeboat/'],
+  ['/tags/agent', '/tags/agent/'],
+  ['/authors/sungho-park', '/authors/sungho-park/'],
 ]
+const redirectNonExpectations = [
+  ['/blog/en/example-post', '/blog/en/en/'],
+  ['/blog/ko/example-post', '/blog/en/ko/'],
+  ['/blog/it/example-post', '/blog/en/it/'],
+  ['/blog/2', '/blog/en/2/'],
+]
+const MAX_STATIC_REDIRECTS = 2000
+const MAX_DYNAMIC_REDIRECTS = 100
 
 function fail(message) {
   failures.push(message)
@@ -53,6 +68,73 @@ function walkHtml(dir, result = []) {
   return result
 }
 
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function compileRedirectSource(source) {
+  const names = []
+  const pattern = source
+    .split('/')
+    .map((part) => {
+      if (part === '*') {
+        names.push('splat')
+        return '(.*)'
+      }
+
+      if (part.startsWith(':')) {
+        names.push(part.slice(1))
+        return '([^/]+)'
+      }
+
+      return escapeRegExp(part)
+    })
+    .join('/')
+
+  return { names, regex: new RegExp(`^${pattern}$`) }
+}
+
+function parseRedirects(redirects) {
+  return redirects
+    .split('\n')
+    .map((line, index) => ({ line: line.trim(), lineNumber: index + 1 }))
+    .filter(({ line }) => line && !line.startsWith('#'))
+    .map(({ line, lineNumber }) => {
+      const [source, destination, status = '302'] = line.split(/\s+/)
+      const dynamic = source.includes(':') || source.includes('*')
+      const { names, regex } = compileRedirectSource(source)
+
+      return {
+        source,
+        destination,
+        status,
+        lineNumber,
+        dynamic,
+        names,
+        regex,
+      }
+    })
+}
+
+function resolveRedirect(pathname, rules) {
+  for (const rule of rules) {
+    const match = pathname.match(rule.regex)
+
+    if (!match) {
+      continue
+    }
+
+    let destination = rule.destination
+    rule.names.forEach((name, index) => {
+      destination = destination.replaceAll(`:${name}`, match[index + 1])
+    })
+
+    return { ...rule, destination }
+  }
+
+  return null
+}
+
 if (!existsSync(distDir) || !existsSync(sitemapPath)) {
   fail('Run npm run build before npm run check:seo.')
 } else {
@@ -60,10 +142,46 @@ if (!existsSync(distDir) || !existsSync(sitemapPath)) {
     fail('Cloudflare _redirects file is missing from dist.')
   } else {
     const redirects = readFileSync(redirectsPath, 'utf8')
+    const redirectRules = parseRedirects(redirects)
+    const dynamicRedirectCount = redirectRules.filter(
+      (rule) => rule.dynamic,
+    ).length
+    const staticRedirectCount = redirectRules.length - dynamicRedirectCount
 
-    for (const rule of requiredRedirectRules) {
-      if (!redirects.includes(rule)) {
-        fail(`Cloudflare _redirects file is missing rule: ${rule}`)
+    if (staticRedirectCount > MAX_STATIC_REDIRECTS) {
+      fail(
+        `Cloudflare _redirects contains ${staticRedirectCount} static redirects; limit is ${MAX_STATIC_REDIRECTS}.`,
+      )
+    }
+
+    if (dynamicRedirectCount > MAX_DYNAMIC_REDIRECTS) {
+      fail(
+        `Cloudflare _redirects contains ${dynamicRedirectCount} dynamic redirects; limit is ${MAX_DYNAMIC_REDIRECTS}.`,
+      )
+    }
+
+    for (const [source, expectedDestination] of redirectExpectations) {
+      const redirect = resolveRedirect(source, redirectRules)
+
+      if (!redirect) {
+        fail(`Cloudflare _redirects does not match ${source}.`)
+        continue
+      }
+
+      if (redirect.destination !== expectedDestination) {
+        fail(
+          `Cloudflare _redirects sends ${source} to ${redirect.destination}; expected ${expectedDestination}. Matched line ${redirect.lineNumber}: ${redirect.source}`,
+        )
+      }
+    }
+
+    for (const [source, forbiddenDestination] of redirectNonExpectations) {
+      const redirect = resolveRedirect(source, redirectRules)
+
+      if (redirect?.destination === forbiddenDestination) {
+        fail(
+          `Cloudflare _redirects sends ${source} to forbidden destination ${forbiddenDestination}. Matched line ${redirect.lineNumber}: ${redirect.source}`,
+        )
       }
     }
   }

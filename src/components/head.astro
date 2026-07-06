@@ -20,11 +20,41 @@ const {
 
 const canonicalURL = toAbsoluteUrl(Astro.url.pathname, Astro.site ?? SITE.href)
 const ogImage = image || new URL('/og-default.png', Astro.site).href
+const googleAnalyticsScript = `
+window.dataLayer = window.dataLayer || []
+window.gtag = function gtag() {
+  window.dataLayer.push(arguments)
+}
+window.gtag('js', new Date())
+window.gtag('config', ${JSON.stringify(ANALYTICS.google)}, { send_page_view: false })
+
+function trackPageView() {
+  window.gtag('event', 'page_view', {
+    page_path: window.location.pathname,
+    page_title: document.title,
+  })
+}
+
+function trackPageNotFound() {
+  if (!document.querySelector('meta[name="page-kind"][content="404"]')) return
+
+  window.gtag('event', 'page_not_found', {
+    page_path: window.location.pathname,
+    page_location: window.location.href,
+    page_referrer: document.referrer || '',
+  })
+}
+
+document.addEventListener('astro:page-load', function () {
+  trackPageView()
+  trackPageNotFound()
+})
+`
 ---
 
 <head>
   <script is:inline>
-    (function () {
+    ;(function () {
       const theme =
         localStorage.getItem('theme') ||
         (window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -36,8 +66,11 @@ const ogImage = image || new URL('/og-default.png', Astro.site).href
   <!-- Preserve theme on ClientRouter navigation (astro-dev guardrail #19) -->
   <script is:inline>
     document.addEventListener('astro:before-swap', function (e) {
-      var theme = localStorage.getItem('theme') ||
-        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      var theme =
+        localStorage.getItem('theme') ||
+        (window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light')
       e.newDocument.documentElement.setAttribute('data-theme', theme)
     })
   </script>
@@ -51,38 +84,49 @@ const ogImage = image || new URL('/og-default.png', Astro.site).href
   <meta name="generator" content={Astro.generator} />
 
   {/* Primary Meta Tags — skipped when PostHead provides its own */}
-  {!skipMeta && (
-    <>
-      <meta name="title" content={title} />
-      {(() => {
-        const desc = description && description.length > 160 ? `${description.slice(0, 157)}…` : description
-        return <meta name="description" content={desc} />
-      })()}
-      <link rel="canonical" href={canonicalURL} />
+  {
+    !skipMeta && (
+      <>
+        <meta name="title" content={title} />
+        {(() => {
+          const desc =
+            description && description.length > 160
+              ? `${description.slice(0, 157)}…`
+              : description
+          return <meta name="description" content={desc} />
+        })()}
+        <link rel="canonical" href={canonicalURL} />
 
-      {/* Open Graph / Facebook */}
-      <meta property="og:type" content="website" />
-      <meta property="og:url" content={canonicalURL} />
-      <meta property="og:title" content={title} />
-      {(() => {
-        const desc = description && description.length > 160 ? `${description.slice(0, 157)}…` : description
-        return <meta property="og:description" content={desc} />
-      })()}
-      <meta property="og:image" content={ogImage} />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalURL} />
+        <meta property="og:title" content={title} />
+        {(() => {
+          const desc =
+            description && description.length > 160
+              ? `${description.slice(0, 157)}…`
+              : description
+          return <meta property="og:description" content={desc} />
+        })()}
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
 
-      {/* Twitter */}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:url" content={canonicalURL} />
-      <meta name="twitter:title" content={title} />
-      {(() => {
-        const desc = description && description.length > 160 ? `${description.slice(0, 157)}…` : description
-        return <meta name="twitter:description" content={desc} />
-      })()}
-      <meta name="twitter:image" content={ogImage} />
-    </>
-  )}
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content={canonicalURL} />
+        <meta name="twitter:title" content={title} />
+        {(() => {
+          const desc =
+            description && description.length > 160
+              ? `${description.slice(0, 157)}…`
+              : description
+          return <meta name="twitter:description" content={desc} />
+        })()}
+        <meta name="twitter:image" content={ogImage} />
+      </>
+    )
+  }
 
   <meta name="HandheldFriendly" content="True" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -114,54 +158,79 @@ const ogImage = image || new URL('/og-default.png', Astro.site).href
   />
 
   <Favicons />
-  
-  <!-- Font Preloading to prevent layout shifts -->
-  <link rel="preload" href="/fonts/GeistVF.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
-  <link rel="preload" href="/fonts/GeistMonoVF.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
-  
-  <!-- Resource Hints for Performance -->
-  {ANALYTICS.google && (
-    <>
-      <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-      <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
-    </>
-  )}
-  {UMAMI.websiteId && (
-    <>
-      <link rel="dns-prefetch" href="https://cloud.umami.is" />
-      <link rel="preconnect" href="https://cloud.umami.is" crossorigin />
-    </>
-  )}
-  <!-- Prefetch search index for faster search -->
-  <link rel="prefetch" href="/api/search-index.json" as="fetch" crossorigin="anonymous" />
-  
-  <!-- Google Analytics -->
-  {ANALYTICS.google && (
-    <>
-      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS.google}`}></script>
-      <script is:inline define:vars={{ gaId: ANALYTICS.google }}>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', gaId, { send_page_view: false });
 
-        // Track pageviews — astro:page-load fires on initial load AND SPA navigations
-        function trackPageView() {
-          gtag('event', 'page_view', {
-            page_path: window.location.pathname,
-            page_title: document.title,
-          });
-        }
-        document.addEventListener('astro:page-load', trackPageView);
-      </script>
-    </>
-  )}
-  
+  <!-- Font Preloading to prevent layout shifts -->
+  <link
+    rel="preload"
+    href="/fonts/GeistVF.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin="anonymous"
+  />
+  <link
+    rel="preload"
+    href="/fonts/GeistMonoVF.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin="anonymous"
+  />
+
+  <!-- Resource Hints for Performance -->
+  {
+    ANALYTICS.google && (
+      <>
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link
+          rel="preconnect"
+          href="https://www.googletagmanager.com"
+          crossorigin
+        />
+      </>
+    )
+  }
+  {
+    UMAMI.websiteId && (
+      <>
+        <link rel="dns-prefetch" href="https://cloud.umami.is" />
+        <link rel="preconnect" href="https://cloud.umami.is" crossorigin />
+      </>
+    )
+  }
+  <!-- Prefetch search index for faster search -->
+  <link
+    rel="prefetch"
+    href="/api/search-index.json"
+    as="fetch"
+    crossorigin="anonymous"
+  />
+
+  <!-- Google Analytics -->
+  {
+    ANALYTICS.google && (
+      <>
+        <script
+          is:inline
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS.google}`}
+        />
+        <script is:inline set:html={googleAnalyticsScript} />
+      </>
+    )
+  }
+
   <ClientRouter />
   <!-- Umami Analytics -->
-  {UMAMI.websiteId && (
-    <script is:inline defer src="https://cloud.umami.is/script.js" define:vars={{ websiteId: UMAMI.websiteId }} data-website-id={UMAMI.websiteId}></script>
-  )}
+  {
+    UMAMI.websiteId && (
+      <script
+        is:inline
+        defer
+        src="https://cloud.umami.is/script.js"
+        define:vars={{ websiteId: UMAMI.websiteId }}
+        data-website-id={UMAMI.websiteId}
+      />
+    )
+  }
 
   <slot />
 </head>
