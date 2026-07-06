@@ -2,9 +2,16 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, relative, sep } from 'node:path'
 
 const distDir = join(process.cwd(), 'dist')
+const redirectsPath = join(distDir, '_redirects')
 const sitemapPath = join(distDir, 'sitemap-0.xml')
 const siteOrigin = 'https://sunghogigio.com'
 const failures = []
+const requiredRedirectRules = [
+  '/blog/:lang/:slug/:timestamp /blog/:lang/:slug/ 301',
+  '/blog/:slug/:timestamp /blog/en/:slug/ 301',
+  '/blog/:lang/:slug /blog/:lang/:slug/ 301',
+  '/blog/:slug /blog/en/:slug/ 301',
+]
 
 function fail(message) {
   failures.push(message)
@@ -49,6 +56,18 @@ function walkHtml(dir, result = []) {
 if (!existsSync(distDir) || !existsSync(sitemapPath)) {
   fail('Run npm run build before npm run check:seo.')
 } else {
+  if (!existsSync(redirectsPath)) {
+    fail('Cloudflare _redirects file is missing from dist.')
+  } else {
+    const redirects = readFileSync(redirectsPath, 'utf8')
+
+    for (const rule of requiredRedirectRules) {
+      if (!redirects.includes(rule)) {
+        fail(`Cloudflare _redirects file is missing rule: ${rule}`)
+      }
+    }
+  }
+
   const sitemap = readFileSync(sitemapPath, 'utf8')
   const sitemapUrls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(
     (match) => match[1],

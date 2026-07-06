@@ -1,0 +1,26 @@
+# Cloudflare Pages static redirects.
+# Keep these in public/ so Astro copies them into dist for static deployments.
+
+# Legacy blog URLs from previous platforms.
+/blog/:lang/:slug/:timestamp /blog/:lang/:slug/ 301
+/blog/:slug/:timestamp /blog/en/:slug/ 301
+
+# Known slashless routes.
+/blog /blog/ 301
+/blog/ko /blog/ko/ 301
+/blog/en /blog/en/ 301
+/blog/it /blog/it/ 301
+/about /about/ 301
+/privacy /privacy/ 301
+/terms /terms/ 301
+/tags /tags/ 301
+/authors /authors/ 301
+/newsletter/confirmed /newsletter/confirmed/ 301
+
+# Dynamic slash normalization.
+/blog/:lang/:slug /blog/:lang/:slug/ 301
+/tags/:tag /tags/:tag/ 301
+/authors/:author /authors/:author/ 301
+
+# Old default-language blog URLs.
+/blog/:slug /blog/en/:slug/ 301
