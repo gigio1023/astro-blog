@@ -21,6 +21,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
+    "generate:redirects": "node scripts/generate-redirects.mjs",
+    "prebuild": "npm run generate:redirects",
     "build": "astro check && astro build",
     "check:seo": "node scripts/check-seo-indexing.mjs",
     "preview": "astro preview",
