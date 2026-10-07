@@ -1,9 +1,9 @@
 # Astro Blog
 
 ## Build & Deploy
-- `npm run build` — Astro 6 static build, ~550 pages, ~130s
+- `npm run build` — `astro check` plus Astro 7 static build, ~560 pages, about 2 minutes
 - Deploy: Cloudflare Workers & Pages
-- Node 22.12.0+ required (Astro 6)
+- Node 22.12.0+ required (Astro 7)
 
 ## Architecture
 - 3-language blog (ko/en/it) with manual routing (`/blog/ko/`, `/blog/en/`, `/blog/it/`)
@@ -14,18 +14,19 @@
 
 ## Content
 - Posts: `src/content/blog/{slug}/index.md` + `index.en.md` + `index.it.md`
-- Use `getLocalizedTitle(post, lang)` not `getEnglishTitle()` — language-neutral API
+- Titles: use `getLocalizedTitle(post, lang)` from `src/lib/data-utils.ts` (language-neutral)
 - Reading time: always use base post slug for consistency across languages
 
 ## Writing Style (blog posts)
-- Dry, first-person, hedging tone — see `.claude/skills/blog-post-writer/SKILL.md`
-- No em-dashes in sentences, no past-tense section headers, no abbreviations (write full names)
-- Check `.claude/skills/blog-post-writer/references/anti-patterns.md` after writing
+- Dry, first-person, evidence-led tone; hedge only when the evidence is incomplete. See `.agents/skills/blog-post-writer/SKILL.md`
+- No decorative em dashes; short, noun-like section headings
+- Run the passes in `.agents/skills/blog-post-writer/references/slop-review.md` and check `references/anti-patterns.md` after writing
 
 ## Skills
-- `/blog-post-writer` — write blog posts in 3 languages
-- `/astro-dev` — Astro 6 guardrails (20 patterns agents get wrong)
+- Canonical skill directory: `.agents/skills/`; `.claude/skills` and `.codex/skills` are symlinks to it
+- `/blog-post-writer` — write blog posts in 3 languages (in this repo)
+- `/astro-dev` — Astro 7 guardrails from [gigio1023/astro-dev-skill](https://github.com/gigio1023/astro-dev-skill). Not vendored here; install with `npx skills add gigio1023/astro-dev-skill@astro-dev`
 
 ## Git
-- Branch protection on master — always use PRs
+- `master` ruleset requires a PR — always use PRs
 - PR assignee: gigio1023
